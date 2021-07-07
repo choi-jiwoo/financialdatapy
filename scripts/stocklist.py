@@ -1,7 +1,10 @@
+from os import EX_CANTCREAT
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from decouple import config
+from sqlalchemy import create_engine
+import pymysql
 
 def convert_to_dataframe(text_data, exchange_name):
     """convert data received from source into a dataframe
@@ -93,7 +96,7 @@ def get_stock_list():
         if logout is None:
             print('Log in failed')
 
-        elif logout.text.lower() == 'log out':
+        elif logout.text.lower() == 'log out': # 이부분 함수로 
             # get .txt formed data
             nyse_txt = s.get('http://www.eoddata.com/Data/symbollist.aspx?e=NYSE')
             nasdaq_txt = s.get('http://www.eoddata.com/Data/symbollist.aspx?e=NASDAQ')
@@ -108,4 +111,20 @@ def get_stock_list():
     
     return (stock_list)
 
+def save_in_db(stock_list):
+    db_name = 'us_stock'
+    SQL_password = config('SQL_password', default='')
+    engine = create_engine('mysql+mysqldb://root:'+SQL_password+'@localhost/'+db_name, encoding='utf-8')
+    connection = pymysql.connect(host='localhost',
+                         user='root',
+                         password=SQL_password,
+                         db=db_name)
+    cursor = connection.cursor()
+    try:
+        stock_list.to_sql(db_name, engine, index=False)
+        print("Success!")
+    except Exception as e:
+        print(e)
+
 stock_list = get_stock_list()
+save_in_db(stock_list)
