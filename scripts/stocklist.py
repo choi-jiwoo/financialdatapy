@@ -6,17 +6,19 @@ from decouple import config
 from sqlalchemy import create_engine
 import pymysql
 
-def convert_to_dataframe(text_data, exchange_name):
+def convert_to_dataframe(s, exchange_name):
     """convert data received from source into a dataframe
 
     Args:
-        text_data (string): data received as text file format
+        s (session): http request session
         exchange_name (string): name to set in dataframe column
 
     Returns:
         dataframe: stock list of the stock exchange
     """
-    row_splitted = text_data.split('\r\n')
+    # get .txt formed data
+    text_data = s.get('http://www.eoddata.com/Data/symbollist.aspx?e='+exchange_name)
+    row_splitted = text_data.text.split('\r\n')
     exchange = pd.DataFrame([x.split('\t') for x in row_splitted], columns=['Symbol', 'Description'])
     # remove duplicated header and blank row at the end
     exchange = exchange.drop([exchange.index[0], exchange.index[-1]])
@@ -52,6 +54,7 @@ def get_stock_list():
     """
     # login information to be passed into HTML requests
     url = 'http://www.eoddata.com/symbols.aspx'
+    exchange = ['NYSE', 'NASDAQ', 'AMEX']
     # get login information from config file
     username = config('username', default='')
     password = config('password', default='')
@@ -80,18 +83,14 @@ def get_stock_list():
             print('Log in failed')
 
         elif logout.text.lower() == 'log out': # 이부분 함수로 
-            # get .txt formed data
-            nyse_txt = s.get('http://www.eoddata.com/Data/symbollist.aspx?e=NYSE')
-            nasdaq_txt = s.get('http://www.eoddata.com/Data/symbollist.aspx?e=NASDAQ')
-            amex_txt = s.get('http://www.eoddata.com/Data/symbollist.aspx?e=AMEX')
-
-            nyse = convert_to_dataframe(nyse_txt.text, 'NYSE')
-            nasdaq = convert_to_dataframe(nasdaq_txt.text, 'NASDAQ')
-            amex = convert_to_dataframe(amex_txt.text, 'AMEX')
+            nyse = convert_to_dataframe(s, exchange[0])
+            nasdaq = convert_to_dataframe(s, exchange[1])
+            amex = convert_to_dataframe(s, exchange[2])
 
             # make as one dataframe
-            exchange_list = [nasdaq, amex]
-            stock_list = nyse.append(exchange_list, ignore_index=True)
+            nasdaq_amex = [nasdaq, amex]
+            stock_list = nyse.append(nasdaq_amex, ignore_index=True)
+
             # check_diff(stock_list)
     
     return (stock_list)
