@@ -26,23 +26,6 @@ def convert_to_dataframe(text_data, exchange_name):
 
     return (exchange)
 
-def merge_exchanges(nyse, nasdaq, amex):
-    """merge stock lists from 3 different stock exchanges
-
-    Args:
-        nyse (dataframe): new york stock exchange
-        nasdaq (dataframe): nasdaq stock exchange
-        amex (dataframe): american stock exchange
-
-    Returns:
-        dataframe: stock list of all 3 major stock exchanges
-    """
-    # make as one dataframe
-    exchange_list = [nasdaq, amex]
-    stock_list = nyse.append(exchange_list, ignore_index=True)
-
-    return (stock_list)
-
 def check_diff(stock_list):
     """check difference between latest stock list and past stock list since market changes every day
 
@@ -106,10 +89,14 @@ def get_stock_list():
             nasdaq = convert_to_dataframe(nasdaq_txt.text, 'NASDAQ')
             amex = convert_to_dataframe(amex_txt.text, 'AMEX')
 
-            stock_list = merge_exchanges(nyse, nasdaq, amex)
+            # make as one dataframe
+            exchange_list = [nasdaq, amex]
+            stock_list = nyse.append(exchange_list, ignore_index=True)
             # check_diff(stock_list)
     
     return (stock_list)
+
+
 
 def save_in_db(stock_list):
     db_name = 'us_stock'
@@ -125,6 +112,9 @@ def save_in_db(stock_list):
         print("Success!")
     except Exception as e:
         print(e)
+
+    # connection.commit()
+    connection.close()
 
 stock_list = get_stock_list()
 save_in_db(stock_list)
