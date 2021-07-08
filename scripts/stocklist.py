@@ -3,7 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 from decouple import config
 from sqlalchemy import create_engine
-import pymysql
 
 def convert_to_dataframe(s, exchange_name):
     """convert data received from source into a dataframe
@@ -21,7 +20,7 @@ def convert_to_dataframe(s, exchange_name):
     exchange = pd.DataFrame([x.split('\t') for x in row_splitted], columns=['Symbol', 'Description'])
     # remove duplicated header and blank row at the end
     exchange = exchange.drop([exchange.index[0], exchange.index[-1]])
-    # add which exchange
+    # add exchange name
     name = pd.Series([exchange_name], name='Exchange')
     exchange = exchange.merge(name, how='cross')
 
@@ -33,17 +32,17 @@ def check_diff(stock_list):
     Args:
         stock_list (dataframe): stock list of all 3 major stock exchanges
     """
-    # check duplicated stocks across three different exchange
-    stock_list = stock_list.drop_duplicates(subset=['Symbol'], ignore_index=True)
-
-    # 이부분은 db로 UPDATE 해야하는 부분
     stock_list.to_csv('stock_list_210705.csv', index=False)
     
     # check changes in stock list
-    # 이부분은 db에서 SELECT 해야하는 부분
     old = pd.read_csv('stock_list_210701.csv')
-
     print(f'yesterday : {len(old)}, today : {len(stock_list)}')
+
+    # check which stock is changed
+    # 'left_only': removed from stock exchange 
+    # 'right_only': newly listed in stock exchange
+    merged = pd.merge(old,stock_list, how='outer', indicator=True)
+    print(merged[merged['_merge'] != 'both'])
 
 def get_stock_list():
     """get stock list data from eoddata.com
@@ -81,7 +80,7 @@ def get_stock_list():
         if logout is None:
             print('Log in failed')
 
-        elif logout.text.lower() == 'log out': # 이부분 함수로 
+        elif logout.text.lower() == 'log out':
             nyse = convert_to_dataframe(s, exchange[0])
             nasdaq = convert_to_dataframe(s, exchange[1])
             amex = convert_to_dataframe(s, exchange[2])
@@ -89,7 +88,10 @@ def get_stock_list():
             # make as one dataframe
             nasdaq_amex = [nasdaq, amex]
             stock_list = nyse.append(nasdaq_amex, ignore_index=True)
-
+            
+            # remove duplicated stocks across three different exchange
+            stock_list = stock_list.drop_duplicates(subset=['Symbol'], ignore_index=True)
+            
             # check_diff(stock_list)
     
     return (stock_list)
