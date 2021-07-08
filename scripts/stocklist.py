@@ -1,4 +1,3 @@
-from os import EX_CANTCREAT
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
@@ -11,7 +10,7 @@ def convert_to_dataframe(s, exchange_name):
 
     Args:
         s (session): http request session
-        exchange_name (string): name to set in dataframe column
+        exchange_name (string): stock exchange stock list to get
 
     Returns:
         dataframe: stock list of the stock exchange
@@ -94,26 +93,3 @@ def get_stock_list():
             # check_diff(stock_list)
     
     return (stock_list)
-
-
-
-def save_in_db(stock_list):
-    db_name = 'us_stock'
-    SQL_password = config('SQL_password', default='')
-    engine = create_engine('mysql+mysqldb://root:'+SQL_password+'@localhost/'+db_name, encoding='utf-8')
-    connection = pymysql.connect(host='localhost',
-                         user='root',
-                         password=SQL_password,
-                         db=db_name)
-    cursor = connection.cursor()
-    try:
-        stock_list.to_sql(db_name, engine, index=False)
-        print("Success!")
-    except Exception as e:
-        print(e)
-
-    # connection.commit()
-    connection.close()
-
-stock_list = get_stock_list()
-save_in_db(stock_list)
