@@ -2,7 +2,6 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from decouple import config
-from sqlalchemy import create_engine
 
 def convert_to_dataframe(s, exchange_name):
     """convert data received from source into a dataframe
@@ -24,18 +23,16 @@ def convert_to_dataframe(s, exchange_name):
     name = pd.Series([exchange_name], name='Exchange')
     exchange = exchange.merge(name, how='cross')
 
-    return (exchange)
+    return exchange
 
-def check_diff(stock_list):
+def check_diff(old, stock_list):
     """check difference between latest stock list and past stock list since market changes every day
 
     Args:
-        stock_list (dataframe): stock list of all 3 major stock exchanges
+        old (dataframe): past stock list of all 3 major stock exchanges
+        stock_list (dataframe): latest stock list of all 3 major stock exchanges
     """
-    stock_list.to_csv('stock_list_210705.csv', index=False)
-    
     # check changes in stock list
-    old = pd.read_csv('stock_list_210701.csv')
     print(f'yesterday : {len(old)}, today : {len(stock_list)}')
 
     # check which stock is changed
@@ -79,6 +76,7 @@ def get_stock_list():
 
         if logout is None:
             print('Log in failed')
+            return False
 
         elif logout.text.lower() == 'log out':
             nyse = convert_to_dataframe(s, exchange[0])
@@ -93,5 +91,4 @@ def get_stock_list():
             stock_list = stock_list.drop_duplicates(subset=['Symbol'], ignore_index=True)
             
             # check_diff(stock_list)
-    
-    return (stock_list)
+            return stock_list
