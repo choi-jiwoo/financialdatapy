@@ -1,24 +1,29 @@
-from decouple import config
 from sqlalchemy import create_engine
 import pymysql
 import pandas as pd
-import stocklist
 
-def save_in_db():
-    stock_list = stocklist.get_stock_list()
-    db_name = 'us_stock'
-    SQL_password = config('SQL_password', default='')
-    engine = create_engine('mysql+mysqldb://root:'+SQL_password+'@localhost/'+db_name, encoding='utf-8')
-    connection = pymysql.connect(host='localhost',
-                         user='root',
-                         password=SQL_password,
-                         db=db_name)
-    cursor = connection.cursor()
-    try:
-        stock_list.to_sql(db_name, engine, index=False)
-        print("Success!")
-    except Exception as e:
-        print(e)
-    finally:
-        # connection.commit()
-        connection.close()
+class Database:
+    def __init__(self, SQL_password, db_name) -> None:
+        self.engine = create_engine('mysql+mysqldb://root:'+SQL_password+'@localhost/'+db_name, encoding='utf-8')
+        self.connection = pymysql.connect(host='localhost',
+                                    user='root',
+                                    password=SQL_password,
+                                    db=db_name)
+        self.cursor = self.connection.cursor()
+
+    def save_in_db(self, stock_list, table_name):
+        try:
+            stock_list.to_sql(table_name, self.engine, index=False)
+            print("Success!")
+        except Exception as e:
+            print(e)
+
+    def read_db(self):
+        try:
+            stock_list = pd.read_sql_table('us_stock', self.engine)
+            return stock_list
+        except Exception as e:
+            print(e)
+    
+    def __del__(self):
+        self.connection.close()
