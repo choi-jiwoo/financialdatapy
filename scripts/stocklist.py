@@ -19,9 +19,6 @@ def convert_to_dataframe(s, exchange_name):
     exchange = pd.DataFrame([x.split('\t') for x in row_splitted], columns=['Symbol', 'Description'])
     # remove duplicated header and blank row at the end
     exchange = exchange.drop([exchange.index[0], exchange.index[-1]])
-    # add exchange name
-    name = pd.Series([exchange_name], name='Exchange')
-    exchange = exchange.merge(name, how='cross')
 
     return exchange
 
