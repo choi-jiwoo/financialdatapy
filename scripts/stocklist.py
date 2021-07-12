@@ -31,15 +31,18 @@ def check_diff(old, latest):
     Args:
         old (dataframe): past list of stock listed in US
         latest (dataframe): latest list of stock listed in US
+
+    Returns:
+        diff (dataframe): dataframe of stocks that are only in past stock list and latest stock list
     """
-    # check changes in stock list
-    print(f'yesterday : {len(old)}, today : {len(latest)}')
 
     # check which stock is changed
     # 'left_only': removed from stock exchange 
     # 'right_only': newly listed in stock exchange
     merged = pd.merge(old,latest, how='outer', indicator=True)
-    print(merged[merged['_merge'] != 'both'])
+    diff = merged[merged['_merge'] != 'both']
+
+    return diff
 
 def get_stock_list():
     """get stock list data from eoddata.com
