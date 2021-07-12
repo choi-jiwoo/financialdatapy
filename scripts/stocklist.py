@@ -25,20 +25,20 @@ def convert_to_dataframe(s, exchange_name):
 
     return exchange
 
-def check_diff(old, stock_list):
+def check_diff(old, latest):
     """check difference between latest stock list and past stock list since market changes every day
 
     Args:
         old (dataframe): past stock list of all 3 major stock exchanges
-        stock_list (dataframe): latest stock list of all 3 major stock exchanges
+        latest (dataframe): latest stock list of all 3 major stock exchanges
     """
     # check changes in stock list
-    print(f'yesterday : {len(old)}, today : {len(stock_list)}')
+    print(f'yesterday : {len(old)}, today : {len(latest)}')
 
     # check which stock is changed
     # 'left_only': removed from stock exchange 
     # 'right_only': newly listed in stock exchange
-    merged = pd.merge(old,stock_list, how='outer', indicator=True)
+    merged = pd.merge(old,latest, how='outer', indicator=True)
     print(merged[merged['_merge'] != 'both'])
 
 def get_stock_list():
