@@ -29,8 +29,8 @@ def check_diff(old, latest):
     """check difference between latest stock list and past stock list since market changes every day
 
     Args:
-        old (dataframe): past stock list of all 3 major stock exchanges
-        latest (dataframe): latest stock list of all 3 major stock exchanges
+        old (dataframe): past list of stock listed in US
+        latest (dataframe): latest list of stock listed in US
     """
     # check changes in stock list
     print(f'yesterday : {len(old)}, today : {len(latest)}')
