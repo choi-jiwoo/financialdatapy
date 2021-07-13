@@ -17,6 +17,16 @@ class Database:
                                     db=db_name)
         self.cursor = self.connection.cursor()
 
+    def check_table_exists(self):
+        query ='SHOW TABLES LIKE \'us_stock\''
+        self.cursor.execute(query)
+        res = self.cursor.fetchall()
+        # check if the length is 0 which means there's no table
+        if len(res) == 0:
+            return 0
+        else:
+            return 1
+
     def save_in_db(self, stock_list, table_name):
         """save received stock list in a database table
 
@@ -25,8 +35,12 @@ class Database:
             table_name (string): table name to save as
         """
         try:
-            stock_list.to_sql(table_name, self.engine, index=False)
-            print("Success!")
+            ret = self.check_table_exists()
+            if ret == 0:
+                stock_list.to_sql(table_name, self.engine, index=False)
+                print('Successfully added to database.')
+            elif ret == 1:
+                print('Table already exists.')
         except Exception as e:
             print(e)
 
