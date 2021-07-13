@@ -21,7 +21,7 @@ class Database:
         query ='SHOW TABLES LIKE \'us_stock\''
         self.cursor.execute(query)
         res = self.cursor.fetchall()
-        # check if the length is 0 which means there's no table
+        # check if the length is 0, which means there's no table
         if len(res) == 0:
             return 0
         else:
@@ -35,12 +35,8 @@ class Database:
             table_name (string): table name to save as
         """
         try:
-            ret = self.check_table_exists()
-            if ret == 0:
-                stock_list.to_sql(table_name, self.engine, index=False)
-                print('Successfully added to database.')
-            elif ret == 1:
-                print('Table already exists.')
+            stock_list.to_sql(table_name, self.engine, index=False)
+            print('Successfully added to database.')
         except Exception as e:
             print(e)
 
