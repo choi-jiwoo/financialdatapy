@@ -18,6 +18,11 @@ class Database:
         self.cursor = self.connection.cursor()
 
     def check_table_exists(self):
+        """check if stock list is already in the database
+
+        Returns:
+            int: 0 for empty, 1 for exists
+        """
         query ='SHOW TABLES LIKE \'us_stock\''
         self.cursor.execute(query)
         res = self.cursor.fetchall()
