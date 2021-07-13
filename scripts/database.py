@@ -31,6 +31,11 @@ class Database:
             print(e)
 
     def read_db(self):
+        """get stock list saved in the database
+
+        Returns:
+            dataframe: stock list saved in the database
+        """
         try:
             stock_list = pd.read_sql_table('us_stock', self.engine)
             return stock_list
@@ -38,6 +43,12 @@ class Database:
             print(e)
 
     def delete_stock(self, table_name, diff):
+        """delete stocks from stock list database which are unlisted from stock exchange
+
+        Args:
+            table_name (string): database table name to delete from
+            diff (dataframe): dataframe that stores which stocks are unlisted and newly listed
+        """
         # stocks only in past stock list
         old = diff[diff['_merge']=='left_only']
         
@@ -53,6 +64,12 @@ class Database:
             print(e)
 
     def add_stock(self, table_name, diff):
+        """add stocks to stock list database wihch are newly listed in stock exchange
+
+        Args:
+            table_name (string): database table name to add in
+            diff (dataframe): dataframe that stores which stocks are unlisted and newly listed
+        """
         # stocks only in latest stock list
         new = diff[diff['_merge']=='right_only']
 
