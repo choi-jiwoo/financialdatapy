@@ -87,8 +87,8 @@ def get_stock_list():
             nasdaq_amex = [nasdaq, amex]
             stock_list = nyse.append(nasdaq_amex, ignore_index=True)
             
-            # remove duplicated stocks across three different exchange
+            # remove duplicated stocks across three different exchange and sort by symbol in ascending order
             stock_list = stock_list.drop_duplicates(subset=['Symbol'], ignore_index=True)
-            
-            # check_diff(stock_list)
+            stock_list = stock_list.sort_values(by=['Symbol'], ignore_index=True)
+
             return stock_list
