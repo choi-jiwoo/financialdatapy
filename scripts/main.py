@@ -16,9 +16,12 @@ if __name__ == '__main__':
         old_stock_list = db.read_db()
         diff = stocklist.check_diff(old_stock_list, latest_stock_list)
 
-        # update stock list to the latest
-        db.delete_stock(db_name, diff)
-        db.add_stock(db_name, diff)
+        if diff.empty:
+            print("No difference")
+        else :
+            # update stock list to the latest
+            db.delete_stock(db_name, diff)
+            db.add_stock(db_name, diff)
     elif ret == 0:
         print('Stock list doensn\'t exists. Cannot compare the difference between past and latest stock list. \n Saving in progress.')
         db.save_in_db(latest_stock_list, db_name)
