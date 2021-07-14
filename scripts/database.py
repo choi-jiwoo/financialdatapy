@@ -17,15 +17,22 @@ class Database:
                                     db=db_name)
         self.cursor = self.connection.cursor()
 
+    def create_database(self):
+        """create database if there is no database named us_stock
+        """
+        query = 'CREATE DATABSE IF NOT EXISTS us_stock'
+        self.cursor.execute(query)
+        self.connection.commit
+
     def check_table_exists(self):
         """check if stock list is already in the database
 
         Returns:
             int: 0 for empty, 1 for exists
         """
-        query ='SHOW TABLES LIKE \'us_stock\''
+        query = 'SHOW TABLES LIKE \'us_stock\''
         self.cursor.execute(query)
-        res = self.cursor.fetchall()
+        res = self.cursor.fetchone()
         # check if the length is 0, which means there's no table
         if len(res) == 0:
             return 0
