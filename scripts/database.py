@@ -3,18 +3,16 @@ import pymysql
 import pandas as pd
 
 class Database:
-    def __init__(self, SQL_password, db_name) -> None:
-        """connect to a database
+    def __init__(self, mysql_pw) -> None:
+        """connect to a mysql server
 
         Args:
-            SQL_password (string): relational database management system (RDBMS) password
-            db_name (string): database to connect with 
+            mysql_pw (string): relational database management system (RDBMS) password
         """
-        self.engine = create_engine('mysql+mysqldb://root:'+SQL_password+'@localhost/'+db_name, encoding='utf-8')
+        self.engine = create_engine('mysql+mysqldb://root:'+mysql_pw+'@localhost/', encoding='utf-8')
         self.connection = pymysql.connect(host='localhost',
                                     user='root',
-                                    password=SQL_password,
-                                    db=db_name)
+                                    password=mysql_pw)
         self.cursor = self.connection.cursor()
 
     def create_database(self):
@@ -52,14 +50,14 @@ class Database:
         except Exception as e:
             print(e)
 
-    def read_db(self):
+    def read_db(self, table_name):
         """get stock list saved in the database
 
         Returns:
             dataframe: stock list saved in the database
         """
         try:
-            stock_list = pd.read_sql_table('us_stock', self.engine)
+            stock_list = pd.read_sql_table(table_name, self.engine)
             return stock_list
         except Exception as e:
             print(e)
