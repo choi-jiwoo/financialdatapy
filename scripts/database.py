@@ -20,9 +20,12 @@ class Database:
         self.cursor = self.connection.cursor()
 
         # create database to work in
-        query = 'CREATE DATABASE IF NOT EXISTS '+self.db_name
+        query = f'CREATE DATABASE IF NOT EXISTS {self.db_name}'
         self.cursor.execute(query)
         self.connection.commit
+
+        query = f'USE {self.db_name}'
+        self.cursor.execute(query)
 
     def read_table(self):
         """get stock list saved in the database
@@ -48,8 +51,9 @@ class Database:
         # delete stock from stock list
         try:
             for i in old['Symbol']:
-               query = 'DELETE FROM '+self.table_name+' WHERE Symbol=%s'
-               self.cursor.execute(query, i)
+                print(i)
+                query = f'DELETE FROM {self.table_name} WHERE Symbol=%s'
+                self.cursor.execute(query, i)
 
             self.connection.commit()
 
@@ -68,8 +72,8 @@ class Database:
         # add new stock list
         try:
             for i in new.to_numpy():
-                query = 'INSERT INTO '+self.table_name+' VALUES(%s, %s, %s)'
-                self.cursor.execute(query, (i[0], i[1], i[2]))
+                query = f'INSERT INTO {self.table_name} VALUES(%s, %s)'
+                self.cursor.execute(query, (i[0], i[1]))
             
             self.connection.commit()
             
