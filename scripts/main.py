@@ -3,11 +3,11 @@ import database
 from decouple import config
 
 if __name__ == '__main__':
-    SQL_password = config('SQL_password', default='')
+    mysql_pw = config('mysql_pw', default='')
     db_name = 'us_stock'
     table_name = 'stock_list'
     # connect database server
-    db = database.Database(SQL_password, db_name)
+    db = database.Database(mysql_pw, db_name)
     # create database if it's first time
     db.create_database()
     
@@ -17,7 +17,7 @@ if __name__ == '__main__':
     # check if table for stock list exists in the database
     ret = db.check_table_exists()
     if ret == 1:
-        old_stock_list = db.read_db()
+        old_stock_list = db.read_db(table_name)
         diff = stocklist.check_diff(old_stock_list, latest_stock_list)
 
         # check if there is a difference
