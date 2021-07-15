@@ -20,7 +20,7 @@ class Database:
     def create_database(self):
         """create database if there is no database named us_stock
         """
-        query = 'CREATE DATABSE IF NOT EXISTS us_stock'
+        query = 'CREATE DATABASE IF NOT EXISTS us_stock'
         self.cursor.execute(query)
         self.connection.commit
 
