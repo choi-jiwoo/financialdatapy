@@ -8,3 +8,4 @@ venv
 /.vscode
 .env
 */__pycache__
+*.json
