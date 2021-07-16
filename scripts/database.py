@@ -51,7 +51,6 @@ class Database:
         # delete stock from stock list
         try:
             for i in old['Symbol']:
-                print(i)
                 query = f'DELETE FROM {self.table_name} WHERE Symbol=%s'
                 self.cursor.execute(query, i)
 

@@ -27,4 +27,3 @@ finally:
         # update stock list to the latest
         db.delete_stock(diff)
         db.add_stock(diff)
-    
