@@ -14,10 +14,12 @@ financial_json_data = json.loads(res.text)
 # Getting financial data
 def extract_numbers(taxonomy):
     data_dict = dict(financial_json_data['facts']['us-gaap'][taxonomy].items())
+    # list to store data
     numbers = []
 
     for i in data_dict['units']['USD']:
         if 'frame' in i:
+            # match annaual data 
             if re.match('CY\d*$', i['frame']):
                 numbers.append(i['val'])
 
