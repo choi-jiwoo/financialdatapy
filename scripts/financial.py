@@ -1,17 +1,19 @@
 import json
 import requests
 import re
+import cik
 
-# Getting data from SEC
-# test for Apple Inc.
-cik = '0000320193'
-url = f'https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json'
-headers = {'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36'}
+# Getting cik list
+def search_cik(ticker):
+    # subsetting
+    data = cik_list[cik_list['ticker']==ticker]['cik']
+    data = data.values[0]
 
-res = requests.get(url, headers=headers)
-financial_json_data = json.loads(res.text)
+    # cik number received from source excludes 0s that comes first. Since cik is a 10-digit number, concatenate 0s.
+    zeros = 10 - len(str(data))
+    data = ('0' * zeros) + str(data)
+    return data
 
-# Getting financial data
 def extract_numbers(taxonomy):
     data_dict = dict(financial_json_data['facts']['us-gaap'][taxonomy].items())
     # list to store data
@@ -25,6 +27,19 @@ def extract_numbers(taxonomy):
 
     return numbers
 
+cik_url = 'https://www.sec.gov/files/company_tickers_exchange.json'
+cik_list = cik.get_cik(cik_url)
+
+# Getting data from SEC
+# test for Apple Inc. 
+cik_num = search_cik('AAPL')
+url = f'https://data.sec.gov/api/xbrl/companyfacts/CIK{cik_num}.json'
+headers = {'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36'}
+
+res = requests.get(url, headers=headers)
+financial_json_data = json.loads(res.text)
+
+# Getting financial data
 # test for Revenue
 revenue_taxonomy = 'RevenueFromContractWithCustomerExcludingAssessedTax'
 revenues = extract_numbers(revenue_taxonomy)
