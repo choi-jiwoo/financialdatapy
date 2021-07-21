@@ -36,6 +36,15 @@ def get_sec_data(cik_num):
     
     return data
 
+# Taxonomy and facts
+def get_facts(data, taxonomy):
+    facts_dict = {}
+    us_gaap_taxonomy = data['facts']['us-gaap']
+    for i in taxonomy:
+        facts_dict[i] = list(us_gaap_taxonomy[i]['units'].values())[0] # [0] is for removing unnecessary outer square bracket.
+
+    return facts_dict
+
 def extract_numbers(facts, taxonomy):
     # list to store data
     numbers = []
@@ -60,6 +69,9 @@ cik_list = get_cik()
 cik_num = search_cik('AAPL')
 financial_data = get_sec_data(cik_num)
 taxonomy = list(financial_data['facts']['us-gaap'].keys())
+
+# Getting financial data
+facts = get_facts(financial_data, taxonomy)
 
 # test for Revenue (NEEDS TO BE CHANGED AFTER)
 revenue_taxonomy = 'RevenueFromContractWithCustomerExcludingAssessedTax'
