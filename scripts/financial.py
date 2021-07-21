@@ -1,10 +1,22 @@
 import json
 import requests
 import re
-import cik
+import pandas as pd
 
-# Getting cik list
+# CIK
+def get_cik():
+    url = 'https://www.sec.gov/files/company_tickers_exchange.json'
+    res = requests.get(url)
+    data = json.loads(res.text)
+
+    cik_list = pd.DataFrame(data['data'], columns=data['fields'])
+    # uniform company names
+    cik_list['name'] = cik_list['name'].str.lower().str.title()
+
+    return cik_list
+
 def search_cik(ticker):
+    ticker = ticker.upper()
     # subsetting
     data = cik_list[cik_list['ticker']==ticker]['cik']
     data = data.values[0]
@@ -14,40 +26,45 @@ def search_cik(ticker):
     data = ('0' * zeros) + str(data)
     return data
 
-def extract_numbers(taxonomy):
-    data_dict = dict(financial_json_data['facts']['us-gaap'][taxonomy].items())
+# Company filing data
+def get_sec_data(cik_num):
+    url = f'https://data.sec.gov/api/xbrl/companyfacts/CIK{cik_num}.json'
+    headers = {'User-Agent' : 'Mozilla'}
+
+    res = requests.get(url, headers=headers)
+    data = json.loads(res.text)
+    
+    return data
+
+def extract_numbers(facts, taxonomy):
     # list to store data
     numbers = []
 
-    for i in data_dict['units']['USD']:
+    for i in facts[taxonomy]:
         if 'frame' in i:
-            # match annaual data 
+            # match annual data 
             if re.match('CY\d*$', i['frame']):
                 numbers.append(i['val'])
 
     return numbers
 
-cik_url = 'https://www.sec.gov/files/company_tickers_exchange.json'
-cik_list = cik.get_cik(cik_url)
+# latest fact fata
+def get_latest(data):
+    return data[-1]
+
+# Getting cik list
+cik_list = get_cik()
 
 # Getting data from SEC
 # test for Apple Inc. 
 cik_num = search_cik('AAPL')
-url = f'https://data.sec.gov/api/xbrl/companyfacts/CIK{cik_num}.json'
-headers = {'User-Agent' : 'Mozilla'}
+financial_data = get_sec_data(cik_num)
+taxonomy = list(financial_data['facts']['us-gaap'].keys())
 
-res = requests.get(url, headers=headers)
-financial_json_data = json.loads(res.text)
-
-# Getting financial data
-# test for Revenue
+# test for Revenue (NEEDS TO BE CHANGED AFTER)
 revenue_taxonomy = 'RevenueFromContractWithCustomerExcludingAssessedTax'
-revenues = extract_numbers(revenue_taxonomy)
+revenues = extract_numbers(facts, revenue_taxonomy)
 print(revenues)
 
-# latest Revenue
-def get_latest_number(data):
-    return data[-1]
-
-latest_revenue = get_latest_number(revenues)
+latest_revenue = get_latest(revenues)
 print(latest_revenue)
