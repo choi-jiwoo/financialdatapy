@@ -34,7 +34,7 @@ cik_list = cik.get_cik(cik_url)
 # test for Apple Inc. 
 cik_num = search_cik('AAPL')
 url = f'https://data.sec.gov/api/xbrl/companyfacts/CIK{cik_num}.json'
-headers = {'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36'}
+headers = {'User-Agent' : 'Mozilla'}
 
 res = requests.get(url, headers=headers)
 financial_json_data = json.loads(res.text)
