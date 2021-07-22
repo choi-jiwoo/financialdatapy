@@ -49,12 +49,6 @@ def extract_numbers(facts, taxonomy):
     # list to store data
     numbers = []
 
-    for i in facts[taxonomy]:
-        if 'frame' in i:
-            # match annual data 
-            if re.match('CY\d*$', i['frame']):
-                numbers.append(i['val'])
-
     return numbers
 
 # latest fact fata
