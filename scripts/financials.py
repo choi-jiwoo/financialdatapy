@@ -1,13 +1,19 @@
 import json
 import requests
-import re
 import pandas as pd
+import filings
+
+# Request data from sec.gov
+def request_data(url):
+    headers = {'User-Agent' : 'Mozilla'}
+    res = requests.get(url, headers=headers)
+    data = json.loads(res.text)
+    return data
 
 # CIK
 def get_cik():
     url = 'https://www.sec.gov/files/company_tickers_exchange.json'
-    res = requests.get(url)
-    data = json.loads(res.text)
+    data = request_data(url)
 
     cik_list = pd.DataFrame(data['data'], columns=data['fields'])
     # uniform company names
@@ -29,10 +35,7 @@ def search_cik(ticker):
 # Company filing data
 def get_sec_data(cik_num):
     url = f'https://data.sec.gov/api/xbrl/companyfacts/CIK{cik_num}.json'
-    headers = {'User-Agent' : 'Mozilla'}
-
-    res = requests.get(url, headers=headers)
-    data = json.loads(res.text)
+    data = request_data(url)
     
     return data
 
@@ -59,8 +62,12 @@ def get_latest(data):
 cik_list = get_cik()
 
 # Getting data from SEC
-# test for Apple Inc. 
 cik_num = search_cik('AAPL')
+
+# Getting list of submitted filings 
+# filings.get_filings_list(cik_num)
+
+# test for Apple Inc. 
 financial_data = get_sec_data(cik_num)
 taxonomy = list(financial_data['facts']['us-gaap'].keys())
 
