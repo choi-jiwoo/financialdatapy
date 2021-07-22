@@ -1,7 +1,6 @@
 import json
 import requests
 import pandas as pd
-import filings
 
 # Request data from sec.gov
 def request_data(url):
@@ -31,6 +30,20 @@ def search_cik(ticker):
     zeros = 10 - len(str(data))
     data = ('0' * zeros) + str(data)
     return data
+
+# Company filings list
+def get_filings_list(cik): 
+    url = f'http://data.sec.gov/submissions/CIK{cik}.json'
+    data = request_data(url)
+
+    acc = data['filings']['recent']['accessionNumber']
+    acc = [s.replace('-', '') for s in acc]
+    form = data['filings']['recent']['form']
+    doc = data['filings']['recent']['primaryDocument']
+
+    filings = pd.DataFrame(zip(form, acc, doc), columns=['AccessionNumber', 'Form', 'PrimaryDocument'])
+
+    return filings
 
 # Company filing data
 def get_sec_data(cik_num):
@@ -65,7 +78,9 @@ cik_list = get_cik()
 cik_num = search_cik('AAPL')
 
 # Getting list of submitted filings 
-# filings.get_filings_list(cik_num)
+filings = get_filings_list(cik_num)
+latest_10K_filing = filings[filings['AccessionNumber']=='10-K'].iloc[0].at['Form']
+latest_10K_doc = filings[filings['AccessionNumber']=='10-K'].iloc[0].at['PrimaryDocument']
 
 # test for Apple Inc. 
 financial_data = get_sec_data(cik_num)
