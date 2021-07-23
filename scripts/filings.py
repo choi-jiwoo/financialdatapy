@@ -1,6 +1,7 @@
 import json
 import requests
 import pandas as pd
+import financials
 
 # Request data from sec.gov
 def request_data(url):
@@ -81,6 +82,9 @@ cik_num = search_cik('AAPL')
 filings = get_filings_list(cik_num)
 latest_10K_filing = filings[filings['AccessionNumber']=='10-K'].iloc[0].at['Form']
 latest_10K_doc = filings[filings['AccessionNumber']=='10-K'].iloc[0].at['PrimaryDocument']
+
+# get latest 10-K 
+financials.get_latest_10K(cik_num, latest_10K_filing)
 
 # test for Apple Inc. 
 financial_data = get_sec_data(cik_num)
