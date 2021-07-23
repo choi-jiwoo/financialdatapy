@@ -2,10 +2,8 @@ venv
 .DS_Store
 .ipynb_checkpoints
 *.ipynb
-*.csv
-*.txt
 /.idea
 /.vscode
 .env
 */__pycache__
-*.json
+/docs
