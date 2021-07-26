@@ -1,22 +1,22 @@
 import filings
 from bs4 import BeautifulSoup
 import pandas as pd
+import re
 
 def get_facts(link):
     res = filings.request_data(link)
-    soup = BeautifulSoup(res.text)
-
+    soup = BeautifulSoup(res.text, 'html.parser')
     tbl = soup.find('table')
-    # which financial
-    title = tbl.find(class_='tl').get_text()
-    # index 0 : which financial
-    # index 1: unit (USD)
-    title.split(' - ')
 
     # date
     date = tbl.find_all(class_='th')
     date = [x.get_text() for x in date]
-    date.pop(0) # remove unnecessary
+
+    title = tbl.find(class_='tl').get_text()
+
+    # remove unnecessary
+    if re.search('balance\ssheet+s?', title, flags=re.IGNORECASE) is None:
+        date.pop(0)
 
     # element names
     element_tbl = tbl.find_all(class_='pl')
@@ -34,5 +34,7 @@ def get_facts(link):
     # check if number of elements in a financial statement match with number of facts
     if len(element) == num_of_facts_y:
         facts_df = pd.DataFrame(facts_consecutive, index=element)
+    else :
+        raise Exception('Number of elements and facts doesn\'t match')
 
     return facts_df
