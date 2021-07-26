@@ -1,7 +1,8 @@
 import json
 import requests
 import pandas as pd
-import financials
+from bs4 import BeautifulSoup
+import re
 
 # Request data from sec.gov
 def request_data(url):
@@ -21,7 +22,7 @@ def get_cik():
 
     return cik_list
 
-def search_cik(ticker):
+def search_cik(cik_list, ticker):
     ticker = ticker.upper()
     # subsetting
     data = cik_list[cik_list['ticker']==ticker]['cik']
@@ -46,57 +47,48 @@ def get_filings_list(cik):
 
     return filings
 
-# Company filing data
-def get_sec_data(cik_num):
-    url = f'https://data.sec.gov/api/xbrl/companyfacts/CIK{cik_num}.json'
-    data = request_data(url)
-    
-    return data
+def get_link(cik, latest, file_list, pattern):
+    regex = re.compile(pattern, flags=re.IGNORECASE)
 
-# Taxonomy and facts
-def get_facts(data, taxonomy):
-    facts_dict = {}
-    us_gaap_taxonomy = data['facts']['us-gaap']
-    for i in taxonomy:
-        facts_dict[i] = list(us_gaap_taxonomy[i]['units'].values())[0] # [0] is for removing unnecessary outer square bracket.
+    for i in file_list:
+        if regex.search(i[0]):
+            link = f'https://www.sec.gov/Archives/edgar/data/{cik}/{latest}/{i[1]}.htm'
+            break
+    return link
 
-    return facts_dict
+# only for the latest 10-K filing 
+def get_latest_10K(cik, latest):
+    url = f'https://www.sec.gov/cgi-bin/viewer?action=view&cik={cik}&accession_number={latest}&xbrl_type=v'
+    res = request_data(url)
+    soup = BeautifulSoup(res.text)
 
-def extract_numbers(facts, taxonomy):
-    # list to store data
-    numbers = []
+    menu = soup.find(id='menu')
+    a = menu.find_next('a', string='Financial Statements')
+    ul = a.find_next('ul')
+    li = ul.find_all('li')
 
-    return numbers
+    # element names in financial statements
+    element = [x.get_text() for x in li]
+    # filenames of each 3 statements
+    filename = [re.search('r\d', str(x)).group().upper() for x in li]
+    file_list = list(zip(element, filename))
 
-# latest fact fata
-def get_latest(data):
-    return data[-1]
+    # get link for each financial statement
+    unmatch = '(?!\(parenthetical+s?\))([a-z0-9]+)$'
+    # income statement
+    is_pattern = '(((?<!comprehensive)\sincome)|operation+s?|earning+s?)'+ unmatch
+    is_l = get_link(cik, latest, file_list, is_pattern)
 
-# Getting cik list
-cik_list = get_cik()
+    # balance sheet
+    bs_pattern = '(balance\ssheet+s?)'+ unmatch
+    bs_l = get_link(cik, latest, file_list, bs_pattern)
 
-# Getting data from SEC
-cik_num = search_cik('AAPL')
+    # cash flow
+    cf_pattern = '(cash\sflow+s?)'+ unmatch
+    cf_l = get_link(cik, latest, file_list, cf_pattern)
 
-# Getting list of submitted filings 
-filings = get_filings_list(cik_num)
-latest_10K_filing = filings[filings['AccessionNumber']=='10-K'].iloc[0].at['Form']
-latest_10K_doc = filings[filings['AccessionNumber']=='10-K'].iloc[0].at['PrimaryDocument']
+    financial_statement_link = dict({'income_statement' : is_l,
+                                     'balance_sheet' : bs_l,
+                                     'cash_flow' : cf_l})
 
-# get latest 10-K 
-financials.get_latest_10K(cik_num, latest_10K_filing)
-
-# test for Apple Inc. 
-financial_data = get_sec_data(cik_num)
-taxonomy = list(financial_data['facts']['us-gaap'].keys())
-
-# Getting financial data
-facts = get_facts(financial_data, taxonomy)
-
-# test for Revenue (NEEDS TO BE CHANGED AFTER)
-revenue_taxonomy = 'RevenueFromContractWithCustomerExcludingAssessedTax'
-revenues = extract_numbers(facts, revenue_taxonomy)
-print(revenues)
-
-latest_revenue = get_latest(revenues)
-print(latest_revenue)
+    return financial_statement_link
