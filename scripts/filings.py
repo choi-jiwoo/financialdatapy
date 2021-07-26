@@ -8,14 +8,18 @@ import re
 def request_data(url):
     headers = {'User-Agent' : 'Mozilla'}
     res = requests.get(url, headers=headers)
-    data = json.loads(res.text)
-    return data
-
+    res_type = int(re.search('\d+', str(res)).group())
+    if res_type == 200:
+        return res
+    else :
+        raise Exception('Request not successful')
+    
 # CIK
 def get_cik():
     url = 'https://www.sec.gov/files/company_tickers_exchange.json'
-    data = request_data(url)
-
+    res = request_data(url)
+    data = json.loads(res.text)
+    
     cik_list = pd.DataFrame(data['data'], columns=data['fields'])
     # uniform company names
     cik_list['name'] = cik_list['name'].str.lower().str.title()
@@ -36,7 +40,8 @@ def search_cik(cik_list, ticker):
 # Company filings list
 def get_filings_list(cik): 
     url = f'http://data.sec.gov/submissions/CIK{cik}.json'
-    data = request_data(url)
+    res = request_data(url)
+    data = json.loads(res.text)
 
     acc = data['filings']['recent']['accessionNumber']
     acc = [s.replace('-', '') for s in acc]
@@ -60,7 +65,7 @@ def get_link(cik, latest, file_list, pattern):
 def get_latest_10K(cik, latest):
     url = f'https://www.sec.gov/cgi-bin/viewer?action=view&cik={cik}&accession_number={latest}&xbrl_type=v'
     res = request_data(url)
-    soup = BeautifulSoup(res.text)
+    soup = BeautifulSoup(res.text, 'html.parser')
 
     menu = soup.find(id='menu')
     a = menu.find_next('a', string='Financial Statements')
