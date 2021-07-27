@@ -42,16 +42,18 @@ def search_cik(cik_list, ticker):
 def get_filings_list(cik): 
     url = f'http://data.sec.gov/submissions/CIK{cik}.json'
     res = request_data(url)
-    data = json.loads(res.text)
+    submission = json.loads(res.text)
+    info = submission['filings']['recent']
 
-    acc = data['filings']['recent']['accessionNumber']
+    acc = info['accessionNumber']
     acc = [s.replace('-', '') for s in acc]
-    form = data['filings']['recent']['form']
-    doc = data['filings']['recent']['primaryDocument']
+    form = info['form']
+    doc = info['primaryDocument']
+    date = info['filingDate']
 
     filings = pd.DataFrame(
-        zip(acc, form, doc), 
-        columns=['AccessionNumber', 'Form', 'PrimaryDocument']
+        zip(acc, form, doc, date), 
+        columns=['AccessionNumber', 'Form', 'PrimaryDocument', 'Date']
     )
 
     return filings
