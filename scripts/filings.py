@@ -11,7 +11,7 @@ def request_data(url):
     res_type = int(re.search('\d+', str(res)).group())
     if res_type == 200:
         return res
-    else :
+    else:
         raise Exception('Request not successful')
     
 # CIK
@@ -32,7 +32,8 @@ def search_cik(cik_list, ticker):
     data = cik_list[cik_list['ticker']==ticker]['cik']
     data = data.values[0]
 
-    # cik number received from source excludes 0s that comes first. Since cik is a 10-digit number, concatenate 0s.
+    # cik number received from source excludes 0s that comes first.
+    # Since cik is a 10-digit number, concatenate 0s.
     zeros = 10 - len(str(data))
     data = ('0' * zeros) + str(data)
     return data
@@ -48,7 +49,10 @@ def get_filings_list(cik):
     form = data['filings']['recent']['form']
     doc = data['filings']['recent']['primaryDocument']
 
-    filings = pd.DataFrame(zip(acc, form, doc), columns=['AccessionNumber', 'Form', 'PrimaryDocument'])
+    filings = pd.DataFrame(
+        zip(acc, form, doc), 
+        columns=['AccessionNumber', 'Form', 'PrimaryDocument']
+    )
 
     return filings
 
@@ -81,7 +85,7 @@ def get_latest_10K(cik, latest):
     # get link for each financial statement
     unmatch = '(?!\(parenthetical+s?\))([a-z0-9]+)$'
     # income statement
-    is_pattern = '(((?<!comprehensive)\sincome)|operation+s?|earning+s?)'+ unmatch
+    is_pattern = '(((?<!comprehensive)\sincome)|operation+s?|earning+s?)' + unmatch
     is_l = get_link(cik, latest, file_list, is_pattern)
 
     # balance sheet
