@@ -14,7 +14,6 @@ def request_data(url):
     else:
         raise Exception('Request not successful')
     
-# CIK
 def get_cik():
     url = 'https://www.sec.gov/files/company_tickers_exchange.json'
     res = request_data(url)
@@ -28,7 +27,6 @@ def get_cik():
 
 def search_cik(cik_list, ticker):
     ticker = ticker.upper()
-    # subsetting
     data = cik_list[cik_list['ticker']==ticker]['cik']
     data = data.values[0]
 
@@ -38,7 +36,6 @@ def search_cik(cik_list, ticker):
     data = ('0' * zeros) + str(data)
     return data
 
-# Company filings list
 def get_filings_list(cik): 
     url = f'http://data.sec.gov/submissions/CIK{cik}.json'
     res = request_data(url)
@@ -58,18 +55,10 @@ def get_filings_list(cik):
 
     return filings
 
-def get_link(cik, latest, file_list, pattern):
-    regex = re.compile(pattern, flags=re.IGNORECASE)
-
-    for i in file_list:
-        if regex.search(i[0]):
-            link = f'https://www.sec.gov/Archives/edgar/data/{cik}/{latest}/{i[1]}.htm'
-            break
-    return link
-
 # only for the latest 10-K filing 
 def get_latest_10K(cik, latest):
-    url = f'https://www.sec.gov/cgi-bin/viewer?action=view&cik={cik}&accession_number={latest}&xbrl_type=v'
+    url = ('https://www.sec.gov/cgi-bin/viewer?action=view&'\
+           f'cik={cik}&accession_number={latest}&xbrl_type=v')
     res = request_data(url)
     soup = BeautifulSoup(res.text, 'html.parser')
 
@@ -78,28 +67,22 @@ def get_latest_10K(cik, latest):
     ul = a.find_next('ul')
     li = ul.find_all('li')
 
-    # element names in financial statements
-    element = [x.get_text() for x in li]
-    # filenames of each 3 statements
+    element = [x.get_text().lower() for x in li]
     filename = [re.search('r\d', str(x)).group().upper() for x in li]
-    file_list = list(zip(element, filename))
+    file_list = dict(zip(element, filename))
 
-    # get link for each financial statement
-    unmatch = '(?!\(parenthetical+s?\))([a-z0-9]+)$'
-    # income statement
-    is_pattern = '(((?<!comprehensive)\sincome)|operation+s?|earning+s?)' + unmatch
-    is_l = get_link(cik, latest, file_list, is_pattern)
+    # get links for 3 major financial statement
+    discard = ['parenthetical', 'comprehensive', 'stockholders']
+    base_link = f'https://www.sec.gov/Archives/edgar/data/{cik}/{latest}/'
+    links = {}
 
-    # balance sheet
-    bs_pattern = '(balance\ssheet+s?)'+ unmatch
-    bs_l = get_link(cik, latest, file_list, bs_pattern)
+    for k, v in file_list.items():
+        if any(x in k for x in discard) == False:
+            if re.search('income|operations?|earnings?', k, flags = re.I):
+                links['income_statement'] = base_link + v + '.htm'
+            elif re.search('balance\ssheets?', k, flags = re.I):
+                links['balance_sheet'] = base_link + v + '.htm'
+            elif re.search('cash\sflows?', k, flags = re.I):
+                links['cash_flow'] = base_link + v + '.htm'
 
-    # cash flow
-    cf_pattern = '(cash\sflow+s?)'+ unmatch
-    cf_l = get_link(cik, latest, file_list, cf_pattern)
-
-    financial_statement_link = dict({'income_statement' : is_l,
-                                     'balance_sheet' : bs_l,
-                                     'cash_flow' : cf_l})
-
-    return financial_statement_link
+    return links
