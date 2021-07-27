@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     # Getting list of submitted filings 
     submission = filings.get_filings_list(cik_num)
-    latest_10K_filing = submission[submission['AccessionNumber']=='10-K'].iloc[0].at['Form']
+    latest_10K_filing = submission[submission['Form']=='10-K'].iloc[0].at['AccessionNumber']
 
     # get latest 10-K 
     links = filings.get_latest_10K(cik_num, latest_10K_filing)

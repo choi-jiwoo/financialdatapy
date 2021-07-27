@@ -48,7 +48,7 @@ def get_filings_list(cik):
     form = data['filings']['recent']['form']
     doc = data['filings']['recent']['primaryDocument']
 
-    filings = pd.DataFrame(zip(form, acc, doc), columns=['AccessionNumber', 'Form', 'PrimaryDocument'])
+    filings = pd.DataFrame(zip(acc, form, doc), columns=['AccessionNumber', 'Form', 'PrimaryDocument'])
 
     return filings
 
