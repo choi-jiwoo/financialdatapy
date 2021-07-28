@@ -1,5 +1,4 @@
 import filings
-import re
 import pandas as pd
 from bs4 import BeautifulSoup
 from dateutil.parser import parse
@@ -38,3 +37,23 @@ def get_facts(link):
         raise Exception('Number of elements and facts doesn\'t match')
 
     return facts_df
+
+def get_10K_facts(cik_num, submission):
+    if submission[submission['Form']=='10-K'].empty: print('No 10-K submitted.')
+    else:
+        # get latest 10-K 
+        form_10K = submission[submission['Form']=='10-K']
+        latest_10K_filing = form_10K.iloc[0].at['AccessionNumber']
+        links = filings.get_latest_10K(cik_num, latest_10K_filing)
+
+        # get facts
+        is_l = links.get('income_statement')
+        income_statement = get_facts(is_l)
+
+        bs_l = links.get('balance_sheet')
+        balance_sheet = get_facts(bs_l)
+
+        cf_l = links.get('cash_flow')
+        cash_flow = get_facts(cf_l)
+
+    return income_statement, balance_sheet, cash_flow
