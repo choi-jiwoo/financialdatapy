@@ -1,46 +1,11 @@
-import json
-import requests
+import request
 import pandas as pd
-from bs4 import BeautifulSoup
 import re
-
-# Request data from sec.gov
-def request_data(url):
-    headers = {'User-Agent' : 'Mozilla'}
-    res = requests.get(url, headers=headers)
-    res_type = int(re.search('\d+', str(res)).group())
-    if res_type == 200:
-        return res
-    else:
-        raise Exception('Request not successful')
-    
-def get_cik():
-    url = 'https://www.sec.gov/files/company_tickers_exchange.json'
-    res = request_data(url)
-    data = json.loads(res.text)
-    
-    cik_list = pd.DataFrame(data['data'], columns=data['fields'])
-    # uniform company names
-    cik_list['name'] = cik_list['name'].str.lower().str.title()
-
-    return cik_list
-
-def search_cik(cik_list, ticker):
-    ticker = ticker.upper()
-    data = cik_list[cik_list['ticker']==ticker]['cik']
-    data = data.values[0]
-
-    # cik number received from source excludes 0s that comes first.
-    # Since cik is a 10-digit number, concatenate 0s.
-    zeros = 10 - len(str(data))
-    data = ('0' * zeros) + str(data)
-    return data
 
 def get_filings_list(cik): 
     url = f'http://data.sec.gov/submissions/CIK{cik}.json'
-    res = request_data(url)
-    submission = json.loads(res.text)
-    info = submission['filings']['recent']
+    data = request.request_data(url, 'json')
+    info = data['filings']['recent']
 
     acc = info['accessionNumber']
     acc = [s.replace('-', '') for s in acc]
@@ -59,8 +24,7 @@ def get_filings_list(cik):
 def get_latest_10K(cik, latest):
     url = ('https://www.sec.gov/cgi-bin/viewer?action=view&'\
            f'cik={cik}&accession_number={latest}&xbrl_type=v')
-    res = request_data(url)
-    soup = BeautifulSoup(res.text, 'html.parser')
+    soup = request.request_data(url, 'html')
 
     menu = soup.find(id='menu')
     a = menu.find_next('a', string='Financial Statements')
