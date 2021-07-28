@@ -19,13 +19,45 @@ class Database:
                                     password=mysql_pw)
         self.cursor = self.connection.cursor()
 
-        # create database to work in
         query = f'CREATE DATABASE IF NOT EXISTS {self.db_name}'
         self.cursor.execute(query)
         self.connection.commit
 
         query = f'USE {self.db_name}'
         self.cursor.execute(query)
+
+        
+    def save_in_db(self, latest_stock_list):
+        """save latest stock list in database
+
+        Args:
+            latest_stock_list (dataframe): latest stock list
+        """
+        try:
+            # If database exists, raises a ValueError
+            latest_stock_list.to_sql(
+                self.table_name, 
+                self.engine, 
+                self.db_name, 
+                ndex=False
+            )
+            print("Success.")
+        except:
+            print('Already in the database.')
+        finally:
+            old_stock_list = self.read_table()
+            merged = pd.merge(old_stock_list, 
+                latest_stock_list, 
+                how='outer', 
+                indicator=True
+            )
+            diff = merged[merged['_merge'] != 'both']
+
+            if diff.empty:
+                print("No difference") # 21/7/28 : do i need this?
+            else :
+                self.delete_stock(diff)
+                self.add_stock(diff)
 
     def read_table(self):
         """get stock list saved in the database
@@ -48,7 +80,6 @@ class Database:
         # stocks only in past stock list
         old = diff[diff['_merge']=='left_only']
         
-        # delete stock from stock list
         try:
             for i in old['Symbol']:
                 query = f'DELETE FROM {self.table_name} WHERE Symbol=%s'
@@ -68,7 +99,6 @@ class Database:
         # stocks only in latest stock list
         new = diff[diff['_merge']=='right_only']
 
-        # add new stock list
         try:
             for i in new.to_numpy():
                 query = f'INSERT INTO {self.table_name} VALUES(%s, %s)'
