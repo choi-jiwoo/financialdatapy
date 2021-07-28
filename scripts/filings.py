@@ -80,7 +80,7 @@ def get_latest_10K(cik, latest):
         if any(x in k for x in discard) == False:
             if re.search('income|operations?|earnings?', k, flags = re.I):
                 links['income_statement'] = base_link + v + '.htm'
-            elif re.search('balance\ssheets?', k, flags = re.I):
+            elif re.search('balance\ssheets?|financial\sposition', k, flags = re.I):
                 links['balance_sheet'] = base_link + v + '.htm'
             elif re.search('cash\sflows?', k, flags = re.I):
                 links['cash_flow'] = base_link + v + '.htm'
