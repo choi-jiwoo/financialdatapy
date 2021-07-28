@@ -2,7 +2,7 @@ from numpy import ushort
 import financials
 import filings
 
-if __name__ == '__main__':
+def main():
     # Getting cik list
     cik_list = filings.get_cik()
 
@@ -29,4 +29,5 @@ if __name__ == '__main__':
         cf_l = links.get('cash_flow')
         cash_flow = financials.get_facts(cf_l)
 
-
+if __name__ == '__main__':
+    main()
