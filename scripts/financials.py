@@ -1,11 +1,11 @@
 import filings
+import request
 import pandas as pd
 from bs4 import BeautifulSoup
 from dateutil.parser import parse
 
 def get_facts(link):
-    res = filings.request_data(link)
-    soup = BeautifulSoup(res.text, 'html.parser')
+    soup = request.request_data(link, 'html')
     tbl = soup.find('table')
 
     facts_hdr = tbl.find_all(class_ = 'th')
