@@ -1,10 +1,14 @@
 import database
-from decouple import config
+import yaml
 
 def connect_db():
-    mysql_pw = config('mysql_pw', default='')
+    with open('../config/config.yml', 'r') as f:
+        config = yaml.safe_load(f)
+
+    mysql_pw = config['user']['mysql_password']
     db_name = 'us_stock'
     table_name = 'stock_list'
+    
     try:
         db = database.Database(mysql_pw, db_name, table_name)
         return db
