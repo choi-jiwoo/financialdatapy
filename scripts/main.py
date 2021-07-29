@@ -11,7 +11,7 @@ def main():
     db.save_in_db(cik_list)
 
     # Getting data from SEC
-    ticker = input('ticker : ') # should add test code later
+    ticker = 'aapl'
     cik_num = cik.search_cik(cik_list, ticker)
 
     # Getting list of submitted filings 
