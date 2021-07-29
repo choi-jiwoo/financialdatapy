@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect
 import pymysql
 import pandas as pd
 
@@ -14,6 +14,7 @@ class Database:
         self.db_name = db_name
         self.table_name = table_name
         self.engine = create_engine('mysql+mysqldb://root:'+mysql_pw+'@localhost/', encoding='utf-8')
+        self.insp = inspect(self.engine)
         self.connection = pymysql.connect(host='localhost',
                                     user='root',
                                     password=mysql_pw)
@@ -25,7 +26,6 @@ class Database:
 
         query = f'USE {self.db_name}'
         self.cursor.execute(query)
-
         
     def save_in_db(self, latest_stock_list):
         """save latest stock list in database
@@ -33,17 +33,9 @@ class Database:
         Args:
             latest_stock_list (dataframe): latest stock list
         """
-        try:
-            # If database exists, raises a ValueError
-            latest_stock_list.to_sql(
-                self.table_name, 
-                self.engine, 
-                self.db_name, 
-                index = False
-            )
-        except:
-            raise Exception('Table already exists.')
-        finally:
+        check = self.insp.has_table(self.table_name, self.db_name)
+
+        if check:
             old_stock_list = self.read_table()
             merged = pd.merge(
                 old_stock_list, 
@@ -51,6 +43,8 @@ class Database:
                 how = 'outer', 
                 indicator = True
             )
+            # stocks that are not in the latest stock list will have 'left_only' value
+            # whereas new stocks will have 'right_only' value under '_merge' column
             diff = merged[merged['_merge'] != 'both']
 
             if not diff.empty:
@@ -59,7 +53,15 @@ class Database:
                     self.add_stock(diff)
                 except Exception as e:
                     print(e)
+        else:
+            latest_stock_list.to_sql(
+                self.table_name, 
+                self.engine, 
+                self.db_name, 
+                index = False
+            )
             
+                
     def read_table(self):
         """get stock list saved in the database
 
