@@ -39,26 +39,27 @@ class Database:
                 self.table_name, 
                 self.engine, 
                 self.db_name, 
-                ndex=False
+                index = False
             )
-            print("Success.")
         except:
-            print('Already in the database.')
+            raise Exception('Table already exists.')
         finally:
             old_stock_list = self.read_table()
-            merged = pd.merge(old_stock_list, 
+            merged = pd.merge(
+                old_stock_list, 
                 latest_stock_list, 
-                how='outer', 
-                indicator=True
+                how = 'outer', 
+                indicator = True
             )
             diff = merged[merged['_merge'] != 'both']
 
-            if diff.empty:
-                print("No difference") # 21/7/28 : do i need this?
-            else :
-                self.delete_stock(diff)
-                self.add_stock(diff)
-
+            if not diff.empty:
+                try:
+                    self.delete_stock(diff)
+                    self.add_stock(diff)
+                except Exception as e:
+                    print(e)
+            
     def read_table(self):
         """get stock list saved in the database
 
