@@ -6,6 +6,7 @@ def get_cik():
     data = request.request_data(url, 'json')
     
     cik_list = pd.DataFrame(data['data'], columns=data['fields'])
+    cik_list['cik'] = cik_list['cik'].astype(str)
     cik_list['name'] = cik_list['name'].str.lower().str.title()
 
     return cik_list
