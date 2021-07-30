@@ -1,7 +1,6 @@
 import filings
 import request
 import pandas as pd
-from bs4 import BeautifulSoup
 from dateutil.parser import parse
 
 def get_facts(link):
@@ -14,28 +13,40 @@ def get_facts(link):
     title = tbl.find(class_ = 'tl').get_text()
     title, unit = title.split(' - ')
 
-    for i, date in enumerate(facts_hdr):
+    split_pt = 0
+    for i, d in enumerate(facts_hdr):
         try:
-            parse(date)
+            parse(d)
         except:
-            facts_hdr.pop(i)
+            split_pt = i
+
+    if split_pt == 0:
+        month_ended = ['12 Months Ended']
+        date = facts_hdr
+    else:
+        month_ended = facts_hdr[:split_pt + 1]
+        date = facts_hdr[split_pt + 1:]
 
     element_tbl = tbl.find_all(class_ = 'pl')
     element = [x.get_text() for x in element_tbl]
 
     facts_tbl = tbl.find_all(class_ = ['nump', 'num', 'text'])
     facts = [x.get_text().strip() for x in facts_tbl]
-    years = len(facts_hdr) % len(facts)
 
-    consecutive_facts = dict({facts_hdr[x] : facts[x::years] for x in range(0, years)})
-
-    num_of_facts_y = len(facts) // len(facts_hdr)
+    facts_col = len(date) % len(facts)
+    period_facts = {x : facts[x::facts_col] for x in range(facts_col)}
+        
+    num_of_facts_y = len(facts) // len(date)
     
     if len(element) == num_of_facts_y:
-        facts_df = pd.DataFrame(consecutive_facts, index = element)
+        facts_df = pd.DataFrame(period_facts, index = element)
+        facts_df.columns = date
     else :
-        raise Exception('Number of elements and facts doesn\'t match')
+        raise Exception("Number of elements and facts doesn't match")
 
+    # do something with the month_ended. It must be included in the financial statements. 
+    # ...
+    
     return facts_df
 
 def get_10K_facts(cik_num, submission):
