@@ -35,13 +35,15 @@ def get_latest_10K(cik, latest):
     filename = [re.search('r\d', str(x)).group().upper() for x in li]
     file_list = dict(zip(element, filename))
 
-    # get links for 3 major financial statement
-    discard = ['parenthetical', 'comprehensive', 'stockholders']
+    # get links for 3 major financial statement.
+    # ignore statements of comprehensive income,
+    # parenthetical statement, and stockholder's equity
+    ignore = ['parenthetical', 'comprehensive', 'stockholders']
     base_link = f'https://www.sec.gov/Archives/edgar/data/{cik}/{latest}/'
     links = {}
 
     for k, v in file_list.items():
-        if any(x in k for x in discard) == False:
+        if any(x in k for x in ignore) == False:
             if re.search('income|operations?|earnings?', k, flags = re.I):
                 links['income_statement'] = base_link + v + '.htm'
             elif re.search('balance\ssheets?|financial\sposition', k, flags = re.I):
