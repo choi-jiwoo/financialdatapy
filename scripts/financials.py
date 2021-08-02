@@ -13,7 +13,7 @@ def get_facts(link):
     title, unit = title.split(' - ')
 
     split_pt = 0
-    for i, d in enumerate(facts_hdr):
+    for i, d in enumerate(facts_hdr, start = 1):
         try:
             parse(d)
         except:
@@ -23,8 +23,8 @@ def get_facts(link):
         month_ended = ['12 Months Ended']
         date = facts_hdr
     else:
-        month_ended = facts_hdr[:split_pt + 1]
-        date = facts_hdr[split_pt + 1:]
+        month_ended = facts_hdr[:split_pt]
+        date = facts_hdr[split_pt:]
 
     element_tbl = tbl.find_all(class_ = 'pl')
     element = [x.get_text() for x in element_tbl]
