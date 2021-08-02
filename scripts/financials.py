@@ -1,6 +1,5 @@
 import filings
 import request
-import pandas as pd
 from dateutil.parser import parse
 
 def get_facts(link):
@@ -34,20 +33,18 @@ def get_facts(link):
     facts = [x.get_text().strip() for x in facts_tbl]
 
     facts_col = len(date) % len(facts)
-    period_facts = {x : facts[x::facts_col] for x in range(facts_col)}
-        
+    period = len(date) // len(month_ended)
+    
+    facts_dict = {}
+    for i, v in enumerate(month_ended):
+        facts_dict[v] = {date[x] : facts[x::facts_col] for x in range(i*period, (i+1)*period)}
+
     num_of_facts_y = len(facts) // len(date)
     
     if len(element) == num_of_facts_y:
-        facts_df = pd.DataFrame(period_facts, index = element)
-        facts_df.columns = date
+        return facts_dict
     else :
         raise Exception("Number of elements and facts doesn't match")
-
-    # do something with the month_ended. It must be included in the financial statements. 
-    # ...
-    
-    return facts_df
 
 def get_10K_facts(cik_num, submission):
     if submission[submission['Form']=='10-K'].empty: print('No 10-K submitted.')
