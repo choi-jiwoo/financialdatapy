@@ -11,15 +11,16 @@ def main():
     db.save_in_db(cik_list)
 
     # Getting data from SEC
-    ticker = 'aapl'
+    ticker = 'aapl' # test for apple inc. for meantime
     cik_num = cik.search_cik(cik_list, ticker)
 
     # Getting list of submitted filings 
     submission = filings.get_filings_list(cik_num)
 
-    income_statement, balance_sheet, cash_flow = financials.get_10K_facts(
+    income_statement, balance_sheet, cash_flow = financials.get_form_facts(
         cik_num,
-        submission
+        submission,
+        '10-K'  # test for 10-K filing for meantime
     )
     
     # Do something with these financial statements data...
