@@ -20,8 +20,8 @@ def get_filings_list(cik):
 
     return filings
 
-# only for the latest 10-K filing 
-def get_latest_10K(cik, latest):
+# only for the latest filing 
+def get_latest_form(cik, latest):
     url = ('https://www.sec.gov/cgi-bin/viewer?action=view&'\
            f'cik={cik}&accession_number={latest}&xbrl_type=v')
     soup = request.request_data(url, 'html')
