@@ -9,9 +9,6 @@ def get_facts(link):
     facts_hdr = tbl.find_all(class_ = 'th')
     facts_hdr = [x.get_text() for x in facts_hdr]
 
-    title = tbl.find(class_ = 'tl').get_text()
-    title, unit = title.split(' - ')
-
     split_pt = 0
     for i, d in enumerate(facts_hdr, start = 1):
         try:
@@ -26,23 +23,33 @@ def get_facts(link):
         month_ended = facts_hdr[:split_pt]
         date = facts_hdr[split_pt:]
 
+    title = tbl.find(class_ = 'tl').get_text()
+    title, unit = title.split(' - ')
+
     element_tbl = tbl.find_all(class_ = 'pl')
     element = [x.get_text() for x in element_tbl]
 
     facts_tbl = tbl.find_all(class_ = ['nump', 'num', 'text'])
-    facts = [x.get_text().strip() for x in facts_tbl]
+    all_facts = [x.get_text().strip() for x in facts_tbl] # facts for all periods
 
-    facts_col = len(date) % len(facts)
-    period = len(date) // len(month_ended)
+    facts_col = len(date) % len(all_facts)
+    periods = len(date) // len(month_ended)
+    num_of_facts = len(all_facts) // len(date)
     
-    facts_dict = {}
-    for i, v in enumerate(month_ended):
-        facts_dict[v] = {date[x] : facts[x::facts_col] for x in range(i*period, (i+1)*period)}
+    if len(element) == num_of_facts:
+        facts = {
+            'title': title,
+            'unit': unit,
+            'element': element
+        }
+        for i, v in enumerate(month_ended):
+            facts_by_period = {
+                date[x]: 
+                    all_facts[x::facts_col] for x in range(i*periods, (i+1)*periods)
+            }
+            facts['facts'] = {v: facts_by_period}
 
-    num_of_facts_y = len(facts) // len(date)
-    
-    if len(element) == num_of_facts_y:
-        return facts_dict
+        return facts
     else :
         raise Exception("Number of elements and facts doesn't match")
 
