@@ -50,16 +50,15 @@ def get_facts(link):
             facts['facts'] = {v: facts_by_period}
 
         return facts
-    else :
+    else:
         raise Exception("Number of elements and facts doesn't match")
 
-def get_10K_facts(cik_num, submission):
-    if submission[submission['Form']=='10-K'].empty: print('No 10-K submitted.')
-    else:
+def get_form_facts(cik_num, submission, form_type):
+    if not submission[submission['Form']==form_type].empty:
         # get latest 10-K 
-        form_10K = submission[submission['Form']=='10-K']
-        latest_10K_filing = form_10K.iloc[0].at['AccessionNumber']
-        links = filings.get_latest_10K(cik_num, latest_10K_filing)
+        form = submission[submission['Form']==form_type]
+        latest_filing = form.iloc[0].at['AccessionNumber']
+        links = filings.get_latest_form(cik_num, latest_filing)
 
         # get facts
         is_l = links.get('income_statement')
@@ -71,4 +70,6 @@ def get_10K_facts(cik_num, submission):
         cf_l = links.get('cash_flow')
         cash_flow = get_facts(cf_l)
 
-    return income_statement, balance_sheet, cash_flow
+        return income_statement, balance_sheet, cash_flow
+    else:
+        raise Exception('Failed in getting facts.')
