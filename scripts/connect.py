@@ -2,7 +2,7 @@ import database
 import yaml
 
 def connect_db():
-    with open('../config/config.yml', 'r') as f:
+    with open('config/config.yml', 'r') as f:
         config = yaml.safe_load(f)
 
     mysql_pw = config['user']['mysql_password']
