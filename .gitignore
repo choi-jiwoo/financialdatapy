@@ -1,4 +1,4 @@
-venv
+/usstock
 .DS_Store
 .ipynb_checkpoints
 *.ipynb
@@ -6,5 +6,4 @@ venv
 /.vscode
 .env
 */__pycache__
-/docs
 /config
