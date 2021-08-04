@@ -55,11 +55,8 @@ class Database:
             diff = merged[merged['_merge'] != 'both']
 
             if not diff.empty:
-                try:
-                    self.delete_stock(diff)
-                    self.add_stock(diff)
-                except Exception as e:
-                    print(e)
+                self.delete_stock(diff)
+                self.add_stock(diff)
         else:
             latest_stock_list.to_sql(
                 self.table_name,
