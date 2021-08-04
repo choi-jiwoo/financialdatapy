@@ -47,12 +47,14 @@ def get_latest_form(cik, latest):
     links = {}
 
     for k, v in file_list.items():
-        if any(x in k for x in ignore) is False:
-            if re.search(r'income|operations?|earnings?', k, flags=re.I):
-                links['income_statement'] = base_link + v + '.htm'
-            elif re.search(r'balance\ssheets?|financial\sposition', k, flags=re.I):
-                links['balance_sheet'] = base_link + v + '.htm'
-            elif re.search(r'cash\sflows?', k, flags=re.I):
-                links['cash_flow'] = base_link + v + '.htm'
+        if any(x in k for x in ignore) is True:  # need comment
+            continue
+
+        if re.search(r'income|operations?|earnings?', k, flags=re.I):
+            links['income_statement'] = base_link + v + '.htm'
+        elif re.search(r'balance\ssheets?|financial\sposition', k, flags=re.I):
+            links['balance_sheet'] = base_link + v + '.htm'
+        elif re.search(r'cash\sflows?', k, flags=re.I):
+            links['cash_flow'] = base_link + v + '.htm'
 
     return links
