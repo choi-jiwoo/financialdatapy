@@ -1,19 +1,20 @@
+from dateutil.parser import parse
 import filings
 import request
-from dateutil.parser import parse
+
 
 def get_facts(link):
     soup = request.request_data(link, 'html')
     tbl = soup.find('table')
 
-    facts_hdr = tbl.find_all(class_ = 'th')
+    facts_hdr = tbl.find_all(class_='th')
     facts_hdr = [x.get_text() for x in facts_hdr]
 
     split_pt = 0
-    for i, d in enumerate(facts_hdr, start = 1):
+    for i, d in enumerate(facts_hdr, start=1):
         try:
             parse(d)
-        except:
+        except Exception:
             split_pt = i
 
     if split_pt == 0:
@@ -23,19 +24,20 @@ def get_facts(link):
         month_ended = facts_hdr[:split_pt]
         date = facts_hdr[split_pt:]
 
-    title = tbl.find(class_ = 'tl').get_text()
+    title = tbl.find(class_='tl').get_text()
     title, unit = title.split(' - ')
 
-    element_tbl = tbl.find_all(class_ = 'pl')
+    element_tbl = tbl.find_all(class_='pl')
     element = [x.get_text() for x in element_tbl]
 
-    facts_tbl = tbl.find_all(class_ = ['nump', 'num', 'text'])
-    all_facts = [x.get_text().strip() for x in facts_tbl] # facts for all periods
+    facts_tbl = tbl.find_all(class_=['nump', 'num', 'text'])
+    # facts for all periods
+    all_facts = [x.get_text().strip() for x in facts_tbl]
 
     facts_col = len(date) % len(all_facts)
     periods = len(date) // len(month_ended)
     num_of_facts = len(all_facts) // len(date)
-    
+
     if len(element) == num_of_facts:
         facts = {
             'title': title,
@@ -44,8 +46,10 @@ def get_facts(link):
         }
         for i, v in enumerate(month_ended):
             facts_by_period = {
-                date[x]: 
-                    all_facts[x::facts_col] for x in range(i*periods, (i+1)*periods)
+                date[x]:
+                    all_facts[x::facts_col]
+                    for x
+                    in range(i*periods, (i+1)*periods)
             }
             facts['facts'] = {v: facts_by_period}
 
@@ -53,10 +57,11 @@ def get_facts(link):
     else:
         raise Exception("Number of elements and facts doesn't match")
 
+
 def get_form_facts(cik_num, submission, form_type):
-    if not submission[submission['Form']==form_type].empty:
-        # get latest 10-K 
-        form = submission[submission['Form']==form_type]
+    if not submission[submission['Form'] == form_type].empty:
+        # get latest 10-K
+        form = submission[submission['Form'] == form_type]
         latest_filing = form.iloc[0].at['AccessionNumber']
         links = filings.get_latest_form(cik_num, latest_filing)
 
