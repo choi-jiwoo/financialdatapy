@@ -47,7 +47,7 @@ def get_latest_form(cik, latest):
     links = {}
 
     for k, v in file_list.items():
-        if any(x in k for x in ignore) is True:  # need comment
+        if any(x in k for x in ignore):
             continue
 
         if re.search(r'income|operations?|earnings?', k, flags=re.I):
