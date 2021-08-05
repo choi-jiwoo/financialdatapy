@@ -1,7 +1,6 @@
 import cik
 import connect
 import filings
-import financials
 
 
 def main():
@@ -18,7 +17,7 @@ def main():
     # Getting list of submitted filings
     submission = filings.get_filings_list(cik_num)
 
-    income_statement, balance_sheet, cash_flow = financials.get_form_facts(
+    income_statement, balance_sheet, cash_flow = filings.get_form_facts(
         cik_num,
         submission,
         '10-K'  # test for 10-K filing for meantime
