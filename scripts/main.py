@@ -17,10 +17,11 @@ def main():
     # Getting list of submitted filings
     submission = filings.get_filings_list(cik_num)
 
-    income_statement, balance_sheet, cash_flow = filings.get_form_facts(
+    form_type = '10-K'
+    income_statement, balance_sheet, cash_flow = filings.get_facts_by_form(
         cik_num,
         submission,
-        '10-K'  # test for 10-K filing for meantime
+        form_type  # test for 10-K filing for meantime
     )
 
     # Do something with these financial statements data...
