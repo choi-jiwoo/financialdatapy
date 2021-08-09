@@ -61,6 +61,27 @@ def get_latest_form(cik, latest):
     return links
 
 
+def get_facts_by_form(cik_num, submission, form_type):
+    if not submission[submission['Form'] == form_type].empty:
+        # get latest filing
+        form = submission[submission['Form'] == form_type]
+        latest_filing = form.iloc[0].at['AccessionNumber']
+        links = get_latest_form(cik_num, latest_filing)
+
+        is_l = links.get('income_statement')
+        income_statement = get_facts(is_l)
+
+        bs_l = links.get('balance_sheet')
+        balance_sheet = get_facts(bs_l)
+
+        cf_l = links.get('cash_flow')
+        cash_flow = get_facts(cf_l)
+
+        return income_statement, balance_sheet, cash_flow
+    else:
+        raise Exception('Failed in getting facts.')
+
+
 def get_facts(link):
     soup = request.request_data(link, 'html')
     tbl = soup.find('table')
@@ -114,25 +135,3 @@ def get_facts(link):
         return facts
     else:
         raise Exception("Number of elements and facts doesn't match")
-
-
-def get_form_facts(cik_num, submission, form_type):
-    if not submission[submission['Form'] == form_type].empty:
-        # get latest 10-K
-        form = submission[submission['Form'] == form_type]
-        latest_filing = form.iloc[0].at['AccessionNumber']
-        links = get_latest_form(cik_num, latest_filing)
-
-        # get facts
-        is_l = links.get('income_statement')
-        income_statement = get_facts(is_l)
-
-        bs_l = links.get('balance_sheet')
-        balance_sheet = get_facts(bs_l)
-
-        cf_l = links.get('cash_flow')
-        cash_flow = get_facts(cf_l)
-
-        return income_statement, balance_sheet, cash_flow
-    else:
-        raise Exception('Failed in getting facts.')
