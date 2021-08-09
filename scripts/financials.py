@@ -1,18 +1,31 @@
+import pandas as pd
 import yaml
 import request
 
 
-def get_standardized_financials(ticker):
+def get_std_financials(ticker: str, financial_statement: str) -> pd.DataFrame:
+    """Get standardized financials of a company.
+
+    Args:
+        ticker (str): company ticker
+        financial_statement (str): which financial statement to receive
+
+    Returns:
+        pd.DataFrame: [description]
+    """
     with open('config/config.yml', 'r') as f:
         config = yaml.safe_load(f)
 
     api_key = config['user']['financialmodelingprep_api_key']
-    # list 3 major financials for the meantime. Must be modified soon
-    ic = 'income-statement'
-    bs = 'balance-sheet-statement'
-    cf = 'cash-flow-statement'
-
     base_url = 'https://financialmodelingprep.com/api/v3/'
-    param = f'{ic}/{ticker}?limit=120&apikey={api_key}'
+    param = f'{financial_statement}/{ticker}?limit=120&apikey={api_key}'
     url = base_url + param
-    financial_data = request.request_data(url, 'json')
+
+    data = request.request_data(url, 'json')
+    df = pd.DataFrame(data)
+    # columns 0~5 : filing info
+    # last two columns : filing url
+    financial_data = df.iloc[:, 6:-2].T
+    financial_data.columns = df['date'].values
+
+    return financial_data
