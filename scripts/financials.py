@@ -1,6 +1,6 @@
 import pandas as pd
 import yaml
-import request
+from scripts import request
 
 
 def get_std_financials(ticker: str, financial_statement: str) -> pd.DataFrame:
