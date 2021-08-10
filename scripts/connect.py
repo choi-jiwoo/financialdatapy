@@ -1,5 +1,5 @@
 import yaml
-import database
+from scripts.database import Database
 
 
 def connect_db():
@@ -11,7 +11,7 @@ def connect_db():
     table_name = 'stock_list'
 
     try:
-        db = database.Database(mysql_pw, db_name, table_name)
+        db = Database(mysql_pw, db_name, table_name)
         return db
     except Exception as e:
         print(e)
