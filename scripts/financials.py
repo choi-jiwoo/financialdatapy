@@ -23,9 +23,23 @@ def get_std_financials(ticker: str, financial_statement: str) -> pd.DataFrame:
 
     data = request.request_data(url, 'json')
     df = pd.DataFrame(data)
+    new_name = [
+        ''.join(map(lambda y: y if y.islower() else ' '+y, x)).capitalize()
+        for x
+        in df.index
+    ]
+    df.index = new_name
+    df = df.rename(
+        index={
+            'Epsdiluted': 'Eps diluted',
+            'Ebitdaratio': 'Ebitda ratio'
+        }
+    )
     # columns 0~5 : filing info
     # last two columns : filing url
-    financial_data = df.iloc[:, 6:-2].T
+    start_pos = 6
+    end_pos = -2
+    financial_data = df.iloc[:, start_pos:end_pos].T
     financial_data.columns = df['date'].values
 
     return financial_data
