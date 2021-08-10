@@ -1,6 +1,6 @@
-import cik
-import connect
-import filings
+from scripts import cik
+from scripts import connect
+from scripts import filings
 
 
 def main():
