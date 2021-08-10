@@ -1,7 +1,7 @@
 from dateutil.parser import parse
 import pandas as pd
 import re
-import request
+from scripts import request
 
 
 def get_filings_list(cik):
