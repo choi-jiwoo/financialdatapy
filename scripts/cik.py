@@ -1,7 +1,7 @@
 import pandas as pd
 from string import capwords
 import re
-import request
+from scripts import request
 
 
 def get_cik():
