@@ -1,45 +1,36 @@
 import pandas as pd
-import yaml
 from scripts import request
 
 
-def get_std_financials(ticker: str, financial_statement: str) -> pd.DataFrame:
-    """Get standardized financials of a company.
+def get_std_financials(ticker: str, which_financial: str) -> pd.DataFrame:
+    period = {
+        'annual': '1',
+        'quarter': '2'
+    }
+    financials = {
+        'ic': 'incomeStatementTable',
+        'bs': 'balanceSheetTable',
+        'cf': 'cashFlowTable'
+    }
 
-    Args:
-        ticker (str): company ticker
-        financial_statement (str): which financial statement to receive
-
-    Returns:
-        pd.DataFrame: [description]
-    """
-    with open('config/config.yml', 'r') as f:
-        config = yaml.safe_load(f)
-
-    api_key = config['user']['financialmodelingprep_api_key']
-    base_url = 'https://financialmodelingprep.com/api/v3/'
-    param = f'{financial_statement}/{ticker}?limit=120&apikey={api_key}'
-    url = base_url + param
-
+    url = ('https://api.nasdaq.com/api/company/'
+           f'{ticker}/financials?frequency={period["annual"]}')
     data = request.request_data(url, 'json')
-    df = pd.DataFrame(data)
-    new_name = [
-        ''.join(map(lambda y: y if y.islower() else ' '+y, x)).capitalize()
-        for x
-        in df.index
-    ]
-    df.index = new_name
-    df = df.rename(
-        index={
-            'Epsdiluted': 'Eps diluted',
-            'Ebitdaratio': 'Ebitda ratio'
-        }
-    )
-    # columns 0~5 : filing info
-    # last two columns : filing url
-    start_pos = 6
-    end_pos = -2
-    financial_data = df.iloc[:, start_pos:end_pos].T
-    financial_data.columns = df['date'].values
 
-    return financial_data
+    financial_statement = get_statements(data, financials[which_financial])
+
+    return financial_statement
+
+
+def get_statements(data: dict, financials_name: str) -> pd.DataFrame:
+    try:
+        financial = data['data'][financials_name]
+        df = pd.DataFrame(financial['rows'])
+        df.columns = financial['headers'].values()
+        df.index = df.iloc[:, 0]
+        df.drop(df.columns[[0]], axis=1, inplace=True)
+
+        return df
+    except Exception as e:
+        print(e)
+        return
