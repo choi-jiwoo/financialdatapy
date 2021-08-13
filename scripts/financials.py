@@ -19,7 +19,8 @@ def get_std_financials(ticker: str,
     data = request.request_data(url, 'json')
 
     del data['currency']
-    del data['data']['Period Length']
+    if 'Period Length' in data['data']:
+        del data['data']['Period Length']
 
     financial_statement = get_statements(data)
 
