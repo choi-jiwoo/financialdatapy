@@ -21,7 +21,7 @@ class Database:
         self.connection = pymysql.connect(
             host='localhost',
             user='root',
-            password=mysql_pw
+            password=mysql_pw,
         )
         self.cursor = self.connection.cursor()
 
@@ -50,7 +50,7 @@ class Database:
                 old_stock_list,
                 latest_stock_list,
                 how='outer',
-                indicator=True
+                indicator=True,
             )
             diff = merged[merged['_merge'] != 'both']
 
@@ -62,7 +62,7 @@ class Database:
                 self.table_name,
                 self.engine,
                 self.db_name,
-                index=False
+                index=False,
             )
 
     def read_table(self):
@@ -75,7 +75,7 @@ class Database:
             stock_list = pd.read_sql_table(
                 self.table_name,
                 self.engine,
-                self.db_name
+                self.db_name,
             )
             return stock_list
         except Exception as e:
