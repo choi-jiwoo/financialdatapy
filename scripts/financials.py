@@ -39,6 +39,14 @@ def get_statements(data: dict) -> pd.DataFrame():
 
         values_unit = 1_000_000
         df = df * values_unit
+
+        ignore_word = ['eps', 'employee', 'number']
+
+        for i in df.index:
+            for word in ignore_word:
+                if word in i.lower():
+                    df.loc[i] /= 1_000_000
+
     except Exception as e:
         print(e)
 
