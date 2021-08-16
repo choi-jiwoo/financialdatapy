@@ -1,7 +1,7 @@
 {
     "Net Income": "당기순이익",
     "Depreciation/Depletion": "감가상각비",
-    "Amortization": "무형자산상각",
+    "Amortization": "무형자산상각비",
     "Deferred Taxes": "이연법인세",
     "Non-Cash Items": "비현금항목",
     "Changes in Working Capital": "영업활동으로 인한 자산부채의 변동",
@@ -18,6 +18,6 @@
     "Net Cash - Beginning Balance": "기초현금및현금성자산",
     "Net Cash - Ending Balance": "기말현금및현금성자산",
     "Net Change in Cash": "현금순증감",
-    "Cash Interest Paid": "이자의 지급",
-    "Cash Taxes Paid": "법인세 납부액"
+    "Cash Interest Paid": "이자지급",
+    "Cash Taxes Paid": "법인세납부액"
 }

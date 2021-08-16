@@ -34,5 +34,13 @@
     "Total Liabilities and Equity": "부채와자본총계",
     "Total Common Shares Outstanding": "보통주 발행 주식수",
     "Full-Time Employees": "직원수",
-    "Number of Common Shareholders": "주주명부상의 주주수"
+    "Number of Common Shareholders": "주주명부상의 주주수",
+    "Cash & Due From Banks": "현금 및 예치금",
+    "Net Loans": "순대출금",
+    "Total Deposits": "예수금",
+    "Other Bearing Liabilities": "기타부담부채",
+    "Total Short Term Borrowings": "단기차입금",
+    "Cash": "현금",
+    "Insurance Receivables": "보험미지급금",
+    "Policy Liabilities": "보험계약부채"
 }

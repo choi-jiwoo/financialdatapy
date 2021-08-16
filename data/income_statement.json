@@ -16,5 +16,16 @@
     "Income Avail. to Common Incl. Extraord.": "특별손익항목차감후당기순이익",
     "Diluted Average Shares": "희석된가중평균주식수",
     "Diluted EPS Excl. Extraord.": "특별손익항목제외희석주당순이익",
-    "Diluted EPS Incl. Extraord.": "희석주당순이익"
+    "Diluted EPS Incl. Extraord.": "희석주당순이익",
+    "Interest Income": "이자수익",
+    "Total Interest Expenses": "이자비용",
+    "Net Interest Income": "순이자수익",
+    "Loan Loss Provision": "대손충당금",
+    "Net Interest Income After Loan Loss Provision": "충당금적립후순이자수익",
+    "Non-Interest Income": "비이자수익",
+    "Non-Interest Expense": "비이자비용",
+    "Total Premiums Earned": "보험료수익",
+    "Net Investment Income": "투자이익",
+    "Realized and Unrealized Gains (Losses)": "미실현이익 (손실)",
+    "Losses, Benefits, and Adjustments": "손해사정 및 보험영업손익"
 }
