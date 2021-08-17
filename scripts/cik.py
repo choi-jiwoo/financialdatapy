@@ -4,9 +4,10 @@ import re
 from scripts import request
 
 
-def get_cik():
+def get_cik() -> pd.DataFrame:
     url = 'https://www.sec.gov/files/company_tickers_exchange.json'
-    cik_data = request.request_data(url, 'json')
+    res = request.Request(url)
+    cik_data = res.get_json()
 
     cik_list = pd.DataFrame(cik_data['data'], columns=cik_data['fields'])
 
@@ -31,7 +32,7 @@ def get_cik():
     return cik_list
 
 
-def search_cik(cik_list, ticker):
+def search_cik(cik_list: pd.DataFrame, ticker: str) -> str:
     ticker = ticker.upper()
     ticker_df = cik_list[cik_list['ticker'] == ticker]
     cik = ticker_df.get('cik').item()
