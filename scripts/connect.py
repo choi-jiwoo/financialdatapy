@@ -2,7 +2,7 @@ import yaml
 from scripts.database import Database
 
 
-def connect_db():
+def connect_db() -> Database:
     with open('config/config.yml', 'r') as f:
         config = yaml.safe_load(f)
 
