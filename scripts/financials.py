@@ -1,10 +1,11 @@
 import pandas as pd
+import json
 from scripts import request
 
 
 def get_std_financials(ticker: str,
                        which_financial: str,
-                       period: str = 'annual') -> dict:
+                       period: str = 'annual') -> pd.DataFrame():
     financials = {
         'income_statement': 'I',
         'balance_sheet': 'B',
@@ -18,17 +19,17 @@ def get_std_financials(ticker: str,
     url = f'https://finviz.com/api/statement.ashx?t={ticker}&s={statement}'
     data = request.request_data(url, 'json')
 
-    del data['currency']
-    if 'Period Length' in data['data']:
-        del data['data']['Period Length']
-
-    financial_statement = get_statements(data)
+    financial_statement = convert_to_table(data)
 
     return financial_statement
 
 
-def get_statements(data: dict) -> pd.DataFrame():
+def convert_to_table(data: dict) -> pd.DataFrame():
     try:
+        del data['currency']
+        if 'Period Length' in data['data']:
+            del data['data']['Period Length']
+
         df = pd.DataFrame(data['data']).T
         df.columns = df.iloc[0, :].values
         df.drop(df.index[[0]], axis=0, inplace=True)
@@ -41,7 +42,6 @@ def get_statements(data: dict) -> pd.DataFrame():
         df = df * values_unit
 
         ignore_word = ['eps', 'employee', 'number']
-
         for i in df.index:
             for word in ignore_word:
                 if word in i.lower():
@@ -51,3 +51,14 @@ def get_statements(data: dict) -> pd.DataFrame():
         print(e)
 
     return df
+
+
+def convert_into_korean(statement) -> pd.DataFrame():
+    # elements of financial statements mapped with translation in korean.
+    with open('data/statements_kor.json', 'r') as f:
+        stmts_in_kor = json.load(f)
+
+    for i in statement.index:
+        statement.rename(index={i: stmts_in_kor[i]}, inplace=True)
+
+    return statement
