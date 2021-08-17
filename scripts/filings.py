@@ -48,7 +48,7 @@ def get_latest_form(cik, latest):
     links = {}
 
     for k, v in file_list.items():
-        if any(x in k for x in ignore):
+        if any(x in k.lower() for x in ignore):
             continue
 
         if re.search(r'income|operations?|earnings?', k, flags=re.I):
@@ -121,7 +121,8 @@ def get_facts(link):
         facts = {
             'title': title,
             'unit': unit,
-            'element': element
+            'element': element,
+            'facts' : []
         }
         for i, v in enumerate(month_ended):
             facts_by_period = {
@@ -130,7 +131,7 @@ def get_facts(link):
                     for x
                     in range(i*periods, (i+1)*periods)
             }
-            facts['facts'] = {v: facts_by_period}
+            facts['facts'].append({v: facts_by_period})
 
         return facts
     else:
