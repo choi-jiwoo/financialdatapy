@@ -5,7 +5,7 @@ from scripts import request
 
 def get_std_financials(ticker: str,
                        which_financial: str,
-                       period: str = 'annual') -> pd.DataFrame():
+                       period: str = 'annual') -> pd.DataFrame:
     financials = {
         'income_statement': 'I',
         'balance_sheet': 'B',
@@ -17,14 +17,15 @@ def get_std_financials(ticker: str,
     }
     statement = financials[which_financial] + periods[period]
     url = f'https://finviz.com/api/statement.ashx?t={ticker}&s={statement}'
-    data = request.request_data(url, 'json')
+    res = request.Request(url)
+    data = res.get_json()
 
     financial_statement = convert_to_table(data)
 
     return financial_statement
 
 
-def convert_to_table(data: dict) -> pd.DataFrame():
+def convert_to_table(data: dict) -> pd.DataFrame:
     try:
         del data['currency']
         if 'Period Length' in data['data']:
@@ -53,7 +54,7 @@ def convert_to_table(data: dict) -> pd.DataFrame():
     return df
 
 
-def convert_into_korean(statement) -> pd.DataFrame():
+def convert_into_korean(statement: pd.DataFrame) -> pd.DataFrame:
     # elements of financial statements mapped with translation in korean.
     with open('data/statements_kor.json', 'r') as f:
         stmts_in_kor = json.load(f)

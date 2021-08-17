@@ -4,9 +4,10 @@ import re
 from scripts import request
 
 
-def get_filings_list(cik):
+def get_filings_list(cik: str) -> pd.DataFrame:
     url = f'http://data.sec.gov/submissions/CIK{cik}.json'
-    data = request.request_data(url, 'json')
+    res = request.Request(url)
+    data = res.get_json()
     info = data['filings']['recent']
 
     acc = info['accessionNumber']
@@ -24,10 +25,11 @@ def get_filings_list(cik):
 
 
 # only for the latest filing
-def get_latest_form(cik, latest):
+def get_latest_form(cik: str, latest: str) -> dict:
     url = ('https://www.sec.gov/cgi-bin/viewer?action=view&'
            f'cik={cik}&accession_number={latest}&xbrl_type=v')
-    soup = request.request_data(url, 'html')
+    res = request.Request(url)
+    soup = res.get_soup()
 
     menu = soup.find(id='menu')
     a = menu.find_next('a', string='Financial Statements')
@@ -61,7 +63,8 @@ def get_latest_form(cik, latest):
     return links
 
 
-def get_facts_by_form(cik_num, submission, form_type):
+def get_facts_by_form(cik_num: str, submission: pd.DataFrame,
+                      form_type: str) -> dict:
     if not submission[submission['Form'] == form_type].empty:
         # get latest filing
         form = submission[submission['Form'] == form_type]
@@ -82,8 +85,9 @@ def get_facts_by_form(cik_num, submission, form_type):
         raise Exception('Failed in getting facts.')
 
 
-def get_facts(link):
-    soup = request.request_data(link, 'html')
+def get_facts(link: str) -> dict:
+    res = request.Request(link)
+    soup = res.get_soup()
     tbl = soup.find('table')
 
     facts_hdr = tbl.find_all(class_='th')
