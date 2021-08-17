@@ -122,7 +122,7 @@ def get_facts(link):
             'title': title,
             'unit': unit,
             'element': element,
-            'facts' : []
+            'facts': []
         }
         for i, v in enumerate(month_ended):
             facts_by_period = {
