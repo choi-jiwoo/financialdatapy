@@ -4,7 +4,7 @@ import pandas as pd
 
 
 class Database:
-    def __init__(self, mysql_pw, db_name, table_name) -> None:
+    def __init__(self, mysql_pw: str, db_name: str, table_name: str) -> None:
         """connect to a mysql server
 
         Args:
@@ -32,7 +32,7 @@ class Database:
         query = f'USE {self.db_name}'
         self.cursor.execute(query)
 
-    def save_in_db(self, latest_stock_list):
+    def save_in_db(self, latest_stock_list: pd.DataFrame) -> None:
         """save latest stock list in database
 
         stocks that are not in the latest stock list
@@ -65,7 +65,7 @@ class Database:
                 index=False,
             )
 
-    def read_table(self):
+    def read_table(self) -> pd.DataFrame:
         """get stock list saved in the database
 
         Returns:
@@ -81,7 +81,7 @@ class Database:
         except Exception as e:
             print(e)
 
-    def delete_stock(self, diff):
+    def delete_stock(self, diff: pd.DataFrame) -> None:
         """Delete stocks from stock list database.
 
         Retrieve rows which the value in column '_merge' is 'left_only' since
@@ -104,7 +104,7 @@ class Database:
         except Exception as e:
             print(e)
 
-    def add_stock(self, diff):
+    def add_stock(self, diff: pd.DataFrame) -> None:
         """add stocks to stock list database.
 
         Args:
@@ -124,7 +124,7 @@ class Database:
         except Exception as e:
             print(e)
 
-    def __del__(self):
+    def __del__(self) -> None:
         """close database connection
         """
         self.connection.close()
