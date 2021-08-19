@@ -32,10 +32,12 @@ def convert_to_table(data: dict) -> pd.DataFrame:
             del data['data']['Period Length']
 
         df = pd.DataFrame(data['data']).T
-        df.columns = df.iloc[0, :].values
-        df.drop(df.index[[0]], axis=0, inplace=True)
-        df = df.replace(',', '', regex=True)
+        date = df.iloc[0, :].values
+        df.columns = date
+        row_with_dates = df.index[[0]]
+        df.drop(row_with_dates, axis='index', inplace=True)
 
+        df = df.replace(',', '', regex=True)
         for i in df:
             df[i] = pd.to_numeric(df[i])
 
