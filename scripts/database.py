@@ -4,24 +4,33 @@ import pandas as pd
 
 
 class Database:
-    def __init__(self, mysql_pw: str, db_name: str, table_name: str) -> None:
+    def __init__(self, user: str, mysql_pw: str,
+                 host: str, db_name: str, table_name: str) -> None:
         """connect to a mysql server
 
         Args:
+            user (string): RDBMS username
             mysql_pw (string): RDBMS password
+            host (string): RDBMS host
             db_name (string): database name to work in
             table_name (string): table name to work in
         """
+        self.user = user
+        self.mysql_pw = mysql_pw
+        self.host = host
         self.db_name = db_name
         self.table_name = table_name
+
         self.engine = create_engine(
-            f'mysql+mysqldb://root:{mysql_pw}@localhost/', encoding='utf-8'
+            f'mysql+mysqldb://{self.user}:{self.mysql_pw}@{self.host}/',
+            encoding='utf-8'
         )
         self.insp = inspect(self.engine)
+
         self.connection = pymysql.connect(
-            host='localhost',
-            user='root',
-            password=mysql_pw,
+            host=self.host,
+            user=self.user,
+            password=self.mysql_pw,
         )
         self.cursor = self.connection.cursor()
 
@@ -71,15 +80,12 @@ class Database:
         Returns:
             dataframe: stock list saved in the database
         """
-        try:
-            stock_list = pd.read_sql_table(
-                self.table_name,
-                self.engine,
-                self.db_name,
-            )
-            return stock_list
-        except Exception as e:
-            print(e)
+        stock_list = pd.read_sql_table(
+            self.table_name,
+            self.engine,
+            self.db_name,
+        )
+        return stock_list
 
     def delete_stock(self, diff: pd.DataFrame) -> None:
         """Delete stocks from stock list database.
@@ -96,12 +102,12 @@ class Database:
 
         try:
             for i in old['Symbol']:
-                query = f'DELETE FROM {self.table_name} WHERE Symbol=%s'
+                query = f'DELETE FROM {self.table_name} WHERE ticker=%s'
                 self.cursor.execute(query, i)
 
             self.connection.commit()
 
-        except Exception as e:
+        except pymysql.ProgrammingError as e:
             print(e)
 
     def add_stock(self, diff: pd.DataFrame) -> None:
@@ -121,7 +127,7 @@ class Database:
 
             self.connection.commit()
 
-        except Exception as e:
+        except pymysql.ProgrammingError as e:
             print(e)
 
     def __del__(self) -> None:
