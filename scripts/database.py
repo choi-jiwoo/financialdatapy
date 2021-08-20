@@ -29,7 +29,7 @@ class Database:
         self.db_url = (f'{self.rdb}+{self.dbapi}://'
                        f'{self.user}:{self.pw}@{self.host}/')
         self.engine = create_engine(
-            url=db_url,
+            url=self.db_url,
             encoding='utf-8',
         )
         self.insp = inspect(self.engine)
@@ -40,7 +40,14 @@ class Database:
             password=self.pw,
         )
         self.cursor = self.connection.cursor()
+        try:
+            self.setup_db()
+        except (pymysql.ProgrammingError, pymysql.OperationalError) as e:
+            print(e)
 
+    def setup_db(self) -> None:
+        """Choose a database to operate.
+        """
         query = f'CREATE DATABASE IF NOT EXISTS {self.db_name}'
         self.cursor.execute(query)
 
