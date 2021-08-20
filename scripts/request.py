@@ -3,6 +3,9 @@ import json
 from bs4 import BeautifulSoup
 
 
+class ConnectionError(Exception):
+    pass
+
 # Request data from sec.gov
 class Request():
     def __init__(self, url: str) -> None:
@@ -13,7 +16,7 @@ class Request():
         res = requests.get(self.url, headers=headers)
 
         if not res.ok:
-            raise Exception('Bad response')
+            raise ConnectionError('Bad response')
 
         return res
 
