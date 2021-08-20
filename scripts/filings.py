@@ -18,7 +18,7 @@ def get_filings_list(cik: str) -> pd.DataFrame:
 
     filings = pd.DataFrame(
         zip(acc, form, doc, date),
-        columns=['AccessionNumber', 'Form', 'PrimaryDocument', 'Date']
+        columns=['AccessionNumber', 'Form', 'PrimaryDocument', 'Date'],
     )
 
     return filings
@@ -126,7 +126,7 @@ def get_facts(link: str) -> dict:
             'title': title,
             'unit': unit,
             'element': element,
-            'facts': []
+            'facts': [],
         }
         for i, v in enumerate(month_ended):
             facts_by_period = {
