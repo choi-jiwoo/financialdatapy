@@ -14,6 +14,7 @@ def connect_db() -> Database:
 
     try:
         db = Database(user, mysql_pw, host, db_name, table_name)
-        return db
     except Exception as e:
         print(e)
+    else:
+        return db
