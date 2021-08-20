@@ -26,32 +26,28 @@ def get_std_financials(ticker: str,
 
 
 def convert_to_table(data: dict) -> pd.DataFrame:
-    try:
-        del data['currency']
-        if 'Period Length' in data['data']:
-            del data['data']['Period Length']
+    del data['currency']
+    if 'Period Length' in data['data']:
+        del data['data']['Period Length']
 
-        df = pd.DataFrame(data['data']).T
-        date = df.iloc[0, :].values
-        df.columns = date
-        row_with_dates = df.index[[0]]
-        df.drop(row_with_dates, axis='index', inplace=True)
+    df = pd.DataFrame(data['data']).T
+    date = df.iloc[0, :].values
+    df.columns = date
+    row_with_dates = df.index[[0]]
+    df.drop(row_with_dates, axis='index', inplace=True)
 
-        df = df.replace(',', '', regex=True)
-        for i in df:
-            df[i] = pd.to_numeric(df[i])
+    df = df.replace(',', '', regex=True)
+    for i in df:
+        df[i] = pd.to_numeric(df[i])
 
-        values_unit = 1_000_000
-        df = df * values_unit
+    values_unit = 1_000_000
+    df = df * values_unit
 
-        ignore_word = ['eps', 'employee', 'number']
-        for i in df.index:
-            for word in ignore_word:
-                if word in i.lower():
-                    df.loc[i] /= 1_000_000
-
-    except Exception as e:
-        print(e)
+    ignore_word = ['eps', 'employee', 'number']
+    for i in df.index:
+        for word in ignore_word:
+            if word in i.lower():
+                df.loc[i] /= 1_000_000
 
     return df
 
