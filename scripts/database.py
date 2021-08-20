@@ -4,25 +4,32 @@ import pandas as pd
 
 
 class Database:
-    def __init__(self, user: str, mysql_pw: str,
-                 host: str, db_name: str, table_name: str) -> None:
+    def __init__(self, rdb: str, dbapi: str,
+                 user: str, pw: str, host: str,
+                 db_name: str, table_name: str) -> None:
         """connect to a mysql server
 
         Args:
-            user (string): mysql username
-            mysql_pw (string): mysql password
-            host (string): mysql host
-            db_name (string): database name to work in
-            table_name (string): table name to work in
+            rpd (string): Relational Database Management System
+            dbapi (string): Database API
+            user (string): RDBMS username
+            pw (string): RDBMS password
+            host (string): RDBMS host
+            db_name (string): database to work in
+            table_name (string): table to work in
         """
+        self.rdb = rdb
+        self.dbapi = dbapi
         self.user = user
-        self.mysql_pw = mysql_pw
+        self.pw = pw
         self.host = host
         self.db_name = db_name
         self.table_name = table_name
 
+        self.db_url = (f'{self.rdb}+{self.dbapi}://'
+                       f'{self.user}:{self.pw}@{self.host}/')
         self.engine = create_engine(
-            f'mysql+mysqldb://{self.user}:{self.mysql_pw}@{self.host}/',
+            url=db_url,
             encoding='utf-8',
         )
         self.insp = inspect(self.engine)
@@ -30,7 +37,7 @@ class Database:
         self.connection = pymysql.connect(
             host=self.host,
             user=self.user,
-            password=self.mysql_pw,
+            password=self.pw,
         )
         self.cursor = self.connection.cursor()
 
