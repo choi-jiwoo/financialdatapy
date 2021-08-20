@@ -9,9 +9,9 @@ class Database:
         """connect to a mysql server
 
         Args:
-            user (string): RDBMS username
-            mysql_pw (string): RDBMS password
-            host (string): RDBMS host
+            user (string): mysql username
+            mysql_pw (string): mysql password
+            host (string): mysql host
             db_name (string): database name to work in
             table_name (string): table name to work in
         """
@@ -23,7 +23,7 @@ class Database:
 
         self.engine = create_engine(
             f'mysql+mysqldb://{self.user}:{self.mysql_pw}@{self.host}/',
-            encoding='utf-8'
+            encoding='utf-8',
         )
         self.insp = inspect(self.engine)
 
@@ -36,10 +36,11 @@ class Database:
 
         query = f'CREATE DATABASE IF NOT EXISTS {self.db_name}'
         self.cursor.execute(query)
-        self.connection.commit()
 
         query = f'USE {self.db_name}'
         self.cursor.execute(query)
+
+        self.connection.commit()
 
     def save_in_db(self, latest_stock_list: pd.DataFrame) -> None:
         """save latest stock list in database
