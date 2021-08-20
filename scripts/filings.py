@@ -1,7 +1,15 @@
-from dateutil.parser import parse
+from dateutil import parser
 import pandas as pd
 import re
 from scripts import request
+
+
+class EmptyDataFrameError(Exception):
+    pass
+
+
+class ImbalanceNumberOfFactsError(Exception):
+    pass
 
 
 def get_filings_list(cik: str) -> pd.DataFrame:
@@ -82,7 +90,7 @@ def get_facts_by_form(cik_num: str, submission: pd.DataFrame,
 
         return income_statement, balance_sheet, cash_flow
     else:
-        raise Exception('Failed in getting facts.')
+        raise EmptyDataFrameError('Failed in getting facts.')
 
 
 def get_facts(link: str) -> dict:
@@ -97,7 +105,7 @@ def get_facts(link: str) -> dict:
     for i, d in enumerate(facts_hdr, start=1):
         try:
             parse(d)
-        except Exception:
+        except parser.ParserError:
             split_pt = i
 
     if split_pt == 0:
@@ -139,4 +147,5 @@ def get_facts(link: str) -> dict:
 
         return facts
     else:
-        raise Exception("Number of elements and facts doesn't match")
+        raise ImbalanceNumberOfFactsError(
+            "Number of elements and facts doesn't match")
