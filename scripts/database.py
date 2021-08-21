@@ -7,16 +7,16 @@ class Database:
     def __init__(self, rdb: str, dbapi: str,
                  user: str, pw: str, host: str,
                  db_name: str, table_name: str) -> None:
-        """connect to a mysql server
+        """Connect to a database server and choose which database to use.
 
         Args:
-            rpd (string): Relational Database Management System
-            dbapi (string): Database API
-            user (string): RDBMS username
-            pw (string): RDBMS password
-            host (string): RDBMS host
-            db_name (string): database to work in
-            table_name (string): table to work in
+            rpd: Relational Database Management System.
+            dbapi: Database API.
+            user: RDBMS username.
+            pw: RDBMS password.
+            host: RDBMS host.
+            db_name: Database to work in.
+            table_name: Database table to work in.
         """
         self.rdb = rdb
         self.dbapi = dbapi
@@ -57,14 +57,14 @@ class Database:
         self.connection.commit()
 
     def save_in_db(self, latest_stock_list: pd.DataFrame) -> None:
-        """save latest stock list in database
+        """Save latest stock list in database.
 
-        stocks that are not in the latest stock list
-        will have 'left_only' value whereas new stocks
-        will have 'right_only' value under '_merge' column
+        Stocks that are not in the latest stock list
+        will have 'left_only' value, whereas new stocks
+        will have 'right_only' value under '_merge' column.
 
         Args:
-            latest_stock_list (dataframe): latest stock list
+            latest_stock_list: Latest stock list.
         """
         check = self.insp.has_table(self.table_name, self.db_name)
 
@@ -90,10 +90,10 @@ class Database:
             )
 
     def read_table(self) -> pd.DataFrame:
-        """get stock list saved in the database
+        """Get stock list saved in the database.
 
         Returns:
-            dataframe: stock list saved in the database
+            Stock list.
         """
         stock_list = pd.read_sql_table(
             self.table_name,
@@ -103,16 +103,17 @@ class Database:
         return stock_list
 
     def delete_stock(self, diff: pd.DataFrame) -> None:
-        """Delete stocks from stock list database.
+        """Delete delisted stocks in the stock list.
 
         Retrieve rows which the value in column '_merge' is 'left_only' since
         'left_only' is the ones that are not in the latest stock list. Then
-        deletes it from the stock_list database.
+        deletes it from the stock_list database table.
 
         Args:
-            diff (dataframe): Dataframe that stores which stocks are
-                unlisted and newly listed
+            diff: Dataframe that stores which stocks are
+                unlisted and newly listed.
         """
+        # stocks only in old stock list
         old = diff[diff['_merge'] == 'left_only']
 
         try:
@@ -126,11 +127,11 @@ class Database:
             print(e)
 
     def add_stock(self, diff: pd.DataFrame) -> None:
-        """add stocks to stock list database.
+        """Add new stock informations in the stock list.
 
         Args:
-            diff (dataframe): dataframe that stores which stocks
-                are unlisted and newly listed
+            diff: Dataframe that stores which stocks are
+                unlisted and newly listed.
         """
         # stocks only in latest stock list
         new = diff[diff['_merge'] == 'right_only']
@@ -146,6 +147,6 @@ class Database:
             print(e)
 
     def __del__(self) -> None:
-        """close database connection
+        """Close database connection.
         """
         self.connection.close()
