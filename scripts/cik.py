@@ -5,6 +5,14 @@ from scripts import request
 
 
 def get_cik() -> pd.DataFrame:
+    """Get a list of companies CIK(Central Index Key) from SEC.
+
+    The list also contains ticker of a company.
+
+    Returns:
+        Dataframe containing CIK, company name, and ticker for its columns.
+    """
+
     url = 'https://www.sec.gov/files/company_tickers_exchange.json'
     res = request.Request(url)
     cik_data = res.get_json()
@@ -33,6 +41,17 @@ def get_cik() -> pd.DataFrame:
 
 
 def search_cik(cik_list: pd.DataFrame, ticker: str) -> str:
+    """Search CIK of specific a company.
+
+    Args:
+        cik_list: Dataframe containing CIK, company name,
+            and ticker for its columns.
+        ticker: Company ticker to search.
+
+    Returns:
+        CIK of the company searching for.
+    """
+
     ticker = ticker.upper()
     ticker_df = cik_list[cik_list['ticker'] == ticker]
     cik = ticker_df.get('cik').item()
