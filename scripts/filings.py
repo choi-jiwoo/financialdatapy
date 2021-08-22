@@ -5,14 +5,30 @@ from scripts import request
 
 
 class EmptyDataFrameError(Exception):
+    """Exception when dataframe is empty.
+    """
     pass
 
 
 class ImbalanceNumberOfFactsError(Exception):
+    """Exception when the number of elements and facts are different.
+
+    When a financial statement have N number of elements, facts data per period
+    should also have N number of items.
+    """
     pass
 
 
 def get_filings_list(cik: str) -> pd.DataFrame:
+    """Retrieve whole list of filings a company made in the SEC EDGAR system.
+
+    Args:
+        cik: CIK of a company.
+
+    Returns:
+        Dataframe containing all the company filings information.
+    """
+
     url = f'http://data.sec.gov/submissions/CIK{cik}.json'
     res = request.Request(url)
     data = res.get_json()
@@ -32,8 +48,23 @@ def get_filings_list(cik: str) -> pd.DataFrame:
     return filings
 
 
-# only for the latest filing
 def get_latest_form(cik: str, latest: str) -> dict:
+    """Find URL of each financial statements where their data is in table form.
+
+    EDGAR system provides an interactive data in their website. Interactive
+    data only contains the financial statements of a company which is just the
+    same one in the official document. So it makes one easy to scrape the
+    financial statment data.
+
+    Args:
+        cik: CIK of a company.
+        latest: Latest accesion number of a form.
+
+    Returns:
+        Dictionary with the name of financial statements as a key, and their
+            URL to the data as a value.
+    """
+
     url = ('https://www.sec.gov/cgi-bin/viewer?action=view&'
            f'cik={cik}&accession_number={latest}&xbrl_type=v')
     res = request.Request(url)
@@ -50,7 +81,7 @@ def get_latest_form(cik: str, latest: str) -> dict:
     ]
     file_list = dict(zip(element, filename))
 
-    # get links for 3 major financial statement.
+    # get links for 3 major financial statement only.
     # ignore statements of comprehensive income,
     # parenthetical statement, and stockholder's equity
     ignore = ['parenthetical', 'comprehensive', 'stockholders']
@@ -73,6 +104,20 @@ def get_latest_form(cik: str, latest: str) -> dict:
 
 def get_facts_by_form(cik_num: str, submission: pd.DataFrame,
                       form_type: str) -> dict:
+    """Get facts from either 10-K or 10-Q form.
+
+    Args:
+        cik_num: CIK of a company.
+        submission: Dataframe containing all the company filings information.
+        form_type: Either 10-K or 10-Q.
+
+    Returns:
+        Dictionary of each financial statements data.
+
+    Raises:
+        EmptyDataFrameError: If dataframe is empty.
+    """
+
     if not submission[submission['Form'] == form_type].empty:
         # get latest filing
         form = submission[submission['Form'] == form_type]
@@ -94,6 +139,19 @@ def get_facts_by_form(cik_num: str, submission: pd.DataFrame,
 
 
 def get_facts(link: str) -> dict:
+    """Extract a financial statement data from web.
+
+    Args:
+        link: URL that has financial statment data in a table form.
+
+    Returns:
+        Dictionary containing all the data from financial statement.
+
+    Raises:
+        ImbalanceNumberOfFactsError: When the number of elements and facts
+            are different.
+    """
+
     res = request.Request(link)
     soup = res.get_soup()
     tbl = soup.find('table')
