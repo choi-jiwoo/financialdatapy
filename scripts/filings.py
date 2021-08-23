@@ -118,6 +118,7 @@ def get_facts_by_form(cik_num: str, submission: pd.DataFrame,
         EmptyDataFrameError: If dataframe is empty.
     """
 
+    form_type = form_type.upper()
     if not submission[submission['Form'] == form_type].empty:
         # get latest filing
         form = submission[submission['Form'] == form_type]
