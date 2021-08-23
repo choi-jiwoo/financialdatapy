@@ -56,6 +56,18 @@ class Stock():
 
     def get_std_financials(self, which_financial: str,
                            period: str = 'annual') -> pd.DataFrame:
+        """Get 3 major standard financial statements from finviz.com.
+
+        Args:
+            which_financial: One of the three financial statement.
+                'income_statement' or 'balance_sheet' or 'cash_flow'.
+            period: Either 'annual' or 'quarter'.
+
+        Returns:
+            Dataframe with columns as dates, and index as financial
+            statement elements.
+        """
+
         std_financial = financials.get_std_financials(
             ticker=self.ticker,
             which_financial=which_financial,
