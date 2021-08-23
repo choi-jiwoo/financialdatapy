@@ -54,5 +54,11 @@ class Stock():
         }
         return financial_statement
 
-    def std_financials(self):
-        pass
+    def get_std_financials(self, which_financial: str,
+                           period: str = 'annual') -> pd.DataFrame:
+        std_financial = financials.get_std_financials(
+            ticker=self.ticker,
+            which_financial=which_financial,
+            period=period,
+        )
+        return std_financial
