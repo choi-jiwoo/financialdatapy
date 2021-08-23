@@ -162,7 +162,7 @@ def get_facts(link: str) -> dict:
     split_pt = 0
     for i, d in enumerate(facts_hdr, start=1):
         try:
-            parse(d)
+            parser.parse(d)
         except parser.ParserError:
             split_pt = i
 
