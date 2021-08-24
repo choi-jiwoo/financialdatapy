@@ -1,3 +1,19 @@
+"""Retrieve data of a certain stock.
+
+Scrape data from 3 major financial statements as reported in the SEC EDGAR
+system, and 3 major standard financial statements from finviz.com of a
+stock (company).
+
+Classes:
+
+    Stock
+
+Usage example:
+
+comp = Stock('AAPL')
+fs = comp.read_financials('10-K')
+std_fs_ic = comp.read_std_financials('income_statement', 'annual')
+"""
 import pandas as pd
 from scripts import cik
 from scripts import filings
@@ -8,17 +24,30 @@ CIK_LIST = cik.get_cik()
 
 
 class Stock():
+    """Class representing a stock or a company.
+
+    Attributes:
+        ticker: Ticker of a stock.
+
+    Methods:
+        read_financials(form :str) -> dict:
+            Get financial statements as reported.
+        read_std_financials(which_financial, period="annual") -> pd.DataFrame:
+            Get standard financial statements.
+
+    """
+
     def __init__(self, ticker: str) -> None:
         """Initialize ticker to search.
 
         Args:
-            ticker: Ticker of a company.
+            ticker: Ticker of a stock.
         """
 
         self.ticker = ticker
 
     def read_financials(self, form: str) -> dict:
-        """Get 3 major financial statements as reported in SEC EDGAR system.
+        """Get financial statements as reported.
 
         Args:
             form: Either 10-K or 10-Q form.
@@ -56,7 +85,7 @@ class Stock():
 
     def read_std_financials(self, which_financial: str,
                             period: str = 'annual') -> pd.DataFrame:
-        """Get 3 major standard financial statements from finviz.com.
+        """Get standard financial statements.
 
         Args:
             which_financial: One of the three financial statement.
