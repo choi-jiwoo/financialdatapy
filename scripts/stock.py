@@ -21,6 +21,7 @@ from scripts import financials
 
 
 class Cik():
+    """Get cik list and set it as a class variable."""
 
     CIK_LIST = cik.get_cik()
 
