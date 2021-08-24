@@ -17,7 +17,7 @@ class Stock():
 
         self.ticker = ticker
 
-    def get_financials(self, form: str) -> dict:
+    def read_financials(self, form: str) -> dict:
         """Get 3 major financial statements as reported in SEC EDGAR system.
 
         Args:
@@ -54,8 +54,8 @@ class Stock():
         }
         return financial_statement
 
-    def get_std_financials(self, which_financial: str,
-                           period: str = 'annual') -> pd.DataFrame:
+    def read_std_financials(self, which_financial: str,
+                            period: str = 'annual') -> pd.DataFrame:
         """Get 3 major standard financial statements from finviz.com.
 
         Args:
