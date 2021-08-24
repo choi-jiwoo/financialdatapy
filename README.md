@@ -1,4 +1,4 @@
-# us-stock-data
+# financialdatapy
 
 🔨 under construction...
 
