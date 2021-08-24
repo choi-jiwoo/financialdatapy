@@ -20,7 +20,9 @@ from scripts import filings
 from scripts import financials
 
 
-CIK_LIST = cik.get_cik()
+class Cik():
+
+    CIK_LIST = cik.get_cik()
 
 
 class Stock():
@@ -70,7 +72,7 @@ class Stock():
                 are different.
         """
 
-        comp_cik = cik.search_cik(CIK_LIST, self.ticker)
+        comp_cik = cik.search_cik(Cik.CIK_LIST, self.ticker)
         submission = filings.get_filings_list(comp_cik)
         name = ['income_statement', 'balance_sheet', 'cash_flow']
         financial_statement = filings.get_financials(
