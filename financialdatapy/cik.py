@@ -1,7 +1,7 @@
 import pandas as pd
 from string import capwords
 import re
-from scripts import request
+from financialdatapy import request
 
 
 def get_cik() -> pd.DataFrame:

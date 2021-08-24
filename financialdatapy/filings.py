@@ -1,7 +1,7 @@
 from dateutil import parser
 import pandas as pd
 import re
-from scripts import request
+from financialdatapy import request
 
 
 class EmptyDataFrameError(Exception):

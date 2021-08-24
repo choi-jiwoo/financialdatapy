@@ -15,9 +15,9 @@ fs = comp.read_financials('10-K')
 std_fs_ic = comp.read_std_financials('income_statement', 'annual')
 """
 import pandas as pd
-from scripts import cik
-from scripts import filings
-from scripts import financials
+from financialdatapy import cik
+from financialdatapy import filings
+from financialdatapy import financials
 
 
 class Cik():

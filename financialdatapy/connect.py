@@ -1,5 +1,5 @@
 import yaml
-from scripts.database import Database
+from financialdatapy.database import Database
 
 
 def connect_db() -> Database:

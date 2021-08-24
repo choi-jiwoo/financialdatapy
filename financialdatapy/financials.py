@@ -1,6 +1,6 @@
 import pandas as pd
 import json
-from scripts import request
+from financialdatapy import request
 
 
 def get_std_financials(ticker: str,
