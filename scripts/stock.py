@@ -85,13 +85,14 @@ class Stock():
         }
         return financial_statement
 
-    def read_std_financials(self, which_financial: str,
+    def read_std_financials(self, which_financial: str = 'income_statement',
                             period: str = 'annual') -> pd.DataFrame:
         """Get standard financial statements.
 
         Args:
             which_financial: One of the three financial statement.
-                'income_statement' or 'balance_sheet' or 'cash_flow'.
+                'income_statement' or 'balance_sheet' or 'cash_flow'. Default
+                value is 'income_statement'
             period: Either 'annual' or 'quarter'. Default value is 'annual'
 
         Returns:
