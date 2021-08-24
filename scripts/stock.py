@@ -46,11 +46,11 @@ class Stock():
 
         self.ticker = ticker
 
-    def read_financials(self, form: str) -> dict:
+    def read_financials(self, form: str = '10-K') -> dict:
         """Get financial statements as reported.
 
         Args:
-            form: Either 10-K or 10-Q form.
+            form: Either '10-K' or '10-Q' form. Default value is '10-K'.
 
         Returns:
             Dictionary with key for the financial statment name
@@ -90,7 +90,7 @@ class Stock():
         Args:
             which_financial: One of the three financial statement.
                 'income_statement' or 'balance_sheet' or 'cash_flow'.
-            period: Either 'annual' or 'quarter'.
+            period: Either 'annual' or 'quarter'. Default value is 'annual'
 
         Returns:
             Dataframe with columns as dates, and index as financial
