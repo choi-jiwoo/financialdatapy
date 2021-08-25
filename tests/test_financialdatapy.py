@@ -49,7 +49,7 @@ class TestFinancials:
             ('000032019321000065/R7.htm', 0),
         ]
     )
-    def test_get_financials(self, url, zero):
+    def test_getting_each_financials(self, url, zero):
         """Test if all 3 major financial statement is returned."""
         base_url = 'https://www.sec.gov/Archives/edgar/data/320193/'
         assert len(filings.get_values(base_url+url)['value']) > zero
