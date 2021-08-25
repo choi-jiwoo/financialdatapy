@@ -6,6 +6,14 @@ from financialdatapy import stock
 from financialdatapy import filings
 
 
+def test_cik_request(requests_mock):
+    """Test for requesting CIK list from a source."""
+    url = 'https://www.sec.gov/files/company_tickers_exchange.json'
+    requests_mock.get(url, text='data')
+    assert 'data' == requests.get(url).text
+
+
+@pytest.mark.integtest
 class TestCik:
     """Test for getting a CIK list, and searching cik."""
 
@@ -13,12 +21,6 @@ class TestCik:
     def cik_list(self):
         """Get CIK list and use it as a fixture."""
         return cik.get_cik()
-
-    def test_cik_request(self, requests_mock):
-        """Test for requesting CIK list from a source."""
-        url = 'https://www.sec.gov/files/company_tickers_exchange.json'
-        requests_mock.get(url, text='data')
-        assert 'data' == requests.get(url).text
 
     def test_get_cik(self, cik_list):
         """Test get_cik returns in DataFrame."""
@@ -30,6 +32,7 @@ class TestCik:
         assert len(res) == 10
 
 
+@pytest.mark.integtest
 class TestFinancials:
     """Test for getting financial statements."""
 
@@ -67,5 +70,7 @@ class TestFinancials:
     )
     def test_get_std_financials(self, company, which_financial, period):
         """Test standard financial statement is in DataFrame."""
+        std_fs = company.read_std_financials(which_financial, period)
+        assert isinstance(std_fs, pd.DataFrame)
         std_fs = company.read_std_financials(which_financial, period)
         assert isinstance(std_fs, pd.DataFrame)
