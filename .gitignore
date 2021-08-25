@@ -1,10 +1,11 @@
-/usstock
+.env
 .DS_Store
 .ipynb_checkpoints
 *.ipynb
+*.ini
 /.idea
 /.vscode
-.env
+/usstock
 */__pycache__
 /config
 /rawdata
