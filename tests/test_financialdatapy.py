@@ -72,5 +72,3 @@ class TestFinancials:
         """Test standard financial statement is in DataFrame."""
         std_fs = company.read_std_financials(which_financial, period)
         assert isinstance(std_fs, pd.DataFrame)
-        std_fs = company.read_std_financials(which_financial, period)
-        assert isinstance(std_fs, pd.DataFrame)
