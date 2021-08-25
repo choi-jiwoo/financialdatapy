@@ -3,6 +3,7 @@ import requests
 import pytest
 from financialdatapy import cik
 from financialdatapy import stock
+from financialdatapy import filings
 
 
 class TestCik:
@@ -38,15 +39,20 @@ class TestFinancials:
         return stock.Stock('AAPL')
 
     @pytest.mark.parametrize(
-        'form, expected',
+        'url, zero',
         [
-            ('10-K', 3),
-            ('10-Q', 3)
+            ('000032019320000096/R2.htm', 0),
+            ('000032019320000096/R4.htm', 0),
+            ('000032019320000096/R7.htm', 0),
+            ('000032019321000065/R2.htm', 0),
+            ('000032019321000065/R4.htm', 0),
+            ('000032019321000065/R7.htm', 0),
         ]
     )
-    def test_get_financials(self, company, form, expected):
-        """Test all 3 major financial statement is returned."""
-        assert len(company.read_financials(form)) == expected
+    def test_get_financials(self, url, zero):
+        """Test if all 3 major financial statement is returned."""
+        base_url = 'https://www.sec.gov/Archives/edgar/data/320193/'
+        assert len(filings.get_values(base_url+url)['value']) > zero
 
     @pytest.mark.parametrize(
         'which_financial, period',
@@ -56,7 +62,7 @@ class TestFinancials:
             ('income_statement', 'annual'),
             ('income_statement', 'quarter'),
             ('balance_sheet', 'quarter'),
-            ('income_statement', 'quarter')
+            ('income_statement', 'quarter'),
         ]
     )
     def test_get_std_financials(self, company, which_financial, period):
