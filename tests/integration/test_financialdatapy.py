@@ -1,19 +1,10 @@
 import pandas as pd
-import requests
 import pytest
 from financialdatapy import cik
 from financialdatapy import stock
 from financialdatapy import filings
 
 
-def test_cik_request(requests_mock):
-    """Test for requesting CIK list from a source."""
-    url = 'https://www.sec.gov/files/company_tickers_exchange.json'
-    requests_mock.get(url, text='data')
-    assert 'data' == requests.get(url).text
-
-
-@pytest.mark.integtest
 class TestCik:
     """Test for getting a CIK list, and searching cik."""
 
@@ -32,7 +23,6 @@ class TestCik:
         assert len(res) == 10
 
 
-@pytest.mark.integtest
 class TestFinancials:
     """Test for getting financial statements."""
 
