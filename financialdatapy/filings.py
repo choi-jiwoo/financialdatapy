@@ -103,13 +103,13 @@ def get_latest_form(cik: str, latest: str) -> dict:
 
 
 def get_financials(cik_num: str, submission: pd.DataFrame,
-                   form_type: str) -> dict:
+                   form_type: str = '10-K') -> dict:
     """Get financial statements from either 10-K or 10-Q form.
 
     Args:
         cik_num: CIK of a company.
         submission: Dataframe containing all the company filings information.
-        form_type: Either 10-K or 10-Q.
+        form_type: Either 10-K or 10-Q. Default value is 10-K.
 
     Returns:
         Dictionary of each financial statements data.
