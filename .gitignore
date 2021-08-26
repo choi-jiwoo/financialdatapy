@@ -6,6 +6,6 @@
 /.idea
 /.vscode
 /usstock
-*/__pycache__
+**/__pycache__
 /config
 /rawdata
