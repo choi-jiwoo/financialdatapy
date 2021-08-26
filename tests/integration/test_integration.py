@@ -14,13 +14,22 @@ class TestCik:
         return cik.get_cik()
 
     def test_get_cik(self, cik_list):
-        """Test get_cik returns in DataFrame."""
+        """Test get_cik returns DataFrame."""
         assert isinstance(cik_list, pd.DataFrame)
 
     def test_search_cik(self, cik_list):
         """Test the length of CIK number is 10."""
         res = cik.search_cik(cik_list, 'AAPL')
         assert len(res) == 10
+
+
+class TestFilings:
+    """Test for getting list of filings a company."""
+
+    def test_filings(self):
+        """Test get_filings_list returns DataFrame."""
+        res = filings.get_filings_list('0000320193')
+        assert isinstance(res, pd.DataFrame)
 
 
 class TestFinancials:
