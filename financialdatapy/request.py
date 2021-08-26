@@ -11,6 +11,7 @@ class ConnectionError(Exception):
 class Request():
     def __init__(self, url: str) -> None:
         self.url = url
+        self.res = self.http_request()
 
     def http_request(self) -> requests.models.Response:
         headers = {'User-Agent': 'Mozilla'}
@@ -22,13 +23,7 @@ class Request():
         return res
 
     def get_json(self) -> dict:
-        res = self.http_request()
-        json_file = json.loads(res.text)
-
-        return json_file
+        return json.loads(self.res.text)
 
     def get_soup(self) -> BeautifulSoup:
-        res = self.http_request()
-        soup = BeautifulSoup(res.text, 'html.parser')
-
-        return soup
+        return BeautifulSoup(self.res.text, 'html.parser')
