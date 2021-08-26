@@ -15,15 +15,13 @@ fs = comp.read_financials('10-K')
 std_fs_ic = comp.read_std_financials('income_statement', 'annual')
 """
 import pandas as pd
-from financialdatapy import cik
-from financialdatapy import filings
-from financialdatapy import financials
+import financialdatapy
 
 
 class Cik():
     """Get cik list and set it as a class variable."""
 
-    CIK_LIST = cik.get_cik()
+    CIK_LIST = financialdatapy.get_cik()
 
 
 class Stock():
@@ -73,10 +71,10 @@ class Stock():
                 are different.
         """
 
-        comp_cik = cik.search_cik(Cik.CIK_LIST, self.ticker)
-        submission = filings.get_filings_list(comp_cik)
+        comp_cik = financialdatapy.search_cik(Cik.CIK_LIST, self.ticker)
+        submission = financialdatapy.get_filings_list(comp_cik)
         name = ['income_statement', 'balance_sheet', 'cash_flow']
-        financial_statement = filings.get_financials(
+        financial_statement = financialdatapy.get_financials(
             comp_cik,
             submission,
             form,
@@ -101,7 +99,7 @@ class Stock():
             statement elements.
         """
 
-        std_financial = financials.get_std_financials(
+        std_financial = financialdatapy.get_std_financials(
             ticker=self.ticker,
             which_financial=which_financial,
             period=period,
