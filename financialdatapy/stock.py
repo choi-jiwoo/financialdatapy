@@ -5,14 +5,18 @@ system, and 3 major standard financial statements from finviz.com of a
 stock (company).
 
 Classes:
-
+    Cik
     Stock
 
-Usage example:
+Get a list of CIK:
 
-comp = Stock('AAPL')
-fs = comp.read_financials('10-K')
-std_fs_ic = comp.read_std_financials('income_statement', 'annual')
+    cik_list = financialdatapy.get_cik()
+
+Get financial statements:
+
+    comp = financialdatapy.Stock('AAPL')
+    fs = comp.read_financials('10-K')
+    std_fs_ic = comp.read_std_financials('income_statement', 'annual')
 """
 import pandas as pd
 import financialdatapy
