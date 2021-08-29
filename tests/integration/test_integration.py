@@ -1,17 +1,11 @@
 import pandas as pd
 import pytest
 from financialdatapy import cik
-from financialdatapy import stock
 from financialdatapy import filings
 
 
 class TestCik:
     """Test for getting a CIK list, and searching cik."""
-
-    @pytest.fixture
-    def cik_list(self):
-        """Get CIK list and use it as a fixture."""
-        return cik.get_cik()
 
     def test_get_cik(self, cik_list):
         """Test get_cik returns DataFrame."""
@@ -34,11 +28,6 @@ class TestFilings:
 
 class TestFinancials:
     """Test for getting financial statements."""
-
-    @pytest.fixture
-    def company(self):
-        """Instantiate Stock class."""
-        return stock.Stock('AAPL')
 
     @pytest.mark.parametrize(
         'url, zero',
