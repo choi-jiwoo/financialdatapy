@@ -2,6 +2,7 @@ import pandas as pd
 import pytest
 from financialdatapy import cik
 from financialdatapy import filings
+from financialdatapy import price
 
 
 class TestCik:
@@ -60,3 +61,14 @@ class TestFinancials:
         """Test standard financial statement is in DataFrame."""
         std_fs = company.read_std_financials(which_financial, period)
         assert isinstance(std_fs, pd.DataFrame)
+
+
+class TestPriceData:
+    """Test for getting historical stock price data."""
+
+    def test_price_data(self, company):
+        """Test the type of historical stock price data is dictionary."""
+        start = (2021, 8, 1)
+        end = (2021, 8, 10)
+        price = company.historical(start, end)
+        assert isinstance(price, dict)
