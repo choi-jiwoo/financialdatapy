@@ -49,7 +49,7 @@ class Stock():
             ticker: Ticker of a stock.
         """
 
-        self.ticker = ticker
+        self.ticker = ticker.upper()
 
     def read_financials(self, form: str = '10-K') -> dict:
         """Get financial statements as reported.
