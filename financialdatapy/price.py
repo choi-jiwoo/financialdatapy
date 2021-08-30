@@ -6,11 +6,12 @@ from dateutil.parser import parse
 class Price():
     def __init__(self, ticker: str, start: tuple, end: tuple) -> None:
         self.ticker = ticker
-        self.start = start
-        self.end = end
+        self.start = self.parse_date(start)
+        self.end = self.parse_date(end)
 
-    def parse_date(self) -> None:
-        start = date(*self.start)
-        end = date(*self.end)
-        date_range = {'start': start, 'end': end}
-        return date_range
+    def parse_date(self, period: tuple) -> int:
+        ymd = [str(x) for x in period]
+        ymd = '-'.join(ymd)
+        date = parse(ymd)
+        timestamp = int(datetime.timestamp(date))
+        return timestamp
