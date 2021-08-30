@@ -51,7 +51,7 @@ class Stock():
 
         self.ticker = ticker.upper()
 
-    def read_financials(self, form: str = '10-K') -> dict:
+    def financials(self, form: str = '10-K') -> dict:
         """Get financial statements as reported.
 
         Args:
@@ -88,7 +88,7 @@ class Stock():
         }
         return financial_statement
 
-    def read_std_financials(self, which_financial: str = 'income_statement',
+    def standard_financials(self, which_financial: str = 'income_statement',
                             period: str = 'annual') -> pd.DataFrame:
         """Get standard financial statements.
 
