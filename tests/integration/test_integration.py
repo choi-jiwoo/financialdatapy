@@ -68,7 +68,5 @@ class TestPriceData:
 
     def test_price_data(self, company):
         """Test the type of historical stock price data is dictionary."""
-        start = '2021-8-1'
-        end = '2021-8-10'
-        price = company.historical(start, end)
+        price = company.historical('2021-8-3', '2021-8-10')
         assert isinstance(price, dict)
