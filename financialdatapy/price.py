@@ -1,6 +1,5 @@
 from datetime import datetime
 from pytz import timezone
-from dateutil.parser import parse
 from financialdatapy import request
 
 
@@ -8,13 +7,16 @@ class Price():
     def __init__(self, ticker: str, start: str, end: str) -> None:
         self.ticker = ticker
         self.start = self.parse_date(start)
-        # add 86,400s (1 day) in the end date timestamp
+        # add 86,400s (1 day) to the end date timestamp
         self.end = self.parse_date(end) + 86400
 
     def parse_date(self, period: str) -> int:
-        # include exception handling with a date format
+        try:
+            date = datetime.strptime(period, '%Y-%m-%d')
+        except ValueError:
+            date = datetime.strptime(period, '%y-%m-%d')
+
         edt = timezone('Etc/GMT+4')
-        date = parse(period)
         edt_date = edt.localize(date)
         timestamp = int(datetime.timestamp(edt_date))
 
