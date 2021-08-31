@@ -19,7 +19,6 @@ Get financial statements:
     std_fs_ic = comp.read_std_financials('income_statement', 'annual')
 """
 import pandas as pd
-from typing import Tuple
 import financialdatapy
 
 
@@ -111,12 +110,14 @@ class Stock():
         )
         return std_financial
 
-    def historical(self, start: Tuple[int], end: Tuple[int]) -> dict:
+    def historical(self, start: str, end: str()) -> dict:
         """Get historical stock price data from finance.yahoo.com.
 
         Args:
-            start: Start date to query. e.g. (2021, 8, 1)
-            end: End date to query. e.g. (2021, 8, 10)
+            start: Start date to query. Format should be in ISO 8601.
+                e.g. 2021-8-1
+            end: End date to query. Format should be in ISO 8601.
+                e.g. 2021-8-10
 
         Returns:
             Historical price data in JSON format.

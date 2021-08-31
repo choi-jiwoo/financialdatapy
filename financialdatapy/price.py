@@ -1,22 +1,18 @@
 from datetime import date
 from datetime import datetime
 from dateutil.parser import parse
-from typing import Tuple
 from financialdatapy import request
 
 
 class Price():
-    def __init__(self, ticker: str,
-                 start: Tuple[int], end: Tuple[int]) -> None:
+    def __init__(self, ticker: str, start: str, end: str) -> None:
         self.ticker = ticker
         self.start = self.parse_date(start)
         self.end = self.parse_date(end)
 
-    def parse_date(self, period: Tuple[int]) -> int:
+    def parse_date(self, period: str) -> int:
         # include exception handling with a date format
-        ymd = [str(x) for x in period]
-        ymd = '-'.join(ymd)
-        date = parse(ymd)
+        date = parse(period)
         timestamp = int(datetime.timestamp(date))
 
         return timestamp
