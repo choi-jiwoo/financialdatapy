@@ -10,7 +10,7 @@ Classes:
 
 Get a list of CIK:
 
-    cik_list = financialdatapy.get_cik()
+    cik_list = financialdatapy.Cik.cik_list
 
 Get financial statements:
 
@@ -25,10 +25,10 @@ import financialdatapy
 class Cik():
     """Get cik list and set it as a class variable."""
 
-    CIK_LIST = financialdatapy.get_cik()
+    cik_list = financialdatapy.get_cik()
 
 
-class Stock():
+class Stock(Cik):
     """Class representing a stock or a company.
 
     Attributes:
@@ -75,7 +75,7 @@ class Stock():
                 are different.
         """
 
-        comp_cik = financialdatapy.search_cik(Cik.CIK_LIST, self.ticker)
+        comp_cik = financialdatapy.search_cik(Stock.cik_list, self.ticker)
         submission = financialdatapy.get_filings_list(comp_cik)
         name = ['income_statement', 'balance_sheet', 'cash_flow']
         financial_statement = financialdatapy.get_financials(
