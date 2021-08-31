@@ -122,7 +122,6 @@ class Stock():
         Returns:
             Historical price data in JSON format.
         """
-        # include Raise section in docstring after adding exceptions in price.py
         ticker = self.ticker
         price = financialdatapy.Price(ticker, start, end)
         price_data = price.get_price_data()
