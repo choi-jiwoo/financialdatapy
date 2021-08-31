@@ -115,9 +115,9 @@ class Stock():
 
         Args:
             start: Start date to query. Format should be in ISO 8601.
-                e.g. 2021-8-1
+                e.g. 2021-8-1 or 2021-08-01
             end: End date to query. Format should be in ISO 8601.
-                e.g. 2021-8-10
+                e.g. 2021-8-10 or 2021-08-10
 
         Returns:
             Historical price data in JSON format.
