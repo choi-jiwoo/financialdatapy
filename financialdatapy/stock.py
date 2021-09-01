@@ -30,13 +30,19 @@ Get historical price data:
     price = comp.historical('2021-1-1', '2021-2-1')
 """
 import pandas as pd
-import financialdatapy
+from typing import Optional
+from financialdatapy.cik import get_cik
+from financialdatapy.cik import search_cik
+from financialdatapy.filings import get_filings_list
+from financialdatapy.filings import get_financials
+from financialdatapy.financials import get_std_financials
+from financialdatapy.price import Price
 
 
 class Cik():
     """Get cik list as a class variable."""
 
-    cik_list = financialdatapy.get_cik()
+    cik_list = get_cik()
 
 
 class Stock(Cik):
@@ -86,10 +92,10 @@ class Stock(Cik):
                 are different.
         """
 
-        comp_cik = financialdatapy.search_cik(Stock.cik_list, self.ticker)
-        submission = financialdatapy.get_filings_list(comp_cik)
+        comp_cik = search_cik(Stock.cik_list, self.ticker)
+        submission = get_filings_list(comp_cik)
         name = ['income_statement', 'balance_sheet', 'cash_flow']
-        financial_statement = financialdatapy.get_financials(
+        financial_statement = get_financials(
             comp_cik,
             submission,
             form,
@@ -114,14 +120,14 @@ class Stock(Cik):
             statement elements.
         """
 
-        std_financial = financialdatapy.get_std_financials(
+        std_financial = get_std_financials(
             ticker=self.ticker,
             which_financial=which_financial,
             period=period,
         )
         return std_financial
 
-    def historical(self, start: str, end: str()) -> dict:
+    def historical(self, start: str, end: Optional[str] = None) -> dict:
         """Get historical stock price data from finance.yahoo.com.
 
         Args:
@@ -134,6 +140,6 @@ class Stock(Cik):
             Historical price data in JSON format.
         """
         ticker = self.ticker
-        price = financialdatapy.Price(ticker, start, end)
+        price = Price(ticker, start, end)
         price_data = price.get_price_data()
         return price_data
