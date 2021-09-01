@@ -18,7 +18,7 @@ class Request():
         res = requests.get(self.url, headers=headers)
 
         if not res.ok:
-            raise ConnectionError('Bad response')
+            raise ConnectionError(f'Status code<{res.status_code}>')
 
         return res
 
