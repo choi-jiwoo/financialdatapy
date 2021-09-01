@@ -2,7 +2,35 @@ import pandas as pd
 import pytest
 from financialdatapy import cik
 from financialdatapy import filings
-from financialdatapy import price
+from financialdatapy.price import Price
+
+
+class TestDate:
+    """Test date operations."""
+
+    @pytest.mark.parametrize(
+        'start, end',
+        [
+            ('2021-8-3', '2021-8-10'),
+            ('2021-08-03', '2021-08-10'),
+            ('21-8-3', '21-8-10'),
+            ('21-08-03', '21-08-10'),
+        ]
+    )
+    def test_parsing_date(self, start, end):
+        """Test the date correctly converts to timestamp."""
+        date = Price('AAPL', start, end)
+
+        assert date.start == 1627963200
+        assert date.end == 1628654400
+
+    def test_empty_end_date(self):
+        """Test default end date returns type int which is a timestamp."""
+        date = Price('AAPL', '2021-8-3')
+        end = pd.to_datetime(date.end, unit='s').normalize()
+        today = pd.Timestamp.today().normalize()
+
+        assert end == today
 
 
 class TestCik:
