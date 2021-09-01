@@ -1,8 +1,8 @@
 """Retrieve data of a certain stock.
 
 Scrape data from 3 major financial statements as reported in the SEC EDGAR
-system, and 3 major standard financial statements from finviz.com of a
-stock (company).
+system, 3 major standard financial statements from finviz.com,
+and a historical price data of a stock (company).
 
 Classes:
     Cik
@@ -10,20 +10,31 @@ Classes:
 
 Get a list of CIK:
 
-    cik_list = financialdatapy.Cik.cik_list
+    from financialdatapy.stock import Cik
+
+    cik_list = Cik.cik_list
 
 Get financial statements:
 
-    comp = financialdatapy.Stock('AAPL')
-    fs = comp.read_financials('10-K')
-    std_fs_ic = comp.read_std_financials('income_statement', 'annual')
+    from financialdatapy.stock import Stock
+
+    comp = Stock('AAPL')
+    fs = comp.financials('10-K')
+    std_fs_ic = comp.standard_financials('income_statement', 'annual')
+
+Get historical price data:
+
+    from financialdatapy.stock import Stock
+
+    comp = Stock('AAPL')
+    price = comp.historical('2021-1-1', '2021-2-1')
 """
 import pandas as pd
 import financialdatapy
 
 
 class Cik():
-    """Get cik list and set it as a class variable."""
+    """Get cik list as a class variable."""
 
     cik_list = financialdatapy.get_cik()
 
