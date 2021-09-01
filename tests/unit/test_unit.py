@@ -1,5 +1,5 @@
 import pytest
-from financialdatapy import price
+from financialdatapy.price import Price
 
 
 @pytest.mark.parametrize(
@@ -13,6 +13,14 @@ from financialdatapy import price
 )
 def test_parsing_date(start, end):
     """Test the date correctly converts to timestamp."""
-    date = price.Price('AAPL', start, end)
+    date = Price('AAPL', start, end)
+
     assert date.start == 1627963200
     assert date.end == 1628654400
+
+
+def test_empty_end_date():
+    """Test default end date returns type int which is a timestamp."""
+    date = Price('AAPL', '2021-8-3')
+
+    assert isinstance(date.end, int)
