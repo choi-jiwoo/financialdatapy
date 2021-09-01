@@ -1,14 +1,21 @@
 from datetime import datetime
 from pytz import timezone
+from typing import Optional
 from financialdatapy import request
 
 
 class Price():
-    def __init__(self, ticker: str, start: str, end: str) -> None:
+    def __init__(self, ticker: str, start: str,
+                 end: Optional[str] = None) -> None:
         self.ticker = ticker
         self.start = self.parse_date(start)
-        # add 86,400s (1 day) to the end date timestamp
-        self.end = self.parse_date(end) + 86400
+
+        if end is None:
+            today = datetime.today().strftime('%Y-%m-%d')
+            self.end = self.parse_date(today)
+        else:
+            # add 86,400s (1 day) to the timestamp
+            self.end = self.parse_date(end) + 86400
 
     def parse_date(self, period: str) -> int:
         try:
