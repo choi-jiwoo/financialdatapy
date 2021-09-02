@@ -38,6 +38,7 @@ class TestDate:
         with pytest.raises(IntegerDateInputError):
             Price('AAPL', 1)
 
+
 class TestCik:
     """Test for getting a CIK list, and searching cik."""
 
@@ -48,7 +49,7 @@ class TestCik:
         Used in TestCik inside test_integration.py.
         """
         return cik.get_cik()
-    
+
     def test_get_cik(self, cik_list):
         """Test get_cik returns DataFrame."""
         assert isinstance(cik_list, pd.DataFrame)
