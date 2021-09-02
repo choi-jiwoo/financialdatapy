@@ -1,7 +1,13 @@
 from datetime import datetime
 from pytz import timezone
 from typing import Optional
+import pandas as pd
 from financialdatapy import request
+
+
+class IntegerDateInputError(Exception):
+    """Throws error when integer type is passed in date parameters."""
+    pass
 
 
 class Price():
@@ -18,6 +24,9 @@ class Price():
             self.end = self.parse_date(end) + 86400
 
     def parse_date(self, period: str) -> int:
+        if isinstance(period, int):
+            raise IntegerDateInputError('Date should be in string.')
+
         try:
             date = datetime.strptime(period, '%Y-%m-%d')
         except ValueError:
