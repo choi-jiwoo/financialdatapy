@@ -20,8 +20,9 @@ class Price():
             today = datetime.today().strftime('%Y-%m-%d')
             self.end_date_in_timestamp = self.parse_date(today)
         else:
-            # add 86,400s (1 day) to the timestamp
-            self.end_date_in_timestamp = self.parse_date(end) + 86400
+            one_day_in_timestamp = 86_400
+            self.end_date_in_timestamp = (self.parse_date(end)
+                                          + one_day_in_timestamp)
 
     def parse_date(self, period: str) -> int:
         if isinstance(period, int):
