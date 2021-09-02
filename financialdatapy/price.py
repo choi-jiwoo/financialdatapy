@@ -14,14 +14,14 @@ class Price():
     def __init__(self, ticker: str, start: str,
                  end: Optional[str] = None) -> None:
         self.ticker = ticker
-        self.start = self.parse_date(start)
+        self.start_date_in_timestamp = self.parse_date(start)
 
         if end is None:
             today = datetime.today().strftime('%Y-%m-%d')
-            self.end = self.parse_date(today)
+            self.end_date_in_timestamp = self.parse_date(today)
         else:
             # add 86,400s (1 day) to the timestamp
-            self.end = self.parse_date(end) + 86400
+            self.end_date_in_timestamp = self.parse_date(end) + 86400
 
     def parse_date(self, period: str) -> int:
         if isinstance(period, int):
@@ -40,9 +40,10 @@ class Price():
 
     def get_price_data(self) -> dict:
         url = ('https://query1.finance.yahoo.com/v8/finance/chart/'
-               f'{self.ticker}?symbol={self.ticker}&'
-               f'period1={self.start}&period2={self.end}&'
-               'interval=1d&corsDomain=finance.yahoo.com')
+               f'&{self.ticker}?symbol={self.ticker}'
+               f'&period1={self.start_date_in_timestamp}'
+               f'&period2={self.end_date_in_timestamp}'
+               '&interval=1d&corsDomain=finance.yahoo.com')
         res = request.Request(url)
         data = res.get_json()
 
