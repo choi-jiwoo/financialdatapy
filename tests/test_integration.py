@@ -3,6 +3,7 @@ import pytest
 from financialdatapy import cik
 from financialdatapy import filings
 from financialdatapy.price import Price
+from financialdatapy.price import IntegerDateInputError
 
 
 class TestDate:
@@ -32,10 +33,22 @@ class TestDate:
 
         assert end == today
 
+    def test_integer_input_error(self):
+        """Test the function returns error when integer is inputted."""
+        with pytest.raises(IntegerDateInputError):
+            Price('AAPL', 1)
 
 class TestCik:
     """Test for getting a CIK list, and searching cik."""
 
+    @pytest.fixture
+    def cik_list():
+        """Get CIK list and use it as a fixture.
+
+        Used in TestCik inside test_integration.py.
+        """
+        return cik.get_cik()
+    
     def test_get_cik(self, cik_list):
         """Test get_cik returns DataFrame."""
         assert isinstance(cik_list, pd.DataFrame)
