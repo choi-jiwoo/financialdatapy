@@ -57,9 +57,8 @@ class TestCik:
         assert isinstance(cik_list, pd.DataFrame)
 
     def test_search_cik(self, cik_list):
-        """Test the length of CIK number is 10."""
+        """Test the returned cik number matches with the company's cik number."""
         res = cik.search_cik(cik_list, 'AAPL')
-        assert len(res) == 10
         assert res == '0000320193'
 
 
