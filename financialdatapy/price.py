@@ -11,8 +11,29 @@ class IntegerDateInputError(Exception):
 
 
 class Price():
+    """A Class representing a company's historical stock price data.
+
+    Attributes:
+        ticker: Ticker of a company/stock.
+        start: Starting date to search.
+        end: Ending date to search.
+
+    Methods:
+        parse_date(period: str) -> int:
+            Parse the date in string passed by an argument into a timestamp.
+        get_price_data() -> dict:
+            Get historical stock price data from finance.yahoo.com.
+    """
+
     def __init__(self, ticker: str, start: str,
                  end: Optional[str] = None) -> None:
+        """Initialize ticker, start date and optional end date to search.
+
+        Args:
+            ticker: Ticker of a company/stock.
+            start: Starting date to search.
+            end: Ending date to search.
+        """
         self.ticker = ticker
         self.start_date_in_timestamp = self.parse_date(start)
 
@@ -25,6 +46,17 @@ class Price():
                                           + one_day_in_timestamp)
 
     def parse_date(self, period: str) -> int:
+        """Parse the date in string passed by an argument into a timestamp.
+
+        Args:
+            period: Date in string format YYYY-MM-DD or YY-MM-DD.
+
+        Raises:
+            IntegerDateInputError: Raised when integer is passed as an argument.
+
+        Returns:
+            The timestamp value equivalent to the date passed.
+        """
         if isinstance(period, int):
             raise IntegerDateInputError('Date should be in string.')
 
@@ -40,6 +72,11 @@ class Price():
         return timestamp
 
     def get_price_data(self) -> dict:
+        """Get historical stock price data from finance.yahoo.com.
+
+        Returns:
+            Historical stock price data in JSON format.
+        """
         url = ('https://query1.finance.yahoo.com/v8/finance/chart/'
                f'{self.ticker}?symbol={self.ticker}'
                f'&period1={self.start_date_in_timestamp}'
