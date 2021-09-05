@@ -49,7 +49,7 @@ class Stock(Cik):
     """Class representing a stock or a company.
 
     Attributes:
-        ticker: Ticker of a stock.
+        ticker: Ticker of a company/stock.
 
     Methods:
         read_financials(form :str) -> dict:
