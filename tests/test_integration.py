@@ -6,6 +6,15 @@ from financialdatapy.price import Price
 from financialdatapy.price import IntegerDateInputError
 
 
+@pytest.fixture(scope='class')
+def cik_list():
+    """Get CIK list and use it as a fixture.
+
+    Used in TestCik inside test_integration.py.
+    """
+    return cik.get_cik()
+
+
 class TestDate:
     """Test date operations."""
 
@@ -39,16 +48,9 @@ class TestDate:
             Price('AAPL', 1)
 
 
+@pytest.mark.usefixtures('cik_list')
 class TestCik:
     """Test for getting a CIK list, and searching cik."""
-    
-    @pytest.fixture
-    def cik_list():
-        """Get CIK list and use it as a fixture.
-
-        Used in TestCik inside test_integration.py.
-        """
-        return cik.get_cik()
 
     def test_get_cik(self, cik_list):
         """Test get_cik returns DataFrame."""
