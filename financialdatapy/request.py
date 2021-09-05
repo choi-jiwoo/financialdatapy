@@ -7,7 +7,6 @@ class ConnectionError(Exception):
     pass
 
 
-# Request data from sec.gov
 class Request():
     def __init__(self, url: str) -> None:
         self.url = url
