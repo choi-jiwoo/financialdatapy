@@ -22,13 +22,13 @@ class TestDate:
         """Test the date correctly converts to timestamp."""
         date = Price('AAPL', start, end)
 
-        assert date.start == 1627963200
-        assert date.end == 1628654400
+        assert date.start_date_in_timestamp == 1627963200
+        assert date.end_date_in_timestamp == 1628654400
 
     def test_empty_end_date(self):
         """Test default end date returns type int which is a timestamp."""
         date = Price('AAPL', '2021-8-3')
-        end = pd.to_datetime(date.end, unit='s').normalize()
+        end = pd.to_datetime(date.end_date_in_timestamp, unit='s').normalize()
         today = pd.Timestamp.today().normalize()
 
         assert end == today
@@ -41,7 +41,7 @@ class TestDate:
 
 class TestCik:
     """Test for getting a CIK list, and searching cik."""
-
+    
     @pytest.fixture
     def cik_list():
         """Get CIK list and use it as a fixture.
