@@ -60,6 +60,7 @@ class TestCik:
         """Test the length of CIK number is 10."""
         res = cik.search_cik(cik_list, 'AAPL')
         assert len(res) == 10
+        assert res == '0000320193'
 
 
 class TestFilings:
