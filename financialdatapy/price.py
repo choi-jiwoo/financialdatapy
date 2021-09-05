@@ -41,7 +41,7 @@ class Price():
 
     def get_price_data(self) -> dict:
         url = ('https://query1.finance.yahoo.com/v8/finance/chart/'
-               f'&{self.ticker}?symbol={self.ticker}'
+               f'{self.ticker}?symbol={self.ticker}'
                f'&period1={self.start_date_in_timestamp}'
                f'&period2={self.end_date_in_timestamp}'
                '&interval=1d&corsDomain=finance.yahoo.com')
