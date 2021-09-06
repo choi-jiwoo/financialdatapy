@@ -15,8 +15,8 @@ class Price():
 
     Attributes:
         ticker: Ticker of a company/stock.
-        start: Starting date to search.
-        end: Ending date to search.
+        start: Starting date to search. If empty, 1900-01-01 is passed.
+        end: Ending date to search. If empty, date of today is passed.
 
     Methods:
         date_to_timestamp(period: str) -> int:
@@ -32,8 +32,8 @@ class Price():
 
         Args:
             ticker: Ticker of a company/stock.
-            start: Starting date to search.
-            end: Ending date to search.
+            start: Starting date to search. If empty, 1900-01-01 is passed.
+            end: Ending date to search. If empty, date of today is passed.
         """
         self.ticker = ticker
         self.start_date_in_timestamp = self.date_to_timestamp(start)
