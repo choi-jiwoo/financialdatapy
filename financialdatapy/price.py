@@ -25,7 +25,8 @@ class Price():
             Get historical stock price data from finance.yahoo.com.
     """
 
-    def __init__(self, ticker: str, start: str,
+    def __init__(self, ticker: str,
+                 start: Optional[str] = '1900-01-01',
                  end: Optional[str] = None) -> None:
         """Initialize ticker, start date and optional end date to search.
 
