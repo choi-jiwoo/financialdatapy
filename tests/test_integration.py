@@ -15,6 +15,15 @@ def cik_list():
     return cik.get_cik()
 
 
+@pytest.fixture(scope='class')
+def price(company):
+    """Get historical price data.
+
+    Used in class TestPrice.
+    """
+    return company.historical('2021-8-3', '2021-8-10')
+
+
 class TestDate:
     """Test date operations."""
 
@@ -116,7 +125,6 @@ class TestFinancials:
 class TestPriceData:
     """Tests for getting historical stock price data."""
 
-    def test_getting_price_data(self, company):
+    def test_getting_price_data(self, price):
         """Test the type of historical stock price data is dictionary."""
-        price = company.historical('2021-8-3', '2021-8-10')
         assert isinstance(price, dict)
