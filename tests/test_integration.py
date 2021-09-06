@@ -130,7 +130,7 @@ class TestPriceData:
         assert isinstance(price, dict)
 
     def test_price_data(self, price):
-        """Test stock price data."""
+        """Test stock price data returns OHLC data."""
         price_data = price['chart']['result'][0]['indicators']['quote'][0]
         quotes = ['volume', 'close', 'open', 'high', 'low']
 
