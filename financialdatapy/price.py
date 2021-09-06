@@ -19,7 +19,7 @@ class Price():
         end: Ending date to search.
 
     Methods:
-        parse_date(period: str) -> int:
+        date_to_timestamp(period: str) -> int:
             Parse the date in string passed by an argument into a timestamp.
         get_price_data() -> dict:
             Get historical stock price data from finance.yahoo.com.
@@ -35,17 +35,17 @@ class Price():
             end: Ending date to search.
         """
         self.ticker = ticker
-        self.start_date_in_timestamp = self.parse_date(start)
+        self.start_date_in_timestamp = self.date_to_timestamp(start)
 
         if end is None:
             today = datetime.today().strftime('%Y-%m-%d')
-            self.end_date_in_timestamp = self.parse_date(today)
+            self.end_date_in_timestamp = self.date_to_timestamp(today)
         else:
             one_day_in_timestamp = 86_400
-            self.end_date_in_timestamp = (self.parse_date(end)
+            self.end_date_in_timestamp = (self.date_to_timestamp(end)
                                           + one_day_in_timestamp)
 
-    def parse_date(self, period: str) -> int:
+    def date_to_timestamp(self, period: str) -> int:
         """Parse the date in string passed by an argument into a timestamp.
 
         Args:
