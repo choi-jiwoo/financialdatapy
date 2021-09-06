@@ -3,10 +3,7 @@ from financialdatapy import cik
 from financialdatapy import stock
 
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def company():
-    """Instantiate Stock class.
-
-    Used in TestFinancials inside test_integration.py.
-    """
+    """Instantiate Stock class."""
     return stock.Stock('AAPL')
