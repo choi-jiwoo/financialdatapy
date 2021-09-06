@@ -34,6 +34,12 @@ class TestDate:
         assert date.start_date_in_timestamp == 1627963200
         assert date.end_date_in_timestamp == 1628654400
 
+    def test_empty_start_date(self):
+        """Test default start date returns timestamp of 1900-01-01."""
+        start = Price('AAPL')
+
+        assert start.start_date_in_timestamp == -2208974400
+
     def test_empty_end_date(self):
         """Test default end date returns type int which is a timestamp."""
         date = Price('AAPL', '2021-8-3')
