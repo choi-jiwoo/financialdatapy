@@ -127,12 +127,11 @@ class TestPriceData:
 
     def test_getting_price_data(self, price):
         """Test the type of historical stock price data is dictionary."""
-        assert isinstance(price, dict)
+        assert isinstance(price, pd.DataFrame)
 
     def test_price_data(self, price):
-        """Test stock price data returns OHLC data."""
-        price_data = price['chart']['result'][0]['indicators']['quote'][0]
-        quotes = ['volume', 'close', 'open', 'high', 'low']
-
-        for i in quotes:
-            assert i in price_data
+        """Test stock price data returns OHLC data.""" 
+        quotes = ['close', 'open', 'high', 'low', 'volume']
+        
+        for i, v in enumerate(price.columns):
+            assert v == quotes[i]
