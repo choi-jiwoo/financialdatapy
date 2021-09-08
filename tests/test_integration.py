@@ -135,3 +135,7 @@ class TestPriceData:
         
         for i, v in enumerate(price.columns):
             assert v == quotes[i]
+
+    def test_date_and_price_match(self, price):
+        """Test the price of a stock on a certain day matches together."""
+        assert price['close'][0] == 147.36
