@@ -66,8 +66,8 @@ class Price():
         except ValueError:
             date = datetime.strptime(period, '%y-%m-%d')
 
-        edt = timezone('Etc/GMT+4')
-        edt_date = edt.localize(date)
+        edt_timezone = timezone('Etc/GMT+4')
+        edt_date = edt_timezone.localize(date)
         timestamp = int(datetime.timestamp(edt_date))
 
         return timestamp
@@ -86,4 +86,16 @@ class Price():
         res = request.Request(url)
         data = res.get_json()
 
-        return data
+        timestamp = data['chart']['result'][0]['timestamp']
+        price_data = data['chart']['result'][0]['indicators']['quote'][0]
+        columns = ['close', 'open', 'high', 'low', 'volume']
+
+        date_range = [pd.to_datetime(x, unit='s').strftime('%Y-%m-%d')
+                      for x in timestamp]
+        price_table = pd.DataFrame(
+            price_data,
+            index=date_range,
+            columns=columns,
+        )
+
+        return price_table
