@@ -97,5 +97,6 @@ class Price():
             index=date_range,
             columns=columns,
         )
-
+        price_table = price_table.round(2)
+        
         return price_table
