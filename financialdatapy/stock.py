@@ -127,19 +127,21 @@ class Stock(Cik):
         )
         return std_financial
 
-    def historical(self, start: str, end: Optional[str] = None) -> dict:
+    def historical(self, start: Optional[str] = '1900-01-01',
+                   end: Optional[str] = None) -> dict:
         """Get historical stock price data from finance.yahoo.com.
 
         Args:
             start: Start date to query. Format should be in ISO 8601.
                 e.g. 2021-8-1 or 2021-08-01
+                If empty, 1900-01-01 is passed.
             end: End date to query. Format should be in ISO 8601.
                 e.g. 2021-8-10 or 2021-08-10
+                If empty, date of today is passed.
 
         Returns:
             Historical price data in JSON format.
         """
-        ticker = self.ticker
-        price = Price(ticker, start, end)
+        price = Price(self.ticker, start, end)
         price_data = price.get_price_data()
         return price_data
