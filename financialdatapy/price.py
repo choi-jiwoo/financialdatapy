@@ -41,11 +41,11 @@ class Price:
             date_to_timestamp(end) + Price.one_day_in_timestamp
         )
 
-    def get_price_data(self) -> dict:
+    def get_price_data(self) -> pd.DataFrame:
         """Get historical stock price data from finance.yahoo.com.
 
         Returns:
-            Historical stock price data in JSON format.
+            Historical stock price data in dataframe.
         """
         url = ('https://query1.finance.yahoo.com/v8/finance/chart/'
                f'{self.ticker}?symbol={self.ticker}'
