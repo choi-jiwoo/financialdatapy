@@ -18,7 +18,7 @@ def _validate_date_format(period: str) -> datetime:
         IntegerDateInputError: Raised when integer is passed as an argument.
 
     Returns:
-        datetime: Datetime object in YYYY-MM-DD or YY-MM-DD format.
+        Datetime object in YYYY-MM-DD or YY-MM-DD format.
     """
     if isinstance(period, int):
         raise IntegerDateInputError('Date should be in string.')
@@ -37,7 +37,7 @@ def date_to_timestamp(period: Optional[str] = None) -> int:
     """Parse the date in string passed by an argument into a timestamp.
 
     Args:
-        period: Date in string.
+        period: Date in string. If empty None is assigned.
 
     Raises:
         IntegerDateInputError: Raised when integer is passed as an argument.
