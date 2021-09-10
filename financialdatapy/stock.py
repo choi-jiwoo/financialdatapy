@@ -128,7 +128,7 @@ class Stock(Cik):
         return std_financial
 
     def historical(self, start: Optional[str] = '1900-01-01',
-                   end: Optional[str] = None) -> dict:
+                   end: Optional[str] = None) -> pd.DataFrame:
         """Get historical stock price data from finance.yahoo.com.
 
         Args:
@@ -140,7 +140,7 @@ class Stock(Cik):
                 If empty, date of today is passed.
 
         Returns:
-            Historical price data in JSON format.
+            Historical stock price data in dataframe.
         """
         price = Price(self.ticker, start, end)
         price_data = price.get_price_data()
