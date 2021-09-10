@@ -2,8 +2,8 @@ import pandas as pd
 import pytest
 from financialdatapy import cik
 from financialdatapy import filings
-from financialdatapy.price import Price
-from financialdatapy.price import IntegerDateInputError
+from financialdatapy import date
+from financialdatapy.date import IntegerDateInputError
 
 
 @pytest.fixture(scope='class')
@@ -38,21 +38,22 @@ class TestDate:
     )
     def test_parsing_date(self, start, end):
         """Test the date correctly converts to timestamp."""
-        date = Price('AAPL', start, end)
+        s_timestamp = date.date_to_timestamp(start)
+        e_timestamp = date.date_to_timestamp(end) + 86400
 
-        assert date.start_date_in_timestamp == 1627963200
-        assert date.end_date_in_timestamp == 1628654400
+        assert s_timestamp == 1627963200
+        assert e_timestamp == 1628654400
 
     def test_empty_start_date(self):
         """Test default start date returns timestamp of 1900-01-01."""
-        start = Price('AAPL')
+        s_timestamp = date.date_to_timestamp('1900-01-01')
 
-        assert start.start_date_in_timestamp == -2208974400
+        assert s_timestamp == -2208974400
 
     def test_empty_end_date(self):
         """Test default end date returns type int which is a timestamp."""
-        date = Price('AAPL', '2021-8-3')
-        end = pd.to_datetime(date.end_date_in_timestamp, unit='s').normalize()
+        e_timestamp = date.date_to_timestamp()
+        end = pd.to_datetime(e_timestamp, unit='s').normalize()
         today = pd.Timestamp.today().normalize()
 
         assert end == today
@@ -60,7 +61,7 @@ class TestDate:
     def test_integer_input_error(self):
         """Test the function returns error when integer is inputted."""
         with pytest.raises(IntegerDateInputError):
-            Price('AAPL', 1)
+            date.date_to_timestamp(1)
 
 
 @pytest.mark.usefixtures('cik_list')
