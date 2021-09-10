@@ -1,17 +1,15 @@
-from datetime import datetime
-from pytz import timezone
 from typing import Optional
 import pandas as pd
 from financialdatapy import request
+from financialdatapy.date import date_to_timestamp
 
 
-class IntegerDateInputError(Exception):
-    """Throws error when integer type is passed in date parameters."""
-    pass
-
-
-class Price():
+class Price:
     """A Class representing a company's historical stock price data.
+
+    Class Attributes:
+        one_day_in_timestamp: Timestamp value equivalent to one day. 
+            24hr * 3,600sec/hr = 86,400
 
     Attributes:
         ticker: Ticker of a company/stock.
@@ -24,53 +22,24 @@ class Price():
         get_price_data() -> dict:
             Get historical stock price data from finance.yahoo.com.
     """
+    one_day_in_timestamp = 86_400
 
-    def __init__(self, ticker: str,
-                 start: Optional[str] = '1900-01-01',
-                 end: Optional[str] = None) -> None:
+    def __init__(self, ticker: str, start: str, end: str) -> None:
         """Initialize ticker, start date and optional end date to search.
 
         Args:
             ticker: Ticker of a company/stock.
-            start: Starting date to search. If empty, 1900-01-01 is passed.
-            end: Ending date to search. If empty, date of today is passed.
+            start: Starting date to search.
+            end: Ending date to search. One more day will be added to the
+                end date internally for the date range to correctly include
+                the end date. Otherwise, the date range will be until the day
+                before the end date.
         """
         self.ticker = ticker
-        self.start_date_in_timestamp = self.date_to_timestamp(start)
-
-        if end is None:
-            today = datetime.today().strftime('%Y-%m-%d')
-            self.end_date_in_timestamp = self.date_to_timestamp(today)
-        else:
-            one_day_in_timestamp = 86_400
-            self.end_date_in_timestamp = (self.date_to_timestamp(end)
-                                          + one_day_in_timestamp)
-
-    def date_to_timestamp(self, period: str) -> int:
-        """Parse the date in string passed by an argument into a timestamp.
-
-        Args:
-            period: Date in string format YYYY-MM-DD or YY-MM-DD.
-
-        Raises:
-            IntegerDateInputError: Raised when integer is passed as an argument.
-
-        Returns:
-            The timestamp value equivalent to the date passed.
-        """
-        if isinstance(period, int):
-            raise IntegerDateInputError('Date should be in string.')
-
-        try:
-            date = datetime.strptime(period, '%Y-%m-%d')
-        except ValueError:
-            date = datetime.strptime(period, '%y-%m-%d')
-
-        edt_timezone = timezone('Etc/GMT+4')
-        edt_date = edt_timezone.localize(date)
-        timestamp = int(datetime.timestamp(edt_date))
-
-        return timestamp
+        self.start_date_in_timestamp = date_to_timestamp(start)
+        self.end_date_in_timestamp = (
+            date_to_timestamp(end) + Price.one_day_in_timestamp
+        )
 
     def get_price_data(self) -> dict:
         """Get historical stock price data from finance.yahoo.com.
