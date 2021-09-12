@@ -103,6 +103,7 @@ class Stock(Cik):
         financial_statement = {
             name[i]: x for i, x in enumerate(financial_statement)
         }
+        
         return financial_statement
 
     def standard_financials(self, which_financial: str = 'income_statement',
@@ -125,6 +126,7 @@ class Stock(Cik):
             which_financial=which_financial,
             period=period,
         )
+
         return std_financial
 
     def historical(self, start: Optional[str] = '1900-01-01',
@@ -144,4 +146,5 @@ class Stock(Cik):
         """
         price = Price(self.ticker, start, end)
         price_data = price.get_price_data()
+
         return price_data
