@@ -52,11 +52,12 @@ class Stock(Cik):
         ticker: Ticker of a company/stock.
 
     Methods:
-        read_financials(form :str) -> dict:
-            Get financial statements as reported.
-        read_std_financials(which_financial, period="annual") -> pd.DataFrame:
-            Get standard financial statements.
-
+        financials(form: str = '10-K') -> dict:
+            Get financial statements as reported. Default form is 10-K.
+        standard_financials(which_financial: str = 'income_statement',
+                            period: str = 'annual') -> pd.DataFrame:
+            Get standard financial statements. Default financial is
+            income statement and default period is in annual.
     """
 
     def __init__(self, ticker: str) -> None:
