@@ -15,29 +15,15 @@ class Price(ABC):
     Attributes:
         ticker: Ticker of a company/stock.
         start: Starting date to search. If empty, 1900-01-01 is passed.
-        end: Ending date to search. If empty, date of today is passed.
-
-    Methods:
-        get_price_data() -> dict:
-            Get historical stock price data.
-        get_url() -> str:
-            Get price data source url.
-        clean() -> pd.DataFrame:
-            Clean JSON file to present in clean dataframe.
+        end: Ending date to search. One more day will be added to the
+                end date internally for the date range to correctly include
+                the end date. Otherwise, the date range will be until the day
+                before the end date. If empty, date of today is passed.
     """
     one_day_in_timestamp = 86_400
 
     def __init__(self, ticker: str, start: str, end: str) -> None:
-        """Initialize ticker, start date and optional end date to search.
-
-        Args:
-            ticker: Ticker of a company/stock.
-            start: Starting date to search.
-            end: Ending date to search. One more day will be added to the
-                end date internally for the date range to correctly include
-                the end date. Otherwise, the date range will be until the day
-                before the end date.
-        """
+        """Initialize ticker, start date and optional end date to search."""
         self.ticker = ticker
         self.start = date_to_timestamp(start)
         self.end = date_to_timestamp(end) + Price.one_day_in_timestamp
@@ -57,10 +43,16 @@ class Price(ABC):
 
     @abstractmethod
     def get_url(self) -> str:
+        """Get price data source url."""
         pass
 
     @abstractmethod
     def clean(self, data: dict) -> pd.DataFrame:
+        """Clean JSON file to present in clean dataframe.
+        
+        Args:
+            data: Historical stock price data in JSON
+        """
         pass
 
     
