@@ -36,7 +36,7 @@ from financialdatapy.cik import search_cik
 from financialdatapy.filings import get_filings_list
 from financialdatapy.filings import get_financials
 from financialdatapy.financials import get_std_financials
-from financialdatapy.price import Price
+from financialdatapy.price import UsMarket
 
 
 class Cik():
@@ -148,7 +148,7 @@ class Stock(Cik):
         Returns:
             Historical stock price data in dataframe.
         """
-        price = Price(self.ticker, start, end)
+        price = UsMarket(self.ticker, start, end)
         price_data = price.get_price_data()
 
         return price_data
