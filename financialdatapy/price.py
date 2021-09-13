@@ -39,10 +39,8 @@ class Price(ABC):
                 before the end date.
         """
         self.ticker = ticker
-        self.start_date_in_timestamp = date_to_timestamp(start)
-        self.end_date_in_timestamp = (
-            date_to_timestamp(end) + Price.one_day_in_timestamp
-        )
+        self.start = date_to_timestamp(start)
+        self.end = date_to_timestamp(end) + Price.one_day_in_timestamp
     
     def get_price_data(self) -> pd.DataFrame:
         """Get historical stock price data.
@@ -73,8 +71,7 @@ class UsMarket(Price):
     def get_url(self) -> str:
         url = ('https://query1.finance.yahoo.com/v8/finance/chart/'
                f'{self.ticker}?symbol={self.ticker}'
-               f'&period1={self.start_date_in_timestamp}'
-               f'&period2={self.end_date_in_timestamp}'
+               f'&period1={self.start}&period2={self.end}'
                '&interval=1d&corsDomain=finance.yahoo.com')
 
         return url
