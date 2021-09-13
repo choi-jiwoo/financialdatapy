@@ -58,6 +58,9 @@ class Stock(Cik):
                             period: str = 'annual') -> pd.DataFrame:
             Get standard financial statements. Default financial is
             income statement and default period is in annual.
+        historical(self, start: Optional[str] = '1900-01-01',
+                   end: Optional[str] = None) -> pd.DataFrame:
+            Get historical stock price data.
     """
 
     def __init__(self, ticker: str) -> None:
@@ -132,7 +135,7 @@ class Stock(Cik):
 
     def historical(self, start: Optional[str] = '1900-01-01',
                    end: Optional[str] = None) -> pd.DataFrame:
-        """Get historical stock price data from finance.yahoo.com.
+        """Get historical stock price data.
 
         Args:
             start: Start date to query. Format should be in ISO 8601.
