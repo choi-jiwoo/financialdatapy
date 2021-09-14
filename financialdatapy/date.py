@@ -1,6 +1,6 @@
 from datetime import datetime
-from pytz import timezone
 from typing import Optional
+import pandas as pd
 
 
 class IntegerDateInputError(Exception):
@@ -24,12 +24,11 @@ def _validate_date_format(period: str) -> datetime:
         raise IntegerDateInputError('Date should be in string.')
 
     if period is None:
-        period = datetime.today().strftime('%Y-%m-%d')
-
-    try:
-        date = datetime.strptime(period, '%Y-%m-%d')
-    except ValueError:
-        date = datetime.strptime(period, '%y-%m-%d')
+        date = pd.Timestamp.today().normalize()
+    else:
+        date = pd.to_datetime(period, yearfirst=True)
+    
+    date = date.tz_localize(tz='Etc/GMT+4')
     
     return date
 
@@ -46,9 +45,7 @@ def date_to_timestamp(period: Optional[str] = None) -> int:
         The timestamp value equivalent to the date passed.
     """
     date = _validate_date_format(period)
-    edt_timezone = timezone('Etc/GMT+4')
-    edt_date = edt_timezone.localize(date)
-    timestamp = int(datetime.timestamp(edt_date))
+    timestamp = date.timestamp()
 
     return timestamp
 
