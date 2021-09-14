@@ -58,6 +58,12 @@ class TestDate:
 
         assert end == today
 
+    def test_year_only_date_input(self):
+        """Test YYYY format string as an argument returns YYYY-01-01 format."""
+        timestamp = date.date_to_timestamp('2021')
+        
+        assert timestamp == 1609473600
+
     def test_integer_input_error(self):
         """Test the function returns error when integer is inputted."""
         with pytest.raises(IntegerDateInputError):
