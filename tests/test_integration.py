@@ -97,20 +97,15 @@ class TestFinancials:
     """Test for getting financial statements."""
 
     @pytest.mark.parametrize(
-        'url, zero',
+        'form',
         [
-            ('000032019320000096/R2.htm', 0),
-            ('000032019320000096/R4.htm', 0),
-            ('000032019320000096/R7.htm', 0),
-            ('000032019321000065/R2.htm', 0),
-            ('000032019321000065/R4.htm', 0),
-            ('000032019321000065/R7.htm', 0),
+            '10-K',
+            '10-Q',
         ]
     )
-    def test_getting_each_financials(self, url, zero):
-        """Test if all 3 major financial statement is returned."""
-        base_url = 'https://www.sec.gov/Archives/edgar/data/320193/'
-        assert len(filings.get_values(base_url+url)['value']) > zero
+    def test_getting_financials_as_reported(self, company, form):
+        """Test all 3 major annual or quarterly financials are returned."""
+        assert len(company.financials(form)) == 3
 
     @pytest.mark.parametrize(
         'which_financial, period',
