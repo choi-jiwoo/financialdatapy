@@ -37,24 +37,25 @@ def get_financials(cik_num: str, submission: pd.DataFrame,
     """
 
     form_type = form_type.upper()
-    if not submission[submission['Form'] == form_type].empty:
-        # get latest filing
-        form = submission[submission['Form'] == form_type]
-        latest_filing = form.iloc[0].at['AccessionNumber']
-        links = get_latest_form(cik_num, latest_filing)
 
-        is_l = links.get('income_statement')
-        income_statement = get_values(is_l)
-
-        bs_l = links.get('balance_sheet')
-        balance_sheet = get_values(bs_l)
-
-        cf_l = links.get('cash_flow')
-        cash_flow = get_values(cf_l)
-
-        return income_statement, balance_sheet, cash_flow
-    else:
+    if submission[submission['Form'] == form_type].empty:
         raise EmptyDataFrameError('Failed in getting financials.')
+
+    # get latest filing
+    form = submission[submission['Form'] == form_type]
+    latest_filing = form.iloc[0].at['AccessionNumber']
+    links = get_latest_form(cik_num, latest_filing)
+
+    is_l = links.get('income_statement')
+    income_statement = get_values(is_l)
+
+    bs_l = links.get('balance_sheet')
+    balance_sheet = get_values(bs_l)
+
+    cf_l = links.get('cash_flow')
+    cash_flow = get_values(cf_l)
+
+    return income_statement, balance_sheet, cash_flow
 
 
 def get_values(link: str) -> dict:
@@ -105,25 +106,25 @@ def get_values(link: str) -> dict:
     num_of_months_ended = len(date) // len(month_ended)
     num_of_values_per_period = len(all_values) // len(date)
 
-    if len(element) == num_of_values_per_period:
-        financials = {
-            'title': title,
-            'unit': unit,
-            'element': element,
-            'value': [],
-        }
-        for i, v in enumerate(month_ended):
-            values_by_period = {
-                date[x]: all_values[x::total_periods]
-                for x
-                in range(i*num_of_months_ended, (i+1)*num_of_months_ended)
-            }
-            financials['value'].append({v: values_by_period})
-
-        return financials
-    else:
+    if len(element) != num_of_values_per_period:
         raise ImbalanceNumberOfFactsError(
-            "Number of elements and values doesn't match")
+                    "Number of elements and values doesn't match")
+
+    financials = {
+        'title': title,
+        'unit': unit,
+        'element': element,
+        'value': [],
+    }
+    for i, v in enumerate(month_ended):
+        values_by_period = {
+            date[x]: all_values[x::total_periods]
+            for x
+            in range(i*num_of_months_ended, (i+1)*num_of_months_ended)
+        }
+        financials['value'].append({v: values_by_period})
+
+    return financials
 
 
 def get_std_financials(ticker: str,
