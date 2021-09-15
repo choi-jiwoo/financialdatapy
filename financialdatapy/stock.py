@@ -19,8 +19,8 @@ Get financial statements:
     from financialdatapy.stock import Stock
 
     comp = Stock('AAPL')
-    fs = comp.financials('10-K')
-    std_fs_ic = comp.standard_financials('income_statement', 'annual')
+    aapl_is_as_reported = comp.financials('10-K', 'income_statement')
+    aapl_std_is = comp.standard_financials('income_statement', 'annual')
 
 Get historical price data:
 
@@ -50,17 +50,6 @@ class Stock(Cik):
 
     Attributes:
         ticker: Ticker of a company/stock.
-
-    Methods:
-        financials(form: str = '10-K') -> dict:
-            Get financial statements as reported. Default form is 10-K.
-        standard_financials(which_financial: str = 'income_statement',
-                            period: str = 'annual') -> pd.DataFrame:
-            Get standard financial statements. Default financial is
-            income statement and default period is in annual.
-        historical(self, start: Optional[str] = '1900-01-01',
-                   end: Optional[str] = None) -> pd.DataFrame:
-            Get historical stock price data.
     """
 
     def __init__(self, ticker: str) -> None:
@@ -80,7 +69,7 @@ class Stock(Cik):
             form: Either '10-K' or '10-Q' form. Default value is '10-K'.
             financial: Which financial statement to retrieve. Input string
                 should be either 'income_statement', 'balance_sheet', or
-                'cash_flow'. Income Statement is set as a default.
+                'cash_flow'. Default value is 'income_statement'
 
         Returns:
             A dataframe containing financial statement as reported.
