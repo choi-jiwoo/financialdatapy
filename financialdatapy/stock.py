@@ -34,7 +34,7 @@ from typing import Optional
 from financialdatapy.cik import get_cik
 from financialdatapy.cik import search_cik
 from financialdatapy.filings import get_filings_list
-from financialdatapy.filings import get_financials
+from financialdatapy.financials import get_financials
 from financialdatapy.financials import get_std_financials
 from financialdatapy.price import UsMarket
 
