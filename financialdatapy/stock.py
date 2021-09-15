@@ -72,28 +72,21 @@ class Stock(Cik):
 
         self.ticker = ticker.upper()
 
-    def financials(self, form: str = '10-K') -> dict:
+    def financials(self, form: str = '10-K',
+                   financial: str = 'income_statement') -> pd.DataFrame:
         """Get financial statements as reported.
 
         Args:
             form: Either '10-K' or '10-Q' form. Default value is '10-K'.
+            financial: Which financial statement to retrieve. Input string
+                should be either 'income_statement', 'balance_sheet', or
+                'cash_flow'. Income Statement is set as a default.
 
         Returns:
-            Dictionary with key for the financial statment name
-            and value for the actual data.
-
-            Looks like::
-
-                {
-                    'income_statement': {...},
-                    'balance_sheet': {...},
-                    'cash_flow': {...}
-                }
+            A dataframe containing financial statement as reported.
 
         Raises:
             EmptyDataFrameError: If dataframe is empty.
-            ImbalanceNumberOfFactsError: When the number of elements and values
-                are different.
         """
 
         comp_cik = search_cik(Stock.cik_list, self.ticker)
@@ -104,11 +97,8 @@ class Stock(Cik):
             submission,
             form,
         )
-        financial_statement = {
-            name[i]: x for i, x in enumerate(financial_statement)
-        }
-        
-        return financial_statement
+
+        return financial_statement[financial]
 
     def standard_financials(self, which_financial: str = 'income_statement',
                             period: str = 'annual') -> pd.DataFrame:
