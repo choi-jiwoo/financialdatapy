@@ -12,6 +12,7 @@ Get a list of CIK:
 
     from financialdatapy.stock import Cik
 
+    Cik.update_cik_list()  # get latest cik list
     cik_list = Cik.cik_list
 
 Get financial statements:
@@ -43,6 +44,10 @@ class Cik():
     """Cik list as a class variable."""
 
     cik_list = get_cik_list()
+
+    @staticmethod
+    def update_cik_list():
+        Cik.cik_list = get_cik_list(update=True)
 
 
 class Stock(Cik):
