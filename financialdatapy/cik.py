@@ -4,6 +4,23 @@ import re
 from financialdatapy import request
 
 
+def get_cik_list() -> pd.DataFrame:
+    """Get cik_list.csv saved in local.
+
+    If it is not saved in local, retrieve the data from SEC.
+
+    Returns:
+        Dataframe containing CIK, company name, and ticker for its columns.
+    """
+    try:
+        cik_list = pd.read_csv('data/cik_list.csv')
+    except FileNotFoundError:
+        cik_list = get_cik()
+        cik_list.to_csv('data/cik_list.csv', index=False)
+
+    return cik_list
+
+
 def get_cik() -> pd.DataFrame:
     """Get a list of companies CIK(Central Index Key) from SEC.
 
