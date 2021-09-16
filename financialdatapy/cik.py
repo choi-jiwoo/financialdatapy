@@ -4,17 +4,27 @@ import re
 from financialdatapy import request
 
 
-def get_cik_list() -> pd.DataFrame:
+class NeedsUpdateError(Exception):
+    """Raises error if cik list needs to be updated to the latest."""
+    pass
+
+
+def get_cik_list(update: bool = False) -> pd.DataFrame:
     """Get cik_list.csv saved in local.
 
     If it is not saved in local, retrieve the data from SEC.
+
+    Args:
+        update: Updates cik list to the latest cik list. Default value is False.
 
     Returns:
         Dataframe containing CIK, company name, and ticker for its columns.
     """
     try:
+        if update:
+            raise NeedsUpdateError()
         cik_list = pd.read_csv('data/cik_list.csv')
-    except FileNotFoundError:
+    except (FileNotFoundError, NeedsUpdateError):
         cik_list = get_cik()
         cik_list.to_csv('data/cik_list.csv', index=False)
 
