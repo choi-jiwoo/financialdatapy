@@ -31,7 +31,7 @@ Get historical price data:
 """
 import pandas as pd
 from typing import Optional
-from financialdatapy.cik import get_cik
+from financialdatapy.cik import get_cik_list
 from financialdatapy.cik import search_cik
 from financialdatapy.filings import get_filings_list
 from financialdatapy.financials import get_financials
@@ -40,9 +40,9 @@ from financialdatapy.price import UsMarket
 
 
 class Cik():
-    """Get cik list as a class variable."""
+    """Cik list as a class variable."""
 
-    cik_list = get_cik()
+    cik_list = get_cik_list()
 
 
 class Stock(Cik):

@@ -12,7 +12,7 @@ def cik_list():
 
     Used in TestCik inside test_integration.py.
     """
-    return cik.get_cik()
+    return cik.get_cik_list()
 
 
 @pytest.fixture(scope='class')
