@@ -27,7 +27,7 @@ class Price(ABC):
         self.ticker = ticker
         self.start = date_to_timestamp(start)
         self.end = date_to_timestamp(end) + Price.one_day_in_timestamp
-    
+
     def get_price_data(self) -> pd.DataFrame:
         """Get historical stock price data.
 
@@ -49,14 +49,25 @@ class Price(ABC):
     @abstractmethod
     def clean(self, data: dict) -> pd.DataFrame:
         """Clean JSON file to present in clean dataframe.
-        
+
         Args:
             data: Historical stock price data in JSON
         """
         pass
 
-    
+
 class UsMarket(Price):
+    """Historical price data of companies in US.
+
+    Attributes:
+        ticker: Ticker of a company/stock.
+        start: Starting date to search. If empty, 1900-01-01 is passed.
+        end: Ending date to search. One more day will be added to the
+                end date internally for the date range to correctly include
+                the end date. Otherwise, the date range will be until the day
+                before the end date. If empty, date of today is passed.
+    """
+
     def __init__(self, ticker: str, start: str, end: str) -> None:
         super().__init__(ticker, start, end)
 
@@ -81,8 +92,5 @@ class UsMarket(Price):
             columns=columns,
         )
         price_table = price_table.round(2)
-        
+
         return price_table
-
-
-        
