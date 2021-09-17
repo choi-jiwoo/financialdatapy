@@ -35,8 +35,7 @@ from typing import Optional
 from financialdatapy.cik import get_cik_list
 from financialdatapy.cik import search_cik
 from financialdatapy.filings import get_filings_list
-from financialdatapy.financials import get_financials
-from financialdatapy.financials import get_std_financials
+from financialdatapy.financials import UsFinancials
 from financialdatapy.price import UsMarket
 
 
@@ -87,10 +86,12 @@ class Stock(Cik):
         comp_cik = search_cik(Stock.cik_list, self.ticker)
         submission = get_filings_list(comp_cik)
         name = ['income_statement', 'balance_sheet', 'cash_flow']
-        financial_statement = get_financials(
-            comp_cik,
-            submission,
-            form,
+
+        market = UsFinancials()
+        financial_statement = market.get_financials(
+            cik_num=comp_cik,
+            submission=submission,
+            form_type=form,
         )
 
         return financial_statement[financial]
@@ -110,7 +111,8 @@ class Stock(Cik):
             statement elements.
         """
 
-        std_financial = get_std_financials(
+        market = UsFinancials()
+        std_financial = market.get_std_financials(
             ticker=self.ticker,
             which_financial=which_financial,
             period=period,
