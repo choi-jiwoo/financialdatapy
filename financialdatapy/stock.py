@@ -47,6 +47,7 @@ class Cik():
 
     @staticmethod
     def update_cik_list():
+        """Get the latest cik list from SEC."""
         Cik.cik_list = get_cik_list(update=True)
 
 
