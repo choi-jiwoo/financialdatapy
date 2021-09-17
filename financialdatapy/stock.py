@@ -20,8 +20,8 @@ Get financial statements:
     from financialdatapy.stock import Stock
 
     comp = Stock('AAPL')
-    aapl_is_as_reported = comp.financials('10-K', 'income_statement')
-    aapl_std_is = comp.standard_financials('income_statement', 'annual')
+    aapl_ic_as_reported = comp.financials('10-K', 'income_statement')
+    aapl_std_ic = comp.standard_financials('income_statement', 'annual')
 
 Get historical price data:
 
@@ -78,9 +78,6 @@ class Stock(Cik):
 
         Returns:
             A dataframe containing financial statement as reported.
-
-        Raises:
-            EmptyDataFrameError: If dataframe is empty.
         """
 
         comp_cik = search_cik(Stock.cik_list, self.ticker)

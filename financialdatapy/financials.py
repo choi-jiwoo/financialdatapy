@@ -41,10 +41,6 @@ class Financials(ABC):
 
         Returns:
             Dictionary containing all the data from financial statement.
-
-        Raises:
-            ImbalanceNumberOfFactsError: When the number of elements and values
-                are different.
         """
         pass
 
