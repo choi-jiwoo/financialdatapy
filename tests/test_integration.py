@@ -105,7 +105,12 @@ class TestFinancials:
     )
     def test_getting_financials_as_reported(self, company, form):
         """Test all 3 major annual or quarterly financials are returned."""
-        assert len(company.financials(form)) == 3
+        ic = company.financials(form, 'income_statement')
+        bs = company.financials(form, 'balance_sheet')
+        cf = company.financials(form, 'cash_flow')
+        assert len(ic) > 0
+        assert len(bs) > 0
+        assert len(cf) > 0
 
     @pytest.mark.parametrize(
         'which_financial, period',
