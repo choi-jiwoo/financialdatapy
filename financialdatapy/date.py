@@ -12,7 +12,7 @@ def _validate_date_format(period: str) -> datetime:
     """Validate the format of date passed as a string.
 
     Args:
-        period: Date in string 
+        period: Date in string
 
     Raises:
         IntegerDateInputError: Raised when integer is passed as an argument.
@@ -27,10 +27,11 @@ def _validate_date_format(period: str) -> datetime:
         date = pd.Timestamp.today().normalize()
     else:
         date = pd.to_datetime(period, yearfirst=True)
-    
+
     date = date.tz_localize(tz='Etc/GMT+4')
-    
+
     return date
+
 
 def date_to_timestamp(period: Optional[str] = None) -> int:
     """Parse the date in string passed by an argument into a timestamp.
@@ -48,4 +49,3 @@ def date_to_timestamp(period: Optional[str] = None) -> int:
     timestamp = date.timestamp()
 
     return timestamp
-

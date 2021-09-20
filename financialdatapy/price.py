@@ -9,7 +9,7 @@ class Price(ABC):
     """A Class representing a company's historical stock price data.
 
     Class Attributes:
-        one_day_in_timestamp: Timestamp value equivalent to one day. 
+        one_day_in_timestamp: Timestamp value equivalent to one day.
             24hr * 3,600sec/hr = 86,400
 
     Attributes:

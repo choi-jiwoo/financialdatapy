@@ -61,7 +61,7 @@ class TestDate:
     def test_year_only_date_input(self):
         """Test YYYY format string as an argument returns YYYY-01-01 format."""
         timestamp = date.date_to_timestamp('2021')
-        
+
         assert timestamp == 1609473600
 
     def test_integer_input_error(self):
@@ -137,9 +137,9 @@ class TestPriceData:
         assert isinstance(price, pd.DataFrame)
 
     def test_price_data(self, price):
-        """Test stock price data returns OHLC data.""" 
+        """Test stock price data returns OHLC data."""
         quotes = ['close', 'open', 'high', 'low', 'volume']
-        
+
         for i, v in enumerate(price.columns):
             assert v == quotes[i]
 
