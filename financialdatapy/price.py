@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Optional
 import pandas as pd
 from financialdatapy import request
 from financialdatapy.date import date_to_timestamp
