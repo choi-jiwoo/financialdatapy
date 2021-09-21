@@ -125,7 +125,7 @@ class Stock(Cik):
 
         return std_financial
 
-    def historical(self, start: Optional[str] = '1900-01-01',
+    def historical(self, start: str = '1900-01-01',
                    end: Optional[str] = None) -> pd.DataFrame:
         """Get historical stock price data.
 
