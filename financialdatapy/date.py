@@ -46,6 +46,6 @@ def date_to_timestamp(period: Optional[str] = None) -> int:
         The timestamp value equivalent to the date passed.
     """
     date = _validate_date_format(period)
-    timestamp = date.timestamp()
+    timestamp = int(date.timestamp())
 
     return timestamp
