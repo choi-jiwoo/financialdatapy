@@ -31,8 +31,8 @@ class Request():
         headers = {'User-Agent': 'Mozilla'}
         res = requests.get(self.url, headers=headers)
 
-        if not res.ok:
-            raise ConnectionError(f'Status code<{res.status_code}>')
+        if res.status_code != 200:
+            res.raise_for_status()
 
         return res
 
