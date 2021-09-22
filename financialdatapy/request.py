@@ -21,7 +21,7 @@ class Request():
         self.url = url
         self.res = self.http_request()
 
-    def http_request(self) -> requests.models.Response:
+    def http_request(self) -> requests.Response:
         """Sends a GET request to a data source url.
 
         :raises ConnectionError: If the connection failed.
