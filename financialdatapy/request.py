@@ -4,11 +4,6 @@ import json
 from bs4 import BeautifulSoup
 
 
-class ConnectionError(Exception):
-    """Throws an error when http request fails."""
-    pass
-
-
 class Request():
     """A class sending and receiving http request.
 
