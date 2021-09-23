@@ -59,7 +59,6 @@ class Stock(Cik):
                 should be either 'income_statement', 'balance_sheet', or
                 'cash_flow'. Default value is 'income_statement'
         :type financial: str, optional
-
         :return: A dataframe containing financial statement as reported.
         :rtype: pandas.DataFrame
 
@@ -99,7 +98,6 @@ class Stock(Cik):
         :type which_financial: str, optional
         :param period: Either 'annual' or 'quarter'. The default value is 'annual'
         :type period: str, optional
-
         :return: A dataframe with columns as dates, and index as financial
             statement elements.
         :rtype: pandas.DataFrame
@@ -135,7 +133,6 @@ class Stock(Cik):
         :param end: End date to query. Format should be in ISO 8601.
             If empty, date of today is passed.
         :type end: str, optional
-
         :return: Historical stock price data in dataframe.
         :rtype: pandas.DataFrame
 
