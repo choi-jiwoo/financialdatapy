@@ -1,25 +1,24 @@
+"""This module parses and converts objects to date format objects"""
 from datetime import datetime
 from typing import Optional
 import pandas as pd
 
 
 class IntegerDateInputError(Exception):
-    """Throws error when integer type is passed in date parameters."""
+    """Raised when integer is passed."""
     pass
 
 
 def _validate_date_format(period: str) -> datetime:
     """Validate the format of date passed as a string.
 
-    Args:
-        period: Date in string
-
-    Raises:
-        IntegerDateInputError: Raised when integer is passed as an argument.
-
-    Returns:
-        Datetime object in YYYY-MM-DD or YY-MM-DD format.
+    :param period: Date in string. If None is passed, date of today is assigned.
+    :type period: str
+    :raises IntegerDateInputError: Raised when integer is passed as an argument.
+    :return: Date with format YYYY-MM-DD or YY-MM-DD.
+    :rtype: datetime
     """
+
     if isinstance(period, int):
         raise IntegerDateInputError('Date should be in string.')
 
@@ -34,17 +33,14 @@ def _validate_date_format(period: str) -> datetime:
 
 
 def date_to_timestamp(period: Optional[str] = None) -> int:
-    """Parse the date in string passed by an argument into a timestamp.
+    """Parse date passed by an argument as string into a timestamp.
 
-    Args:
-        period: Date in string. If empty None is assigned.
-
-    Raises:
-        IntegerDateInputError: Raised when integer is passed as an argument.
-
-    Returns:
-        The timestamp value equivalent to the date passed.
+    :param period: Date in string. If empty None is assigned.
+    :type period: str, optional
+    :return: The timestamp value equivalent to the date passed.
+    :rtype: int
     """
+
     date = _validate_date_format(period)
     timestamp = int(date.timestamp())
 
