@@ -1,3 +1,4 @@
+"""This module retrieves company filings data from EDGAR."""
 import pandas as pd
 import re
 from financialdatapy import request
@@ -6,11 +7,10 @@ from financialdatapy import request
 def get_filings_list(cik: str) -> pd.DataFrame:
     """Retrieve whole list of filings a company made in the SEC EDGAR system.
 
-    Args:
-        cik: CIK of a company.
-
-    Returns:
-        Dataframe containing all the company filings information.
+    :param cik: CIK of a company.
+    :type cik: str
+    :return: Dataframe containing all the company filings data.
+    :rtype: pandas.DataFrame
     """
 
     url = f'http://data.sec.gov/submissions/CIK{cik}.json'
@@ -35,18 +35,16 @@ def get_filings_list(cik: str) -> pd.DataFrame:
 def get_latest_form(cik: str, latest: str) -> dict:
     """Find URL of each financial statements where their data is in table form.
 
-    EDGAR system provides an interactive data in their website. Interactive
-    data only contains the financial statements of a company which is just the
-    same one in the official document. So it makes one easy to scrape the
-    financial statment data.
+    EDGAR system provides an 'interactive data' in their website. It contains
+    financial statements as reported in table form.
 
-    Args:
-        cik: CIK of a company.
-        latest: Latest accesion number of a form.
 
-    Returns:
-        Dictionary with the name of financial statements as a key, and their
-            URL to the data as a value.
+    :param cik: CIK of a company.
+    :type cik: str
+    :param latest: Latest accesion number of a form.
+    :type cik: str
+    :return: Each financial statements mapped with their URL to the data.
+    :rtype: dict
     """
 
     url = ('https://www.sec.gov/cgi-bin/viewer?action=view&'
