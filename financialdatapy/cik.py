@@ -1,3 +1,4 @@
+"""This module retrieves a list of companies CIK."""
 import pandas as pd
 from string import capwords
 import re
@@ -6,6 +7,7 @@ from financialdatapy import request
 
 class NeedsUpdateError(Exception):
     """Raises error if cik list needs to be updated to the latest."""
+
     pass
 
 
@@ -14,11 +16,10 @@ def get_cik_list(update: bool = False) -> pd.DataFrame:
 
     If it is not saved in local, retrieve the data from SEC.
 
-    Args:
-        update: Updates cik list to the latest cik list. Default value is False.
-
-    Returns:
-        Dataframe containing CIK, company name, and ticker for its columns.
+    :param update: Updates cik list to the latest cik list, defaults to False.
+    :type update: bool
+    :return: Dataframe with CIK, company name, and ticker for its columns.
+    :rtype: pandas.DataFrame
     """
     try:
         if update:
@@ -36,10 +37,9 @@ def get_cik() -> pd.DataFrame:
 
     The list also contains ticker of a company.
 
-    Returns:
-        Dataframe containing CIK, company name, and ticker for its columns.
+    :return: Dataframe with CIK, company name, and ticker for its columns.
+    :rtype: pandas.DataFrame
     """
-
     url = 'https://www.sec.gov/files/company_tickers_exchange.json'
     res = request.Request(url)
     cik_data = res.get_json()
@@ -70,15 +70,14 @@ def get_cik() -> pd.DataFrame:
 def search_cik(cik_list: pd.DataFrame, ticker: str) -> str:
     """Search CIK of specific a company.
 
-    Args:
-        cik_list: Dataframe containing CIK, company name,
-            and ticker for its columns.
-        ticker: Company ticker to search.
-
-    Returns:
-        CIK of the company searching for.
+    :param cik_list: Dataframe containing CIK, company name,
+        and ticker for its columns.
+    :type cik_list: pandas.DataFrame
+    :param ticker: Company ticker to search.
+    :type ticker: str
+    :return: CIK of the company searching for.
+    :rtype: str
     """
-
     ticker_df = cik_list[cik_list['ticker'] == ticker]
     cik = ticker_df.get('cik').item()
 

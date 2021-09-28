@@ -37,7 +37,6 @@ class Request():
         :return: A JSON format data
         :rtype: dict
         """
-
         return json.loads(self.res.text)
 
     def get_soup(self) -> BeautifulSoup:
@@ -46,5 +45,4 @@ class Request():
         :return: A HTML format data
         :rtype: Beautifulsoup
         """
-
         return BeautifulSoup(self.res.text, 'html.parser')

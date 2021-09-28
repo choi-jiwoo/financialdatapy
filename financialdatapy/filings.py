@@ -12,7 +12,6 @@ def get_filings_list(cik: str) -> pd.DataFrame:
     :return: Dataframe containing all the company filings data.
     :rtype: pandas.DataFrame
     """
-
     url = f'http://data.sec.gov/submissions/CIK{cik}.json'
     res = request.Request(url)
     data = res.get_json()
@@ -46,7 +45,6 @@ def get_latest_form(cik: str, latest: str) -> dict:
     :return: Each financial statements mapped with their URL to the data.
     :rtype: dict
     """
-
     url = ('https://www.sec.gov/cgi-bin/viewer?action=view&'
            f'cik={cik}&accession_number={latest}&xbrl_type=v')
     res = request.Request(url)

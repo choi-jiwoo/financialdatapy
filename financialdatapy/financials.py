@@ -1,3 +1,4 @@
+"""This module retrieves financial statements of a company."""
 from abc import ABC, abstractmethod
 import pandas as pd
 import json
@@ -6,29 +7,27 @@ from financialdatapy.filings import get_latest_form
 
 
 class EmptyDataFrameError(Exception):
-    """Exception when dataframe is empty.
-    """
+    """Exception when retreived dataframe is empty."""
     pass
 
 
 class Financials(ABC):
-    """A Class representing a company's financial statements."""
+    """A Class representing financial statements. of a company."""
 
     @abstractmethod
     def get_financials(self, cik_num: str, submission: pd.DataFrame,
                        form_type: str) -> dict:
         """Get financial statements from either 10-K or 10-Q form.
 
-        Args:
-            cik_num: CIK of a company.
-            submission: Dataframe containing all the company filings information.
-            form_type: Either 10-K or 10-Q.
-
-        Returns:
-            Dictionary containing each financial statements data in dictionary.
-
-        Raises:
-            EmptyDataFrameError: If dataframe is empty.
+        :param cik_num: CIK of a company.
+        :type cik_num: str
+        :param submission: All company filings information.
+        :type submission: pandas.DataFrame
+        :param form_type: Either 10-K or 10-Q.
+        :type form_type: str
+        :raises: :class:`EmptyDataFrameError`: If retreived dataframe is empty.
+        :return: Dictionary containing each financial statements data.
+        :rtype: dict
         """
         pass
 
@@ -36,22 +35,35 @@ class Financials(ABC):
     def get_values(self, link: str) -> pd.DataFrame:
         """Extract a financial statement values from web.
 
-        Args:
-            link: URL that has financial statment data in a table form.
-
-        Returns:
-            Dictionary containing all the data from financial statement.
+        :param link: Url that has financial statment data in a table form.
+        :type link: str
+        :return: A financial statement.
+        :rtype: pandas.DataFrame
         """
         pass
 
     @abstractmethod
-    def get_std_financials(self, ticker: str, which_financial: str,
+    def get_std_financials(self, ticker: str,
+                           which_financial: str,
                            period: str = 'annual') -> pd.DataFrame:
+        """Get standard financial statements of a company from finviz.com.
+
+        :param ticker: Ticker of a company.
+        :type ticker: str
+        :param which_financial: One of the three financial statement.
+            'income_statement' or 'balance_sheet' or 'cash_flow', defaults to
+            'income_statement'.
+        :type which_financial: str
+        :param period: Either 'annual' or 'quarter', defaults to 'annual'
+        :type period: str, optional
+        :return: Standard financial statement.
+        :rtype: pandas.DataFrame
+        """
         pass
 
 
 class UsFinancials(Financials):
-    """Financial statements of companies in US."""
+    """A class representing financial statements of a company in US."""
 
     def get_financials(self, cik_num: str, submission: pd.DataFrame,
                        form_type: str) -> dict:
@@ -140,6 +152,13 @@ class UsFinancials(Financials):
         return financial_statement
 
     def __convert_to_table(self, data: dict) -> pd.DataFrame:
+        """Convert JSON file to a clean dataframe.
+
+        :param data: Standard financial statement in JSON.
+        :type data: dict
+        :return: Standard financial statement.
+        :rtype: pandas.DataFrame
+        """
         del data['currency']
         if 'Period Length' in data['data']:
             del data['data']['Period Length']
@@ -166,7 +185,14 @@ class UsFinancials(Financials):
         return df
 
     def __convert_into_korean(self, statement: pd.DataFrame) -> pd.DataFrame:
-        # elements of financial statements mapped with translation in korean.
+        """Translate elements of standard financial statements in Korean.
+
+        :param statement: Standard financial statement in English.
+        :type statement: pandas.DataFrame
+        :return: Standard financial statement in Korean.
+        :rtype: pandas.DataFrame
+        """
+        # elements of financial statements mapped with translations in korean.
         with open('data/statements_kor.json', 'r') as f:
             stmts_in_kor = json.load(f)
 

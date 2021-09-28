@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+"""This module retrieves the historical stock price of a company."""
 import pandas as pd
 from financialdatapy import request
 from financialdatapy.date import date_to_timestamp
@@ -7,18 +7,18 @@ from financialdatapy.date import date_to_timestamp
 class Price(ABC):
     """A Class representing a company's historical stock price data.
 
-    Class Attributes:
-        one_day_in_timestamp: Timestamp value equivalent to one day.
-            24hr * 3,600sec/hr = 86,400
-
-    Attributes:
-        ticker: Ticker of a company/stock.
-        start: Starting date to search. If empty, 1900-01-01 is passed.
-        end: Ending date to search. One more day will be added to the
-                end date internally for the date range to correctly include
-                the end date. Otherwise, the date range will be until the day
-                before the end date. If empty, date of today is passed.
+    :param ticker: Ticker of a company/stock.
+    :type ticker: str
+    :param start: Starting date to search. If empty, 1900-01-01 is passed.
+    :type start: str
+    :param end: Ending date to search. One more day will be added to the
+        end date internally for the date range to correctly include
+        the end date. Otherwise, the date range will be until the day
+        before the end date.
+    :type end: str
     """
+
+    #: Timestamp value equivalent to one day. 24hr * 3,600sec/hr = 86,400
     one_day_in_timestamp = 86_400
 
     def __init__(self, ticker: str, start: str, end: str) -> None:
@@ -30,8 +30,8 @@ class Price(ABC):
     def get_price_data(self) -> pd.DataFrame:
         """Get historical stock price data.
 
-        Returns:
-            Historical stock price data in dataframe.
+        :return: Historical stock price data in dataframe.
+        :rtype: pandas.DataFrame
         """
         url = self.get_url()
         res = request.Request(url)
@@ -42,30 +42,27 @@ class Price(ABC):
 
     @abstractmethod
     def get_url(self) -> str:
-        """Get price data source url."""
+        """Get price data source url.
+
+        :return: Url to retrieve data from
+        :rtype: str
+        """
         pass
 
     @abstractmethod
     def clean(self, data: dict) -> pd.DataFrame:
-        """Clean JSON file to present in clean dataframe.
+        """Convert JSON file to a clean dataframe.
 
-        Args:
-            data: Historical stock price data in JSON
+        :param data: Historical stock price data in JSON
+        :type data: dict
+        :return: Historical stock price data.
+        :rtype: pandas.DataFrame
         """
         pass
 
 
 class UsMarket(Price):
-    """Historical price data of companies in US.
-
-    Attributes:
-        ticker: Ticker of a company/stock.
-        start: Starting date to search. If empty, 1900-01-01 is passed.
-        end: Ending date to search. One more day will be added to the
-                end date internally for the date range to correctly include
-                the end date. Otherwise, the date range will be until the day
-                before the end date. If empty, date of today is passed.
-    """
+    """A class representing stock price of a US company."""
 
     def __init__(self, ticker: str, start: str, end: str) -> None:
         super().__init__(ticker, start, end)
