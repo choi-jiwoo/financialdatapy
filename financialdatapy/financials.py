@@ -4,6 +4,7 @@ import pandas as pd
 import json
 from financialdatapy import request
 from financialdatapy.filings import get_latest_form
+from financialdatapy.filings import get_filings_list
 
 
 class EmptyDataFrameError(Exception):
@@ -12,62 +13,56 @@ class EmptyDataFrameError(Exception):
 
 
 class Financials(ABC):
-    """A Class representing financial statements. of a company."""
+    """A Class representing financial statements of a company."""
 
     @abstractmethod
-    def get_financials(self, cik_num: str, submission: pd.DataFrame,
-                       form_type: str) -> dict:
-        """Get financial statements from either 10-K or 10-Q form.
-
-        :param cik_num: CIK of a company.
-        :type cik_num: str
-        :param submission: All company filings information.
-        :type submission: pandas.DataFrame
-        :param form_type: Either 10-K or 10-Q.
-        :type form_type: str
-        :raises: :class:`EmptyDataFrameError`: If retreived dataframe is empty.
-        :return: Dictionary containing each financial statements data.
-        :rtype: dict
-        """
+    def get_financials(self):
+        """Get financial statement as reported."""
         pass
 
     @abstractmethod
-    def get_values(self, link: str) -> pd.DataFrame:
-        """Extract a financial statement values from web.
-
-        :param link: Url that has financial statment data in a table form.
-        :type link: str
-        :return: A financial statement.
-        :rtype: pandas.DataFrame
-        """
-        pass
-
-    @abstractmethod
-    def get_std_financials(self, ticker: str,
-                           which_financial: str,
-                           period: str = 'annual') -> pd.DataFrame:
-        """Get standard financial statements of a company from finviz.com.
-
-        :param ticker: Ticker of a company.
-        :type ticker: str
-        :param which_financial: One of the three financial statement.
-            'income_statement' or 'balance_sheet' or 'cash_flow', defaults to
-            'income_statement'.
-        :type which_financial: str
-        :param period: Either 'annual' or 'quarter', defaults to 'annual'
-        :type period: str, optional
-        :return: Standard financial statement.
-        :rtype: pandas.DataFrame
-        """
+    def get_standard_financials(self):
+        """Get standard financial statements of a company from finviz.com."""
         pass
 
 
 class UsFinancials(Financials):
     """A class representing financial statements of a company in US."""
 
-    def get_financials(self, cik_num: str, submission: pd.DataFrame,
-                       form_type: str) -> dict:
-        form_type = form_type.upper()
+    def __init__(self, cik: str, ticker: str,
+                 financial: str = 'income_statement',
+                 period: str = 'annual') -> None:
+        """Initialize financial statement.
+
+        :param cik: CIK of a company.
+        :type cik: str
+        :param ticker: Ticker of a company.
+        :type ticker: str
+        :param financial: One of the three financial statement.
+            'income_statement' or 'balance_sheet' or 'cash_flow', defaults to
+            'income_statement'.
+        :type financial: str, optional
+        :param period: Either 'annual' or 'quarter', defaults to 'annual'
+        :type period: str, optional
+        """
+        self.cik = cik
+        self.ticker = ticker.upper()
+        self.financial = financial.lower()
+        self.period = period.lower()
+
+    def get_financials(self) -> pd.DataFrame:
+        """Get financial statement as reported.
+
+        :raises: :class:`EmptyDataFrameError`: If retreived dataframe is empty.
+        :return: Financial statement as reported.
+        :rtype: pandas.DataFrame
+        """
+        if self.period == 'annual':
+            form_type = '10-K'
+        else:
+            form_type = '10-Q'
+
+        submission = get_filings_list(self.cik)
 
         if submission[submission['Form'] == form_type].empty:
             raise EmptyDataFrameError('Failed in getting financials.')
@@ -75,26 +70,46 @@ class UsFinancials(Financials):
         # get latest filing
         form = submission[submission['Form'] == form_type]
         latest_filing = form.iloc[0].at['AccessionNumber']
-        links = get_latest_form(cik_num, latest_filing)
+        links = get_latest_form(self.cik, latest_filing)
 
-        is_l = links.get('income_statement')
-        income_statement = self.get_values(is_l)
+        which_financial = links[self.financial]
+        financial_statement = self.__get_values(which_financial)
 
-        bs_l = links.get('balance_sheet')
-        balance_sheet = self.get_values(bs_l)
+        return financial_statement
 
-        cf_l = links.get('cash_flow')
-        cash_flow = self.get_values(cf_l)
+    def get_standard_financials(self) -> pd.DataFrame:
+        """Get standard financial statements of a company from finviz.com.
 
-        financial_statements = {
-            'income_statement': income_statement,
-            'balance_sheet': balance_sheet,
-            'cash_flow': cash_flow,
+        :return: Standard financial statement.
+        :rtype: pandas.DataFrame
+        """
+        financials = {
+            'income_statement': 'I',
+            'balance_sheet': 'B',
+            'cash_flow': 'C',
         }
+        periods = {
+            'annual': 'A',
+            'quarter': 'Q',
+        }
+        statement = financials[self.financial] + periods[self.period]
+        url = ('https://finviz.com/api/statement.ashx?'
+               f't={self.ticker}&s={statement}')
+        res = request.Request(url)
+        data = res.get_json()
 
-        return financial_statements
+        financial_statement = self.__convert_to_table(data)
 
-    def get_values(self, link: str) -> pd.DataFrame:
+        return financial_statement
+
+    def __get_values(self, link: str) -> pd.DataFrame:
+        """Extract a financial statement values from web.
+
+        :param link: Url that has financial statment data in a table form.
+        :type link: str
+        :return: A financial statement.
+        :rtype: pandas.DataFrame
+        """
         res = request.Request(link)
         df = pd.read_html(res.res.text)[0]
 
@@ -130,27 +145,6 @@ class UsFinancials(Financials):
 
         return df
 
-    def get_std_financials(self, ticker: str,
-                           which_financial: str,
-                           period: str = 'annual') -> pd.DataFrame:
-        financials = {
-            'income_statement': 'I',
-            'balance_sheet': 'B',
-            'cash_flow': 'C',
-        }
-        periods = {
-            'annual': 'A',
-            'quarter': 'Q',
-        }
-        statement = financials[which_financial] + periods[period]
-        url = f'https://finviz.com/api/statement.ashx?t={ticker}&s={statement}'
-        res = request.Request(url)
-        data = res.get_json()
-
-        financial_statement = self.__convert_to_table(data)
-
-        return financial_statement
-
     def __convert_to_table(self, data: dict) -> pd.DataFrame:
         """Convert JSON file to a clean dataframe.
 
@@ -183,20 +177,3 @@ class UsFinancials(Financials):
                     df.loc[i] /= 1_000_000
 
         return df
-
-    def __convert_into_korean(self, statement: pd.DataFrame) -> pd.DataFrame:
-        """Translate elements of standard financial statements in Korean.
-
-        :param statement: Standard financial statement in English.
-        :type statement: pandas.DataFrame
-        :return: Standard financial statement in Korean.
-        :rtype: pandas.DataFrame
-        """
-        # elements of financial statements mapped with translations in korean.
-        with open('data/statements_kor.json', 'r') as f:
-            stmts_in_kor = json.load(f)
-
-        for i in statement.index:
-            statement.rename(index={i: stmts_in_kor[i]}, inplace=True)
-
-        return statement

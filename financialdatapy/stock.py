@@ -45,18 +45,19 @@ class Stock(Cik):
 
     def __init__(self, ticker: str) -> None:
         """Initialize ticker to search."""
-        self.ticker = ticker.upper()
+        self.ticker = ticker
+        self.comp_cik = search_cik(Stock.cik_list, ticker)
 
-    def financials(self, form: str = '10-K',
-                   financial: str = 'income_statement') -> pd.DataFrame:
+    def financials(self, financial: str = 'income_statement',
+                   period: str = 'annual') -> pd.DataFrame:
         """Get financial statements as reported.
 
-        :param form: Either '10-K' or '10-Q' form, defaults to '10-K'.
-        :type form: str, optional
         :param financial: Which financial statement to retrieve. Input string
                 should be either 'income_statement', 'balance_sheet', or
                 'cash_flow', defaults to 'income_statement'
         :type financial: str, optional
+        :param period: Either 'annual' or 'quarter, defaults to 'annual'.
+        :type period: str, optional
         :return: A dataframe containing financial statement as reported.
         :rtype: pandas.DataFrame
 
@@ -64,34 +65,26 @@ class Stock(Cik):
 
         >>> from financialdatapy.stock import Stock
         >>> comp = Stock('AAPL')
-        >>> ic_as_reported = comp.financials('10-K', 'income_statement')
+        >>> ic_as_reported = comp.financials('income_statement', 'annual')
         >>> ic_as_reported
              CONSOLIDATED STATEMENTS OF OPERATIONS| 12 Months Ended
         USD ($) shares in Thousands, $ in Millions|   Sep. 26, 2020| Sep. 28, 2019| Sep. 29, 2018
         ------------------------------------------|----------------|--------------|--------------
                                          Net sales|          274515|        260174|        265595
         """
-        comp_cik = search_cik(Stock.cik_list, self.ticker)
-        submission = get_filings_list(comp_cik)
-        name = ['income_statement', 'balance_sheet', 'cash_flow']
+        market = UsFinancials(self.comp_cik, self.ticker, financial, period)
+        financial_statement = market.get_financials()
 
-        market = UsFinancials()
-        financial_statement = market.get_financials(
-            cik_num=comp_cik,
-            submission=submission,
-            form_type=form,
-        )
+        return financial_statement
 
-        return financial_statement[financial]
-
-    def standard_financials(self, which_financial: str = 'income_statement',
+    def standard_financials(self, financial: str = 'income_statement',
                             period: str = 'annual') -> pd.DataFrame:
         """Get standard financial statements.
 
-        :param which_financial: One of the three financial statement.
+        :param financial: One of the three financial statement.
             'income_statement' or 'balance_sheet' or 'cash_flow', defaults to
             'income_statement'.
-        :type which_financial: str, optional
+        :type financial: str, optional
         :param period: Either 'annual' or 'quarter', defaults to 'annual'.
         :type period: str, optional
         :return: Standard financial statement.
@@ -107,12 +100,8 @@ class Stock(Cik):
         -------------|-------------|-------------|----
         Total Revenue| 3.471550e+11| 2.745150e+11| ...
         """
-        market = UsFinancials()
-        std_financial = market.get_std_financials(
-            ticker=self.ticker,
-            which_financial=which_financial,
-            period=period,
-        )
+        market = UsFinancials(self.comp_cik, self.ticker, financial, period)
+        std_financial = market.get_standard_financials()
 
         return std_financial
 
