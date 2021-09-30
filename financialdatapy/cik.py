@@ -78,6 +78,7 @@ def search_cik(cik_list: pd.DataFrame, ticker: str) -> str:
     :return: CIK of the company searching for.
     :rtype: str
     """
+    ticker = ticker.upper()
     ticker_df = cik_list[cik_list['ticker'] == ticker]
     cik = ticker_df.get('cik').item()
 
