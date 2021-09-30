@@ -115,27 +115,26 @@ class UsFinancials(Financials):
 
         first_column = df.columns[0]
         multi_index = len(first_column)
-
+        
         if multi_index == 2:
             first_column_header = df.columns[0][0]
         else:
             first_column_header = df.columns[0]
 
         title, unit = first_column_header.split(' - ')
-        new_column_name = df.iloc[:, 0].rename((title, unit))
+        elements = df.iloc[:, 0].rename((title, unit))
 
         df = df.drop(columns=df.columns[0])
         df.insert(
             loc=0,
-            column=new_column_name.name,
-            value=[*new_column_name.values],
+            column=elements.name,
+            value=list(elements.values),
             allow_duplicates=True,
         )
 
         df = df.fillna('')
 
-        from_element = 1
-        df.iloc[:, from_element:] = df.iloc[:, from_element:].apply(
+        df.iloc[:, 1:] = df.iloc[:, 1:].apply(
             lambda x: [
                 ''.join(filter(str.isdigit, i))
                 for i
