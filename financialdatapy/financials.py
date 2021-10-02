@@ -13,7 +13,24 @@ class EmptyDataFrameError(Exception):
 
 
 class Financials(ABC):
-    """A Class representing financial statements of a company."""
+    """A Class representing financial statements of a company.
+
+    :param symbol: Symbol of a company.
+    :type symbol: str
+    :param financial: One of the three financial statement.
+        'income_statement' or 'balance_sheet' or 'cash_flow', defaults to
+        'income_statement'.
+    :type financial: str, optional
+    :param period: Either 'annual' or 'quarter', defaults to 'annual'
+    :type period: str, optional
+    """
+
+    def __init__(self, symbol: str, financial: str = 'income_statement',
+                 period: str = 'annual') -> None:
+        """Initialize financial statement."""
+        self.symbol = symbol.upper()
+        self.financial = financial.lower()
+        self.period = period.lower()
 
     @abstractmethod
     def get_financials(self):
@@ -27,28 +44,17 @@ class Financials(ABC):
 
 
 class UsFinancials(Financials):
-    """A class representing financial statements of a company in US."""
+    """A class representing financial statements of a company in US.
 
-    def __init__(self, cik: str, ticker: str,
-                 financial: str = 'income_statement',
-                 period: str = 'annual') -> None:
-        """Initialize financial statement.
+    :param cik: CIK of a company.
+    :type cik: str
+    """
 
-        :param cik: CIK of a company.
-        :type cik: str
-        :param ticker: Ticker of a company.
-        :type ticker: str
-        :param financial: One of the three financial statement.
-            'income_statement' or 'balance_sheet' or 'cash_flow', defaults to
-            'income_statement'.
-        :type financial: str, optional
-        :param period: Either 'annual' or 'quarter', defaults to 'annual'
-        :type period: str, optional
-        """
+    def __init__(self, cik: str, symbol: str,
+                 financial: str, period: str) -> None:
+        """Initialize financial statement of US company."""
+        super().__init__(symbol, financial, period)
         self.cik = cik
-        self.ticker = ticker.upper()
-        self.financial = financial.lower()
-        self.period = period.lower()
 
     def get_financials(self) -> pd.DataFrame:
         """Get financial statement as reported.
@@ -94,7 +100,7 @@ class UsFinancials(Financials):
         }
         statement = financials[self.financial] + periods[self.period]
         url = ('https://finviz.com/api/statement.ashx?'
-               f't={self.ticker}&s={statement}')
+               f't={self.symbol}&s={statement}')
         res = request.Request(url)
         data = res.get_json()
 
@@ -115,7 +121,7 @@ class UsFinancials(Financials):
 
         first_column = df.columns[0]
         multi_index = len(first_column)
-        
+
         if multi_index == 2:
             first_column_header = df.columns[0][0]
         else:
