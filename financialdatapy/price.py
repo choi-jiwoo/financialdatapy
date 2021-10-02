@@ -1,4 +1,5 @@
 """This module retrieves the historical stock price of a company."""
+from abc import ABC, abstractmethod
 import pandas as pd
 from financialdatapy import request
 from financialdatapy.date import date_to_timestamp
@@ -7,8 +8,8 @@ from financialdatapy.date import date_to_timestamp
 class Price(ABC):
     """A Class representing a company's historical stock price data.
 
-    :param ticker: Ticker of a company/stock.
-    :type ticker: str
+    :param symbol: Symbol of a company/stock.
+    :type symbol: str
     :param start: Starting date to search. If empty, 1900-01-01 is passed.
     :type start: str
     :param end: Ending date to search. One more day will be added to the
@@ -21,61 +22,51 @@ class Price(ABC):
     #: Timestamp value equivalent to one day. 24hr * 3,600sec/hr = 86,400
     one_day_in_timestamp = 86_400
 
-    def __init__(self, ticker: str, start: str, end: str) -> None:
-        """Initialize ticker, start date and optional end date to search."""
-        self.ticker = ticker
+    def __init__(self, symbol: str, start: str, end: str) -> None:
+        """Initialize symbol, start date and optional end date to search."""
+        self.symbol = symbol
         self.start = date_to_timestamp(start)
         self.end = date_to_timestamp(end) + Price.one_day_in_timestamp
 
-    def get_price_data(self) -> pd.DataFrame:
-        """Get historical stock price data.
-
-        :return: Historical stock price data in dataframe.
-        :rtype: pandas.DataFrame
-        """
-        url = self.get_url()
-        res = request.Request(url)
-        data = res.get_json()
-        price = self.clean(data)
-
-        return price
-
     @abstractmethod
-    def get_url(self) -> str:
-        """Get price data source url.
-
-        :return: Url to retrieve data from
-        :rtype: str
-        """
+    def get_raw_price_data(self):
         pass
 
     @abstractmethod
-    def clean(self, data: dict) -> pd.DataFrame:
-        """Convert JSON file to a clean dataframe.
-
-        :param data: Historical stock price data in JSON
-        :type data: dict
-        :return: Historical stock price data.
-        :rtype: pandas.DataFrame
-        """
+    def get_price_data(self):
         pass
 
 
 class UsMarket(Price):
     """A class representing stock price of a US company."""
 
-    def __init__(self, ticker: str, start: str, end: str) -> None:
-        super().__init__(ticker, start, end)
+    def __init__(self, symbol: str, start: str, end: str) -> None:
+        super().__init__(symbol, start, end)
 
-    def get_url(self) -> str:
+    def get_raw_price_data(self) -> dict:
+        """Get historical stock price data from source in a raw form.
+
+        :return: Historical stock price data retrieved in JSON file.
+        :rtype: dict
+        """
         url = ('https://query1.finance.yahoo.com/v8/finance/chart/'
-               f'{self.ticker}?symbol={self.ticker}'
+               f'{self.symbol}?symbol={self.symbol}'
                f'&period1={self.start}&period2={self.end}'
                '&interval=1d&corsDomain=finance.yahoo.com')
+        res = request.Request(url)
+        data = res.get_json()
 
-        return url
+        return data
 
-    def clean(self, data: dict) -> pd.DataFrame:
+    def get_price_data(self) -> pd.DataFrame:
+        """Get historical stock price data.
+
+        :param data: Historical stock price data in JSON
+        :type data: dict
+        :return: Historical stock price data.
+        :rtype: pandas.DataFrame
+        """
+        data = self.get_raw_price_data()
         timestamp = data['chart']['result'][0]['timestamp']
         price_data = data['chart']['result'][0]['indicators']['quote'][0]
         columns = ['close', 'open', 'high', 'low', 'volume']
