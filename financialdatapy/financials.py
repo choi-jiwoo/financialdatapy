@@ -33,32 +33,22 @@ class Financials(ABC):
         self.period = period.lower()
 
     @abstractmethod
-    def get_financials(self):
-        """Get financial statement as reported."""
+    def get_financials(self, cik: str):
         pass
 
     @abstractmethod
     def get_standard_financials(self):
-        """Get standard financial statements of a company from finviz.com."""
         pass
 
 
 class UsFinancials(Financials):
-    """A class representing financial statements of a company in US.
+    """A class representing financial statements of a company in US."""
 
-    :param cik: CIK of a company.
-    :type cik: str
-    """
-
-    def __init__(self, cik: str, symbol: str,
-                 financial: str, period: str) -> None:
-        """Initialize financial statement of US company."""
-        super().__init__(symbol, financial, period)
-        self.cik = cik
-
-    def get_financials(self) -> pd.DataFrame:
+    def get_financials(self, cik: str) -> pd.DataFrame:
         """Get financial statement as reported.
 
+        :param cik: Cik of a company.
+        :type cik: str
         :raises: :class:`EmptyDataFrameError`: If retreived dataframe is empty.
         :return: Financial statement as reported.
         :rtype: pandas.DataFrame
@@ -68,7 +58,7 @@ class UsFinancials(Financials):
         else:
             form_type = '10-Q'
 
-        submission = get_filings_list(self.cik)
+        submission = get_filings_list(cik)
 
         if submission[submission['Form'] == form_type].empty:
             raise EmptyDataFrameError('Failed in getting financials.')
@@ -76,7 +66,7 @@ class UsFinancials(Financials):
         # get latest filing
         form = submission[submission['Form'] == form_type]
         latest_filing = form.iloc[0].at['AccessionNumber']
-        links = get_latest_form(self.cik, latest_filing)
+        links = get_latest_form(cik, latest_filing)
 
         which_financial = links[self.financial]
         financial_statement = self.__get_values(which_financial)
