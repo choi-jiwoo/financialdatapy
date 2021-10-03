@@ -1,42 +1,64 @@
 """This module retrieves financial data of a stock."""
 import pandas as pd
 from typing import Optional
-from financialdatapy.cik import get_cik_list
-from financialdatapy.cik import search_cik
+from financialdatapy.cik import get_stock_list
+from financialdatapy.cik import UsStockList
 from financialdatapy.filings import get_filings_list
 from financialdatapy.financials import UsFinancials
 from financialdatapy.price import UsMarket
 
 
-class Cik():
-    """Cik list as a class variable.
+class StockList():
+    """Stock list as a class variable.
 
     :Example:
 
-    >>> from financialdatapy.stock import Cik
-    >>> cik_list = Cik.cik_list
-    >>> cik_list
+    >>> from financialdatapy.stock import StockList
+    >>> us_stock_list = StockList.us_stock_list
+    >>> us_stock_list
        cik|       name| ticker
     ------|-----------|-------
     320193| Apple Inc.|   AAPL
     """
 
-    #: Get the list of cik of companies registered in SEC.
-    cik_list = get_cik_list()
+    us_stock_list = get_stock_list(UsStockList())
 
     @staticmethod
-    def update_cik_list():
-        """Update cik list from SEC to the latest.
+    def update_stock_list():
+        """Update stock list to the latest.
 
         :Example:
 
-        >>> from financialdatapy.stock import Cik
-        >>> Cik.update_cik_list()
+        >>> from financialdatapy.stock import StockList
+        >>> StockList.update_stock_list()
         """
-        Cik.cik_list = get_cik_list(update=True)
+        StockList.us_stock_list = get_stock_list(UsStockList(), update=True)
+
+    @staticmethod
+    def search_cik(stock_list: pd.DataFrame, symbol: str) -> str:
+        """Search CIK of specific a company.
+
+        :param stock_list: Dataframe containing CIK, company name,
+            and symbol for its columns.
+        :type stock_list: pandas.DataFrame
+        :param symbol: Company symbol to search.
+        :type symbol: str
+        :return: CIK of the company searching for.
+        :rtype: str
+        """
+        symbol = symbol.upper()
+        symbol_df = stock_list[stock_list['ticker'] == symbol]
+        cik = symbol_df['cik'].item()
+
+        # cik number received from source excludes 0s that comes first.
+        # Since cik is a 10-digit number, concatenate 0s.
+        zeros = 10 - len(str(cik))
+        cik = ('0' * zeros) + str(cik)
+
+        return cik
 
 
-class Stock(Cik):
+class Stock(StockList):
     """A class representing a stock or a company.
 
     :param ticker: Ticker of a company/stock.
@@ -46,7 +68,6 @@ class Stock(Cik):
     def __init__(self, ticker: str) -> None:
         """Initialize ticker to search."""
         self.ticker = ticker
-        self.comp_cik = search_cik(Stock.cik_list, ticker)
 
     def financials(self, financial: str = 'income_statement',
                    period: str = 'annual') -> pd.DataFrame:
@@ -72,8 +93,9 @@ class Stock(Cik):
         ------------------------------------------|----------------|--------------|--------------
                                          Net sales|          274515|        260174|        265595
         """
-        market = UsFinancials(self.comp_cik, self.ticker, financial, period)
-        financial_statement = market.get_financials()
+        comp_cik = StockList.search_cik(StockList.us_stock_list, self.ticker)
+        market = UsFinancials(self.ticker, financial, period)
+        financial_statement = market.get_financials(comp_cik)
 
         return financial_statement
 
@@ -100,7 +122,7 @@ class Stock(Cik):
         -------------|-------------|-------------|----
         Total Revenue| 3.471550e+11| 2.745150e+11| ...
         """
-        market = UsFinancials(self.comp_cik, self.ticker, financial, period)
+        market = UsFinancials(self.ticker, financial, period)
         std_financial = market.get_standard_financials()
 
         return std_financial
