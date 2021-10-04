@@ -35,18 +35,16 @@ class StockList():
         StockList.us_stock_list = get_stock_list(UsStockList(), update=True)
 
     @staticmethod
-    def search_cik(stock_list: pd.DataFrame, symbol: str) -> str:
+    def search_cik(symbol: str) -> str:
         """Search CIK of specific a company.
 
-        :param stock_list: Dataframe containing CIK, company name,
-            and symbol for its columns.
-        :type stock_list: pandas.DataFrame
         :param symbol: Company symbol to search.
         :type symbol: str
         :return: CIK of the company searching for.
         :rtype: str
         """
         symbol = symbol.upper()
+        stock_list = StockList.us_stock_list
         symbol_df = stock_list[stock_list['ticker'] == symbol]
         cik = symbol_df['cik'].item()
 
@@ -93,7 +91,7 @@ class Stock(StockList):
         ------------------------------------------|----------------|--------------|--------------
                                          Net sales|          274515|        260174|        265595
         """
-        comp_cik = StockList.search_cik(StockList.us_stock_list, self.ticker)
+        comp_cik = StockList.search_cik(self.ticker)
         market = UsFinancials(self.ticker, financial, period)
         financial_statement = market.get_financials(comp_cik)
 
