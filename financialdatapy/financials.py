@@ -8,7 +8,7 @@ from financialdatapy.filings import get_filings_list
 
 
 class EmptyDataFrameError(Exception):
-    """Exception when retreived dataframe is empty."""
+    """Raised when retreived dataframe is empty."""
     pass
 
 

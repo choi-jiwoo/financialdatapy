@@ -7,7 +7,7 @@ from financialdatapy import request
 
 
 class NeedsUpdateError(Exception):
-    """Raises error if cik list needs to be updated to the latest."""
+    """Raised if cik list needs to be updated to the latest."""
     pass
 
 
