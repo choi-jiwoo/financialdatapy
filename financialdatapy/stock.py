@@ -59,13 +59,13 @@ class StockList():
 class Stock(StockList):
     """A class representing a stock or a company.
 
-    :param ticker: Ticker of a company/stock.
-    :type ticker: str
+    :param symbol: Symbol of a company/stock.
+    :type symbol: str
     """
 
-    def __init__(self, ticker: str) -> None:
-        """Initialize ticker to search."""
-        self.ticker = ticker
+    def __init__(self, symbol: str) -> None:
+        """Initialize symbol to search."""
+        self.symbol = symbol
 
     def financials(self, financial: str = 'income_statement',
                    period: str = 'annual') -> pd.DataFrame:
@@ -91,8 +91,8 @@ class Stock(StockList):
         ------------------------------------------|----------------|--------------|--------------
                                          Net sales|          274515|        260174|        265595
         """
-        comp_cik = StockList.search_cik(self.ticker)
-        market = UsFinancials(self.ticker, financial, period)
+        comp_cik = StockList.search_cik(self.symbol)
+        market = UsFinancials(self.symbol, financial, period)
         financial_statement = market.get_financials(comp_cik)
 
         return financial_statement
@@ -120,7 +120,7 @@ class Stock(StockList):
         -------------|-------------|-------------|----
         Total Revenue| 3.471550e+11| 2.745150e+11| ...
         """
-        market = UsFinancials(self.ticker, financial, period)
+        market = UsFinancials(self.symbol, financial, period)
         std_financial = market.get_standard_financials()
 
         return std_financial
@@ -148,7 +148,7 @@ class Stock(StockList):
         ----------|-------|-------|-------|-------|----------
         2021-01-04| 129.41| 133.52| 133.61| 126.76| 143301900
         """
-        price = UsMarket(self.ticker, start, end)
+        price = UsMarket(self.symbol, start, end)
         price_data = price.get_price_data()
 
         return price_data
