@@ -20,6 +20,8 @@ class StockList(ABC):
 
         :param update: Updates stock list to the latest.
         :type update: bool
+        :raises: :class:`NeedsUpdateError`: If cik list needs to be updated
+            to the latest.
         :return: Stock list.
         :rtype: pandas.DataFrame
         """
