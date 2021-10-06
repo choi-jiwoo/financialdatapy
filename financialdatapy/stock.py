@@ -1,11 +1,17 @@
 """This module retrieves financial data of a stock."""
 import pandas as pd
+import re
 from typing import Optional
 from financialdatapy.cik import get_stock_list
 from financialdatapy.cik import UsStockList
 from financialdatapy.filings import get_filings_list
 from financialdatapy.financials import UsFinancials
 from financialdatapy.price import UsMarket
+
+
+class CountryCodeValidationFailed(Exception):
+    """Raised when country code is not in alpha-3 code format."""
+    pass
 
 
 class StockList():
@@ -61,11 +67,35 @@ class Stock(StockList):
 
     :param symbol: Symbol of a company/stock.
     :type symbol: str
+    :param country_code: Country where the stock is listed. The format should
+        follow alpha-3 code (ISO 3166), defaults to 'USA'.
+    :type country_code: str, optional
     """
 
-    def __init__(self, symbol: str) -> None:
+    def __init__(self, symbol: str, country_code: str = 'USA') -> None:
         """Initialize symbol to search."""
         self.symbol = symbol
+        self.country_code = self.__validate_country_code(country_code)
+
+    def __validate_country_code(self, country_code: str) -> str:
+        """Validate if country code is in alpha-3 code (ISO 3166).
+
+        :param country_code: Country where the stock is listed.
+        :type country_code: str
+        :raises: :class:`CountryCodeValidationFailed`: If country code is not
+            in alpha-3 code format.
+        :return: Country code in alpha-3 code (ISO-3166).
+        :rtype: str
+        """
+        try:
+            country_code = re.search(r'\b[a-zA-Z]{3}\b', country_code).group()
+            country_code = country_code.upper()
+        except (TypeError, AttributeError):
+            raise CountryCodeValidationFailed(
+                'Country code should be in alpha-3 code (ISO 3166) e.g. USA'
+            ) from None
+        else:
+            return country_code
 
     def financials(self, financial: str = 'income_statement',
                    period: str = 'annual') -> pd.DataFrame:
