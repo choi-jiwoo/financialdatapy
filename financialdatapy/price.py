@@ -40,9 +40,6 @@ class Price(ABC):
 class UsMarket(Price):
     """A class representing stock price of a US company."""
 
-    def __init__(self, symbol: str, start: str, end: str) -> None:
-        super().__init__(symbol, start, end)
-
     def get_raw_price_data(self) -> dict:
         """Get historical stock price data from source in a raw form.
 
