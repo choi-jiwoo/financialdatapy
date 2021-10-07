@@ -2,6 +2,7 @@
 from abc import ABC, abstractmethod
 import pandas as pd
 import json
+from typing import Optional
 from financialdatapy import request
 from financialdatapy.filings import get_latest_form
 from financialdatapy.filings import get_filings_list
@@ -15,6 +16,8 @@ class EmptyDataFrameError(Exception):
 class Financials(ABC):
     """A Class representing financial statements of a company.
 
+    :param cik: Cik of a company.
+    :type cik: str, optional
     :param symbol: Symbol of a company.
     :type symbol: str
     :param financial: One of the three financial statement.
@@ -26,14 +29,15 @@ class Financials(ABC):
     """
 
     def __init__(self, symbol: str, financial: str = 'income_statement',
-                 period: str = 'annual') -> None:
+                 period: str = 'annual', cik: Optional[str] = None) -> None:
         """Initialize financial statement."""
         self.symbol = symbol.upper()
         self.financial = financial.lower()
         self.period = period.lower()
+        self.cik = cik
 
     @abstractmethod
-    def get_financials(self, cik: str):
+    def get_financials(self):
         pass
 
     @abstractmethod
@@ -44,11 +48,9 @@ class Financials(ABC):
 class UsFinancials(Financials):
     """A class representing financial statements of a company in US."""
 
-    def get_financials(self, cik: str) -> pd.DataFrame:
+    def get_financials(self) -> pd.DataFrame:
         """Get financial statement as reported.
 
-        :param cik: Cik of a company.
-        :type cik: str
         :raises: :class:`EmptyDataFrameError`: If retreived dataframe is empty.
         :return: Financial statement as reported.
         :rtype: pandas.DataFrame
@@ -58,7 +60,7 @@ class UsFinancials(Financials):
         else:
             form_type = '10-Q'
 
-        submission = get_filings_list(cik)
+        submission = get_filings_list(self.cik)
 
         if submission[submission['Form'] == form_type].empty:
             raise EmptyDataFrameError('Failed in getting financials.')
@@ -66,7 +68,7 @@ class UsFinancials(Financials):
         # get latest filing
         form = submission[submission['Form'] == form_type]
         latest_filing = form.iloc[0].at['AccessionNumber']
-        links = get_latest_form(cik, latest_filing)
+        links = get_latest_form(self.cik, latest_filing)
 
         which_financial = links[self.financial]
         financial_statement = self.__get_values(which_financial)
