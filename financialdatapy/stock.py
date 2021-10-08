@@ -2,6 +2,7 @@
 import pandas as pd
 import re
 from typing import Optional
+from financialdatapy.country import Market
 from financialdatapy.cik import get_stock_list
 from financialdatapy.cik import UsStockList
 from financialdatapy.filings import get_filings_list
@@ -76,6 +77,7 @@ class Stock(StockList):
         """Initialize symbol to search."""
         self.symbol = symbol
         self.country_code = self.__validate_country_code(country_code)
+        self.market = Market(self.country_code)
 
     def __validate_country_code(self, country_code: str) -> str:
         """Validate if country code is in alpha-3 code (ISO 3166).
@@ -121,11 +123,7 @@ class Stock(StockList):
         ------------------------------------------|----------------|--------------|--------------
                                          Net sales|          274515|        260174|        265595
         """
-        comp_cik = StockList.search_cik(self.symbol)
-        market = UsFinancials(self.symbol, financial, period)
-        financial_statement = market.get_financials(comp_cik)
-
-        return financial_statement
+        return self.market.financial_statement(self.symbol, financial, period)
 
     def standard_financials(self, financial: str = 'income_statement',
                             period: str = 'annual') -> pd.DataFrame:
@@ -150,10 +148,8 @@ class Stock(StockList):
         -------------|-------------|-------------|----
         Total Revenue| 3.471550e+11| 2.745150e+11| ...
         """
-        market = UsFinancials(self.symbol, financial, period)
-        std_financial = market.get_standard_financials()
-
-        return std_financial
+        return self.market.financial_statement(self.symbol, financial,
+                                               period, 'standard')
 
     def historical(self, start: str = '1900-01-01',
                    end: Optional[str] = None) -> pd.DataFrame:
@@ -178,7 +174,7 @@ class Stock(StockList):
         ----------|-------|-------|-------|-------|----------
         2021-01-04| 129.41| 133.52| 133.61| 126.76| 143301900
         """
-        price = UsMarket(self.symbol, start, end)
+        price = self.market.historical_price(self.symbol, start, end)
         price_data = price.get_price_data()
 
         return price_data
