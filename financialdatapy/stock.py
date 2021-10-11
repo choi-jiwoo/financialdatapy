@@ -56,7 +56,7 @@ class Stock():
         :type financial: str, optional
         :param period: Either 'annual' or 'quarter, defaults to 'annual'.
         :type period: str, optional
-        :return: A dataframe containing financial statement as reported.
+        :return: Financial statement as reported.
         :rtype: pandas.DataFrame
 
         :Example:
@@ -108,7 +108,7 @@ class Stock():
         :param end: End date to query. Format should be in ISO 8601, defaults to
             the date of today.
         :type end: str, optional
-        :return: Historical stock price data in dataframe.
+        :return: Historical stock price data.
         :rtype: pandas.DataFrame
 
         :Example:
