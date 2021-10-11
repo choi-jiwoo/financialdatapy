@@ -1,3 +1,4 @@
+"""This module retrieves stock lists."""
 import pandas as pd
 from financialdatapy.cik import get_stock_list
 from financialdatapy.cik import UsStockList
