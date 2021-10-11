@@ -32,7 +32,7 @@ class Market:
                 financial: str,
                 period: str,
                 type_of_financial: Optional[str] = None
-            ) -> pandas.DataFrame:
+    ) -> pandas.DataFrame:
         """Get financial statements.
 
         :param symbol: Symbol of a company/stock.
