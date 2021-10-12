@@ -1,9 +1,13 @@
 """This module retrieves stock lists."""
 from abc import ABC, abstractmethod
 import pandas as pd
+from pathlib import Path
 from string import capwords
 import re
 from financialdatapy import request
+
+
+PATH = str(Path(__file__).parents[1]) + '/'
 
 
 class NeedsUpdateError(Exception):
@@ -28,10 +32,10 @@ class StockList(ABC):
         try:
             if update:
                 raise NeedsUpdateError()
-            usa_stock_list = pd.read_csv('data/usa_stock_list.csv')
+            usa_stock_list = pd.read_csv(PATH+'data/usa_stock_list.csv')
         except (FileNotFoundError, NeedsUpdateError):
             usa_stock_list = self.get_data()
-            usa_stock_list.to_csv('data/usa_stock_list.csv', index=False)
+            usa_stock_list.to_csv(PATH+'data/usa_stock_list.csv', index=False)
 
         return usa_stock_list
 
