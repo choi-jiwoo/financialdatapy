@@ -81,11 +81,5 @@ class UsStockList(StockList):
         return cik_list
 
 
-class KorStockList(StockList):
-    # to be filled
-    def get_data(self) -> pd.DataFrame:
-        pass
-
-
 def get_stock_list(stock_list: StockList, update: bool = False):
     return stock_list.template_method(update)
