@@ -1,4 +1,5 @@
 """This module handles logic of choosing which stock exchange to search."""
+import pandas as pd
 from typing import Optional
 from financialdatapy.financials import UsFinancials
 from financialdatapy.price import UsMarket
@@ -32,7 +33,7 @@ class Market:
                 financial: str,
                 period: str,
                 type_of_financial: Optional[str] = None
-    ) -> pandas.DataFrame:
+    ) -> pd.DataFrame:
         """Get financial statements.
 
         :param symbol: Symbol of a company/stock.
@@ -61,7 +62,7 @@ class Market:
         else:
             raise NotAvailable()
 
-    def historical_price(self, symbol, start, end) -> pandas.DataFrame:
+    def historical_price(self, symbol, start, end) -> pd.DataFrame:
         """Get historical stock price data.
 
         :param symbol: Symbol of a company/stock.
