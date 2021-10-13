@@ -6,7 +6,7 @@ from string import capwords
 import re
 from financialdatapy import request
 
-
+#: Root directory of a package.
 PATH = str(Path(__file__).parents[1]) + '/'
 
 
@@ -16,6 +16,7 @@ class NeedsUpdateError(Exception):
 
 
 class StockList(ABC):
+    """A class representing stock list of listed companies."""
 
     def template_method(self, update: bool) -> pd.DataFrame:
         """Get stock list data saved in local.
@@ -45,6 +46,7 @@ class StockList(ABC):
 
 
 class UsStockList(StockList):
+    """A class representing stock list of listed companies in USA."""
 
     def get_data(self) -> pd.DataFrame:
         """Get a list of companies CIK(Central Index Key) from SEC.
@@ -81,5 +83,14 @@ class UsStockList(StockList):
         return cik_list
 
 
-def get_stock_list(stock_list: StockList, update: bool = False):
+def get_stock_list(stock_list: StockList, update: bool = False) -> pd.DataFrame:
+    """Call StockList.template_method to get stock list data.
+
+    :param stock_list: :class:`StockList` object.
+    :type stock_list: StockList
+    :param update: Updates stock list to the latest., defaults to False
+    :type update: bool, optional
+    :return: Stock list.
+    :rtype: pandas.DataFrame
+    """
     return stock_list.template_method(update)

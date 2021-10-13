@@ -5,7 +5,10 @@ from financialdatapy.cik import UsStockList
 
 
 class StockList():
-    """Stock list as a class variable.
+    """A class representing stock list of listed companies.
+
+    :cvar us_stock_list: Stock list of stocks in the USA.
+    :vartype us_stock_list: pandas.DataFrame
 
     :Example:
 
