@@ -6,12 +6,19 @@
 Welcome to financialdatapy's documentation!
 ===========================================
 
+Contents
+--------
+
 .. toctree::
-   :maxdepth: 4
-   :caption: Contents:
+
+   usage
+
+Modules
+-------
+
+.. toctree::
 
    financialdatapy
-
 
 Indices and tables
 ==================
