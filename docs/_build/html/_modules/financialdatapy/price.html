@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>financialdatapy.price &#8212; financialdatapy  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for financialdatapy.price</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;This module retrieves the historical stock price of a company.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">financialdatapy</span> <span class="kn">import</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">financialdatapy.date</span> <span class="kn">import</span> <span class="n">date_to_timestamp</span>
+
+
+<div class="viewcode-block" id="Price"><a class="viewcode-back" href="../../financialdatapy.price.html#financialdatapy.price.Price">[docs]</a><span class="k">class</span> <span class="nc">Price</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A Class representing a company&#39;s historical stock price data.</span>
+
+<span class="sd">    :param symbol: Symbol of a company/stock.</span>
+<span class="sd">    :type symbol: str</span>
+<span class="sd">    :param start: Starting date to search. If empty, 1900-01-01 is passed.</span>
+<span class="sd">    :type start: str</span>
+<span class="sd">    :param end: Ending date to search. One more day will be added to the</span>
+<span class="sd">        end date internally for the date range to correctly include</span>
+<span class="sd">        the end date. Otherwise, the date range will be until the day</span>
+<span class="sd">        before the end date.</span>
+<span class="sd">    :type end: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#: Timestamp value equivalent to one day. 24hr * 3,600sec/hr = 86,400</span>
+    <span class="n">one_day_in_timestamp</span> <span class="o">=</span> <span class="mi">86_400</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Initialize symbol, start date and optional end date to search.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">symbol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">date_to_timestamp</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">date_to_timestamp</span><span class="p">(</span><span class="n">end</span><span class="p">)</span> <span class="o">+</span> <span class="n">Price</span><span class="o">.</span><span class="n">one_day_in_timestamp</span>
+
+<div class="viewcode-block" id="Price.get_raw_price_data"><a class="viewcode-back" href="../../financialdatapy.price.html#financialdatapy.price.Price.get_raw_price_data">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_raw_price_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Price.get_price_data"><a class="viewcode-back" href="../../financialdatapy.price.html#financialdatapy.price.Price.get_price_data">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_price_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="UsMarket"><a class="viewcode-back" href="../../financialdatapy.price.html#financialdatapy.price.UsMarket">[docs]</a><span class="k">class</span> <span class="nc">UsMarket</span><span class="p">(</span><span class="n">Price</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A class representing stock price of a US company.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="UsMarket.get_raw_price_data"><a class="viewcode-back" href="../../financialdatapy.price.html#financialdatapy.price.UsMarket.get_raw_price_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_raw_price_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get historical stock price data from source in a raw form.</span>
+
+<span class="sd">        :return: Historical stock price data retrieved in JSON file.</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;https://query1.finance.yahoo.com/v8/finance/chart/&#39;</span>
+               <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">symbol</span><span class="si">}</span><span class="s1">?symbol=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">symbol</span><span class="si">}</span><span class="s1">&#39;</span>
+               <span class="sa">f</span><span class="s1">&#39;&amp;period1=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="si">}</span><span class="s1">&amp;period2=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="si">}</span><span class="s1">&#39;</span>
+               <span class="s1">&#39;&amp;interval=1d&amp;corsDomain=finance.yahoo.com&#39;</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="UsMarket.get_price_data"><a class="viewcode-back" href="../../financialdatapy.price.html#financialdatapy.price.UsMarket.get_price_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_price_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get historical stock price data.</span>
+
+<span class="sd">        :param data: Historical stock price data in JSON</span>
+<span class="sd">        :type data: dict</span>
+<span class="sd">        :return: Historical stock price data.</span>
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_raw_price_data</span><span class="p">()</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;chart&#39;</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span>
+        <span class="n">price_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;chart&#39;</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;indicators&#39;</span><span class="p">][</span><span class="s1">&#39;quote&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;close&#39;</span><span class="p">,</span> <span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="s1">&#39;high&#39;</span><span class="p">,</span> <span class="s1">&#39;low&#39;</span><span class="p">,</span> <span class="s1">&#39;volume&#39;</span><span class="p">]</span>
+
+        <span class="n">date_range</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+                      <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">timestamp</span><span class="p">]</span>
+        <span class="n">price_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">price_data</span><span class="p">,</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">date_range</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">price_table</span> <span class="o">=</span> <span class="n">price_table</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">price_table</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">financialdatapy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../financialdatapy.html">financialdatapy package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

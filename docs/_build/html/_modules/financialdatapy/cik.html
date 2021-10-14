@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>financialdatapy.cik &#8212; financialdatapy  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for financialdatapy.cik</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;This module retrieves stock lists.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">capwords</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">financialdatapy</span> <span class="kn">import</span> <span class="n">request</span>
+
+<span class="c1">#: Root directory of a package.</span>
+<span class="n">PATH</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
+
+
+<div class="viewcode-block" id="NeedsUpdateError"><a class="viewcode-back" href="../../financialdatapy.cik.html#financialdatapy.cik.NeedsUpdateError">[docs]</a><span class="k">class</span> <span class="nc">NeedsUpdateError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Raised if cik list needs to be updated to the latest.&quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="StockList"><a class="viewcode-back" href="../../financialdatapy.cik.html#financialdatapy.cik.StockList">[docs]</a><span class="k">class</span> <span class="nc">StockList</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A class representing stock list of listed companies.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="StockList.template_method"><a class="viewcode-back" href="../../financialdatapy.cik.html#financialdatapy.cik.StockList.template_method">[docs]</a>    <span class="k">def</span> <span class="nf">template_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get stock list data saved in local.</span>
+
+<span class="sd">        If it is not saved in local, retrieve the data from source.</span>
+
+<span class="sd">        :param update: Updates stock list to the latest.</span>
+<span class="sd">        :type update: bool</span>
+<span class="sd">        :raises: :class:`NeedsUpdateError`: If cik list needs to be updated</span>
+<span class="sd">            to the latest.</span>
+<span class="sd">        :return: Stock list.</span>
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">NeedsUpdateError</span><span class="p">()</span>
+            <span class="n">usa_stock_list</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">PATH</span><span class="o">+</span><span class="s1">&#39;data/usa_stock_list.csv&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="n">NeedsUpdateError</span><span class="p">):</span>
+            <span class="n">usa_stock_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+            <span class="n">usa_stock_list</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">PATH</span><span class="o">+</span><span class="s1">&#39;data/usa_stock_list.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">usa_stock_list</span></div>
+
+<div class="viewcode-block" id="StockList.get_data"><a class="viewcode-back" href="../../financialdatapy.cik.html#financialdatapy.cik.StockList.get_data">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="UsStockList"><a class="viewcode-back" href="../../financialdatapy.cik.html#financialdatapy.cik.UsStockList">[docs]</a><span class="k">class</span> <span class="nc">UsStockList</span><span class="p">(</span><span class="n">StockList</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A class representing stock list of listed companies in USA.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="UsStockList.get_data"><a class="viewcode-back" href="../../financialdatapy.cik.html#financialdatapy.cik.UsStockList.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of companies CIK(Central Index Key) from SEC.</span>
+
+<span class="sd">        The list also contains ticker of a company.</span>
+
+<span class="sd">        :return: Dataframe with CIK, company name, and ticker for its columns.</span>
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://www.sec.gov/files/company_tickers_exchange.json&#39;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">cik_data</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+
+        <span class="n">cik_list</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cik_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">cik_data</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">])</span>
+
+        <span class="n">cik_list</span><span class="p">[</span><span class="s1">&#39;exchange&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cik_list</span><span class="p">[</span><span class="s1">&#39;exchange&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="n">cik_list</span> <span class="o">=</span> <span class="n">cik_list</span><span class="p">[</span>
+            <span class="p">(</span><span class="n">cik_list</span><span class="p">[</span><span class="s1">&#39;exchange&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;NASDAQ&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">cik_list</span><span class="p">[</span><span class="s1">&#39;exchange&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;NYSE&#39;</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">cik_list</span> <span class="o">=</span> <span class="n">cik_list</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">cik_list</span> <span class="o">=</span> <span class="n">cik_list</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;exchange&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">cik_list</span><span class="p">[</span><span class="s1">&#39;cik&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cik_list</span><span class="p">[</span><span class="s1">&#39;cik&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+        <span class="c1"># remove all characters after &#39;\&#39; or &#39;/&#39; in a company name</span>
+        <span class="c1"># ex) Qualcomm inc\de -&gt; Qualcomm inc</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\s?(\/|</span><span class="se">\\</span><span class="s1">)[a-zA-Z]*&#39;</span>
+        <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+        <span class="n">cik_list</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cik_list</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span>
+
+        <span class="c1"># comapany names in Title Case</span>
+        <span class="n">cik_list</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">capwords</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cik_list</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span>
+
+        <span class="k">return</span> <span class="n">cik_list</span></div></div>
+
+
+<div class="viewcode-block" id="get_stock_list"><a class="viewcode-back" href="../../financialdatapy.cik.html#financialdatapy.cik.get_stock_list">[docs]</a><span class="k">def</span> <span class="nf">get_stock_list</span><span class="p">(</span><span class="n">stock_list</span><span class="p">:</span> <span class="n">StockList</span><span class="p">,</span> <span class="n">update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Call StockList.template_method to get stock list data.</span>
+
+<span class="sd">    :param stock_list: :class:`StockList` object.</span>
+<span class="sd">    :type stock_list: StockList</span>
+<span class="sd">    :param update: Updates stock list to the latest., defaults to False</span>
+<span class="sd">    :type update: bool, optional</span>
+<span class="sd">    :return: Stock list.</span>
+<span class="sd">    :rtype: pandas.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">stock_list</span><span class="o">.</span><span class="n">template_method</span><span class="p">(</span><span class="n">update</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">financialdatapy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../financialdatapy.html">financialdatapy package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
