@@ -154,7 +154,9 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+</ul>
 <ul class="current">
 <li class="toctree-l1 current has-children"><a class="reference internal" href="financialdatapy.html">financialdatapy package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="financialdatapy.cik.html">financialdatapy.cik module</a></li>
@@ -214,25 +216,38 @@ before the end date.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="financialdatapy.price.Price.get_price_data">
-<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">get_price_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/financialdatapy/price.html#Price.get_price_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#financialdatapy.price.Price.get_price_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="financialdatapy.price.Price.get_raw_price_data">
-<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">get_raw_price_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/financialdatapy/price.html#Price.get_raw_price_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#financialdatapy.price.Price.get_raw_price_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="financialdatapy.price.Price.one_day_in_timestamp">
 <span class="sig-name descname"><span class="pre">one_day_in_timestamp</span></span><em class="property"> <span class="pre">=</span> <span class="pre">86400</span></em><a class="headerlink" href="#financialdatapy.price.Price.one_day_in_timestamp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Timestamp value equivalent to one day. 24hr * 3,600sec/hr = 86,400</p>
 </dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="financialdatapy.price.Price.get_raw_price_data">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">get_raw_price_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/financialdatapy/price.html#Price.get_raw_price_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#financialdatapy.price.Price.get_raw_price_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="financialdatapy.price.Price.get_price_data">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">get_price_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/financialdatapy/price.html#Price.get_price_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#financialdatapy.price.Price.get_price_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="financialdatapy.price.UsMarket">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">financialdatapy.price.</span></span><span class="sig-name descname"><span class="pre">UsMarket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/financialdatapy/price.html#UsMarket"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#financialdatapy.price.UsMarket" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#financialdatapy.price.Price" title="financialdatapy.price.Price"><code class="xref py py-class docutils literal notranslate"><span class="pre">financialdatapy.price.Price</span></code></a></p>
 <p>A class representing stock price of a US company.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="financialdatapy.price.UsMarket.get_raw_price_data">
+<span class="sig-name descname"><span class="pre">get_raw_price_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/financialdatapy/price.html#UsMarket.get_raw_price_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#financialdatapy.price.UsMarket.get_raw_price_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get historical stock price data from source in a raw form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Historical stock price data retrieved in JSON file.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="financialdatapy.price.UsMarket.get_price_data">
 <span class="sig-name descname"><span class="pre">get_price_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="_modules/financialdatapy/price.html#UsMarket.get_price_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#financialdatapy.price.UsMarket.get_price_data" title="Permalink to this definition">¶</a></dt>
@@ -246,19 +261,6 @@ before the end date.</p></li>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pandas.DataFrame</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="financialdatapy.price.UsMarket.get_raw_price_data">
-<span class="sig-name descname"><span class="pre">get_raw_price_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/financialdatapy/price.html#UsMarket.get_raw_price_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#financialdatapy.price.UsMarket.get_raw_price_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get historical stock price data from source in a raw form.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Historical stock price data retrieved in JSON file.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>

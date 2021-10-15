@@ -6,6 +6,6 @@ Installation
 
 To use financialdatapy, first install it using pip:
 
-.. note::
+.. warning::
 
    This project is not deployed yet.

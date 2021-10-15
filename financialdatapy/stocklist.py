@@ -15,9 +15,14 @@ class StockList():
     >>> from financialdatapy.stocklist import StockList
     >>> us_stock_list = StockList.us_stock_list
     >>> us_stock_list
-       cik|       name| ticker
-    ------|-----------|-------
-    320193| Apple Inc.|   AAPL
+
+    Output::
+
+        |    cik |       name | ticker |
+        |--------|------------|--------|
+        | 320193 | Apple Inc. |   AAPL |
+        |    ... |        ... |    ... |
+
     """
 
     us_stock_list = get_stock_list(UsStockList())

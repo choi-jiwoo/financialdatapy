@@ -154,7 +154,9 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+</ul>
 <ul class="current">
 <li class="toctree-l1 current has-children"><a class="reference internal" href="financialdatapy.html">financialdatapy package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="financialdatapy.cik.html">financialdatapy.cik module</a></li>
@@ -208,6 +210,22 @@
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="financialdatapy.request.Request.http_request">
+<span class="sig-name descname"><span class="pre">http_request</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">requests.models.Response</span></span></span><a class="reference internal" href="_modules/financialdatapy/request.html#Request.http_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#financialdatapy.request.Request.http_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a GET request to a data source url.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ConnectionError</strong> – If the connection failed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A response object from the source.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>requests.Response</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
 <dt class="sig sig-object py" id="financialdatapy.request.Request.get_json">
 <span class="sig-name descname"><span class="pre">get_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/financialdatapy/request.html#Request.get_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#financialdatapy.request.Request.get_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert response object’s content to dictionary.</p>
@@ -230,22 +248,6 @@
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>Beautifulsoup</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="financialdatapy.request.Request.http_request">
-<span class="sig-name descname"><span class="pre">http_request</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">requests.models.Response</span></span></span><a class="reference internal" href="_modules/financialdatapy/request.html#Request.http_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#financialdatapy.request.Request.http_request" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sends a GET request to a data source url.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><strong>ConnectionError</strong> – If the connection failed.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A response object from the source.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>requests.Response</p>
 </dd>
 </dl>
 </dd></dl>
