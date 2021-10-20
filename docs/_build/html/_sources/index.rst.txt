@@ -34,6 +34,32 @@ To use financialdatapy, first install it using pip:
 **Quick Start**
 ---------------
 
+Financial statements as reported
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   >>> from financialdatapy.stock import Stock
+   >>> comp = Stock('AAPL')
+   >>> ic_as_reported = comp.financials('income_statement', 'annual')
+
+Standard financial statements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   >>> from financialdatapy.stock import Stock
+   >>> comp = Stock('AAPL')
+   >>> std_ic = comp.standard_financials('income_statement', 'annual')
+
+Historical stock price
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   >>> from financialdatapy.stock import Stock
+   >>> comp = Stock('AAPL')
+   >>> price = comp.historical('2021-1-1', '2021-1-5')
 
 **Modules**
 -----------
