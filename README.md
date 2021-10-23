@@ -71,7 +71,7 @@ Output:
 
 </br >
 
-All of the results will return in `pandas.DataFrame` so the user can download it as CSV files.
+All of the results above will return in `pandas.DataFrame` so the user can download it as CSV files.
 
 ### Documentation
 
