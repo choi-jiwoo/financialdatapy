@@ -10,9 +10,13 @@
 
 🪵🪚 on the process...
 
-#### Financial statements as reported
+#### Financial statements
 
-Financial statements reported by the company in their respective country's financial regulator. So the elements in the financial statements are different from others, depending on the comapany's style. financialdatapy supports three major financial statements of a company. Income statement, balance sheets, and cash flow. Also the user can select between annual and quarterly financial statements.
+financialdatapy supports three major financial statements of a company. Income statement, balance sheets, and cash flow. Also the user can select between annual and quarterly financial statements.
+
+##### Financial statements as reported
+
+Financial statements reported by the company in their respective country's financial regulator. So the elements in the financial statements are different from others, depending on the comapany's style. 
 
 ```python
 >>> from financialdatapy.stock import Stock
@@ -30,9 +34,9 @@ Output:
 
 ```
 
-#### Standard financial statements
+##### Standard financial statements
 
-Standardized financial statements of the company. ...
+Standardized financial statements of a company. ...
 
 ```python
 >>> from financialdatapy.stock import Stock
@@ -50,7 +54,9 @@ Output:
 
 
 
-#### Historical stock price
+#### Stock data
+
+##### Historical stock price
 
 Historical stock price of the company. ...
 
@@ -71,7 +77,7 @@ Output:
 
 </br >
 
-All of the results above will return in `pandas.DataFrame` so the user can download it as CSV files.
+All of the above will return in `pandas.DataFrame` so the user can download it as CSV files.
 
 ### Documentation
 
