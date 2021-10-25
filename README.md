@@ -12,7 +12,24 @@
 
 #### Financial statements
 
-financialdatapy supports three major financial statements of a company. Income statement, balance sheets, and cash flow. Also the user can select between annual and quarterly financial statements.
+financialdatapy supports three major financial statements of a company. Income statement, balance sheet, and cash flow. Also the user can select between annual and quarter financial statements.
+
+Values passed for financial statements and periods should follow the format below.
+
+Financial statements:
+
+| Financial statement | Value              |
+| ------------------- | ------------------ |
+| Income statement    | `income_statement` |
+| Balance sheet       | `balance_sheet`    |
+| Cash flow           | `cash_flow`        |
+
+Periods:
+
+| Period  | Value     |
+| ------- | --------- |
+| Annual  | `annual`  |
+| Quarter | `quarter` |
 
 ##### Financial statements as reported
 
