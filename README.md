@@ -33,7 +33,7 @@ Periods:
 
 #### FINANCIAL STATEMENTS AS REPORTED
 
-Financial statements reported by the company in their respective country's financial regulator. So the elements in the financial statements are different from others, depending on the comapany's style. 
+Financial statements reported by the company to a financial regulator. The elements in the financial statements are different from others, depending on the comapany.
 
 ```python
 >>> from financialdatapy.stock import Stock
@@ -53,7 +53,7 @@ Output:
 
 #### STANDARD FINANCIAL STATEMENTS
 
-Standardized financial statements of a company. ...
+Summarized financial statements of a company.
 
 ```python
 >>> from financialdatapy.stock import Stock
@@ -100,7 +100,7 @@ All of the above will return in `pandas.DataFrame` so the user can download it a
 
 ## Credits
 
-Data used in the package are from [SEC EDGAR](https://www.sec.gov/os/accessing-edgar-data), [finance.yahoo.com](https://finance.yahoo.com/) [finviz.com](https://finviz.com/).
+Data used in the package are from [SEC EDGAR](https://www.sec.gov/os/accessing-edgar-data), [finance.yahoo.com](https://finance.yahoo.com/) [investing.com](https://www.investing.com/).
 
 ## Disclaimer
 
