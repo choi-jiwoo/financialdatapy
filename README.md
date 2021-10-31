@@ -2,15 +2,15 @@
 
 **financialdatapy** is a package for getting a fundamental financial data of a company. Currently it supports financial data of companies listed in United States (NASDAQ, NYSE). The user can see the company's latest financial statement reported, standard financials, and historical stock price. financialdatapy will be a good choice for research purposes, and making an investment portfolio.
 
-### Installation
+## Installation
 
 🪜🔨 on the process...
 
-### Usage
+## Usage
 
 🪵🪚 on the process...
 
-#### Financial statements
+### Financial statements
 
 financialdatapy supports three major financial statements of a company. Income statement, balance sheet, and cash flow. Also the user can select between annual and quarter financial statements.
 
@@ -31,7 +31,7 @@ Periods:
 | Annual  | `annual`  |
 | Quarter | `quarter` |
 
-##### Financial statements as reported
+#### FINANCIAL STATEMENTS AS REPORTED
 
 Financial statements reported by the company in their respective country's financial regulator. So the elements in the financial statements are different from others, depending on the comapany's style. 
 
@@ -51,7 +51,7 @@ Output:
 
 ```
 
-##### Standard financial statements
+#### STANDARD FINANCIAL STATEMENTS
 
 Standardized financial statements of a company. ...
 
@@ -69,11 +69,9 @@ Output:
 | Total Revenue |       xxxxxx |       xxxxxx| ... |
 ```
 
+## Stock data
 
-
-#### Stock data
-
-##### Historical stock price
+### HISTORICAL STOCK DATA
 
 Historical stock price of the company. ...
 
@@ -96,15 +94,14 @@ Output:
 
 All of the above will return in `pandas.DataFrame` so the user can download it as CSV files.
 
-### Documentation
+## Documentation
 
 🔩🔧 on the process...
 
-### Credits
+## Credits
 
-Data used in the package are from [SEC EDGAR](https://www.sec.gov/os/accessing-edgar-data), [finance.yahoo.com](https://finance.yahoo.com/) [finviz.com](https://finviz.com/). 
+Data used in the package are from [SEC EDGAR](https://www.sec.gov/os/accessing-edgar-data), [finance.yahoo.com](https://finance.yahoo.com/) [finviz.com](https://finviz.com/).
 
-### Disclaimer
+## Disclaimer
 
 financialdatapy is not meant to be used in trading. The data might not be accurate, and timely. So if you are willing to use data for trading, there are lot more better options.
-
