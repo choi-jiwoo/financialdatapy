@@ -6,6 +6,7 @@ from typing import Optional
 from financialdatapy import request
 from financialdatapy.filings import get_latest_form
 from financialdatapy.filings import get_filings_list
+from financialdatapy import search
 
 
 class EmptyDataFrameError(Exception):
@@ -76,23 +77,27 @@ class UsFinancials(Financials):
         return financial_statement
 
     def get_standard_financials(self) -> pd.DataFrame:
-        """Get standard financial statements of a company from finviz.com.
+        """Get standard financial statements of a company from investing.com.
 
         :return: Standard financial statement.
         :rtype: pandas.DataFrame
         """
         financials = {
-            'income_statement': 'I',
-            'balance_sheet': 'B',
-            'cash_flow': 'C',
+            'income_statement': 'INC',
+            'balance_sheet': 'BAL',
+            'cash_flow': 'CAS',
         }
         periods = {
-            'annual': 'A',
-            'quarter': 'Q',
+            'annual': 'Annual',
+            'quarter': 'Interim',
         }
-        statement = financials[self.financial] + periods[self.period]
-        url = ('https://finviz.com/api/statement.ashx?'
-               f't={self.symbol}&s={statement}')
+        symbol_search_result = search.Company(self.symbol)
+        pair_id = symbol_search_result.pair_id
+        type = financials[self.financial]
+        period = periods[self.period]
+        url = ('https://www.investing.com/instruments/Financials/'
+               'changereporttypeajax?action=change_report_type&'
+               f'pair_ID={pair_id}&report_type={type}&period_type={period}')
         res = request.Request(url)
         data = res.get_json()
 
