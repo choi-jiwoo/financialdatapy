@@ -39,9 +39,8 @@ Financial statements reported by the company to a financial regulator. The eleme
 >>> from financialdatapy.stock import Stock
 >>> comp = Stock('AAPL')
 >>> ic_as_reported = comp.financials('income_statement', 'annual')
+>>> ic_as_reported
 ```
-
-Output:
 
 ```
 |      CONSOLIDATED STATEMENTS OF OPERATIONS | 12 Months Ended                                 |
@@ -59,9 +58,8 @@ Summarized financial statements of a company.
 >>> from financialdatapy.stock import Stock
 >>> comp = Stock('AAPL')
 >>> std_ic = comp.standard_financials('income_statement', 'annual')
+>>> std_ic
 ```
-
-Output:
 
 ```
 |               |          TTM |    9/26/20xx| ... |
@@ -79,9 +77,8 @@ Historical stock price of the company. ...
 >>> from financialdatapy.stock import Stock
 >>> comp = Stock('AAPL')
 >>> price = comp.historical('2021-1-1', '2021-1-5')
+>>> price
 ```
-
-Output:
 
 ```
 |            |   close |    open |    high |     low |  volume |
@@ -92,7 +89,7 @@ Output:
 
 </br >
 
-All of the above will return in `pandas.DataFrame` so the user can download it as CSV files.
+All of the above will return in `pandas.DataFrame`.
 
 ## Documentation
 
@@ -100,7 +97,7 @@ All of the above will return in `pandas.DataFrame` so the user can download it a
 
 ## Credits
 
-Data used in the package are from [SEC EDGAR](https://www.sec.gov/os/accessing-edgar-data), [finance.yahoo.com](https://finance.yahoo.com/) [investing.com](https://www.investing.com/).
+Data used in the package are from [SEC EDGAR](https://www.sec.gov/os/accessing-edgar-data), [finance.yahoo.com](https://finance.yahoo.com/), [investing.com](https://www.investing.com/).
 
 ## Disclaimer
 
