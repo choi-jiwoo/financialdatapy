@@ -72,7 +72,7 @@ class UsFinancials(Financials):
         links = get_latest_form(self.cik, latest_filing)
 
         which_financial = links[self.financial]
-        financial_statement = self.__get_values(which_financial)
+        financial_statement = self._get_values(which_financial)
 
         return financial_statement
 
@@ -101,11 +101,11 @@ class UsFinancials(Financials):
         res = request.Request(url)
         data = res.get_json()
 
-        financial_statement = self.__convert_to_table(data)
+        financial_statement = self._convert_to_table(data)
 
         return financial_statement
 
-    def __get_values(self, link: str) -> pd.DataFrame:
+    def _get_values(self, link: str) -> pd.DataFrame:
         """Extract a financial statement values from web.
 
         :param link: Url that has financial statment data in a table form.
@@ -147,7 +147,7 @@ class UsFinancials(Financials):
 
         return df
 
-    def __convert_to_table(self, data: dict) -> pd.DataFrame:
+    def _convert_to_table(self, data: dict) -> pd.DataFrame:
         """Convert JSON file to a clean dataframe.
 
         :param data: Standard financial statement in JSON.
