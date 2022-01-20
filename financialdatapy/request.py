@@ -28,7 +28,7 @@ class Request():
 
         :param method: Which http methods to request.
         :type method: str
-        :raises :class:`requests.ConnectionError`: HTTP connection failure. 
+        :raises :class:`requests.ConnectionError`: HTTP connection failure.
         :return: A response object from the source.
         :rtype: requests.Response
         """
