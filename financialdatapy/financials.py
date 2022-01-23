@@ -1,7 +1,10 @@
 """This module retrieves financial statements of a company."""
 from abc import ABC, abstractmethod
+from bs4 import BeautifulSoup
+import numpy as np
 import pandas as pd
 import json
+import string
 from typing import Optional
 from financialdatapy import request
 from financialdatapy.filings import get_latest_form
@@ -99,7 +102,7 @@ class UsFinancials(Financials):
                'changereporttypeajax?action=change_report_type&'
                f'pair_ID={pair_id}&report_type={type}&period_type={period}')
         res = request.Request(url)
-        data = res.get_json()
+        data = res.get_soup()
 
         financial_statement = self._convert_to_table(data)
 
@@ -147,32 +150,43 @@ class UsFinancials(Financials):
 
         return df
 
-    def _convert_to_table(self, data: dict) -> pd.DataFrame:
-        """Convert JSON file to a clean dataframe.
+    def _convert_to_table(self, data: BeautifulSoup) -> pd.DataFrame:
+        """Convert HTML table to a clean dataframe.
 
-        :param data: Standard financial statement in JSON.
-        :type data: dict
+        :param data: Standard financial statement in HTML table.
+        :type data: BeautifulSoup
         :return: Standard financial statement.
         :rtype: pandas.DataFrame
         """
-        del data['currency']
-        if 'Period Length' in data['data']:
-            del data['data']['Period Length']
+        table_header = data.find_all('th')
+        table_header = [element.text for element in table_header]
+        table_header = table_header[1:]
+        table_header = [
+            element.translate(str.maketrans('', '', string.punctuation))
+            for element
+            in table_header
+        ]
+        header_length = len(table_header)
 
-        df = pd.DataFrame(data['data']).T
-        date = df.iloc[0, :].values
-        df.columns = date
-        row_with_dates = df.index[[0]]
-        df.drop(row_with_dates, axis='index', inplace=True)
+        statement_table = data.find_all('tbody')[0]
+        data = statement_table.find_all('td')
+        data = [element.text for element in data]
+        data.pop(5)
+        data = {
+            data[i]: data[i+1 : i+header_length]
+            for i
+            in range(0, len(data), header_length)
+        }
+        df = pd.DataFrame(data, index=table_header).T
+        df = df.replace(r'-$', '', regex=True)
 
-        df = df.replace(',', '', regex=True)
         for i in df:
             df[i] = pd.to_numeric(df[i])
 
         values_unit = 1_000_000
         df = df * values_unit
 
-        ignore_word = ['eps', 'employee', 'number']
+        ignore_word = ['eps', 'dps']
         for i in df.index:
             for word in ignore_word:
                 if word in i.lower():
