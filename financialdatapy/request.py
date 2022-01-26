@@ -47,6 +47,14 @@ class Request():
 
         return res
 
+    def get_text(self) -> str:
+        """Return response object in string.
+
+        :return: Response object in string.
+        :rtype: str
+        """
+        return self.res.text
+
     def get_json(self) -> dict:
         """Convert response object's content to dictionary.
 
