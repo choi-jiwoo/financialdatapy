@@ -3,7 +3,7 @@ import pandas as pd
 from financialdatapy.cik import UsCikList
 
 
-class StockList():
+class StockList:
     """A class representing stock list of listed companies.
 
     :cvar us_cik_list: Stock list of stocks in the USA.
@@ -24,15 +24,6 @@ class StockList():
 
     """
 
-    @staticmethod
-    def update_stock_list():
-        """Update stock list to the latest.
-
-        :Example:
-
-        >>> from financialdatapy.stocklist import StockList
-        >>> StockList.update_stock_list()
-        """
     us_cik_list = UsCikList.get_cik_list()
 
     @staticmethod
