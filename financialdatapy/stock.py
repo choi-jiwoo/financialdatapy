@@ -2,7 +2,7 @@
 import pandas as pd
 import re
 from typing import Optional
-from financialdatapy.country import Market
+from financialdatapy.market import Market
 
 
 class CountryCodeValidationFailed(Exception):
