@@ -102,8 +102,8 @@ class UsFinancials(Financials):
                'changereporttypeajax?action=change_report_type&'
                f'pair_ID={pair_id}&report_type={type}&period_type={period}')
         res = request.Request(url)
-        financial_statement = self._convert_to_table(data)
         data = res.get_text()
+        financial_statement = self._convert_to_table(data, type)
 
         return financial_statement
 
@@ -149,12 +149,14 @@ class UsFinancials(Financials):
 
         return df
 
-    def _convert_to_table(self, data: BeautifulSoup) -> pd.DataFrame:
-        """Convert HTML table to a clean dataframe.
+    def _convert_to_table(self, data: str, report_type: str) -> pd.DataFrame:
+        """Convert HTML text to a clean dataframe.
 
-        :param data: Standard financial statement in HTML table.
-        :type data: BeautifulSoup
+        :param data: Standard financial statement in HTML text.
+        :type data: str
         :return: Standard financial statement.
+        :param report_type: INC or BAL or CAS.
+        :type report_type: str
         :rtype: pandas.DataFrame
         """
         table_header = data.find_all('th')
