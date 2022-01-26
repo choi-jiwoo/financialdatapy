@@ -185,3 +185,26 @@ class UsFinancials(Financials):
         data_table.index.rename(None, inplace=True)
 
         return data_table
+
+    def _convert_table_header(self, df: pd.DataFrame, row_idx: int) -> pd.DataFrame:
+        """Convert date in string to datetime object.
+
+        :param df: Standard financial statement.
+        :type df: pd.DataFrame
+        :param row_idx: Index number of row containing dates.
+        :type row_idx: int
+        :return: Standard financial statement with dates as columns.
+        :rtype: pd.DataFrame
+        """
+        table_header = df.iloc[-row_idx:].values[0]
+        table_header = [
+            element.translate(str.maketrans('', '', string.punctuation))
+            for element
+            in table_header
+        ]
+        table_header = pd.to_datetime(table_header, format='%Y%d%m')
+
+        df.columns = table_header
+        df = df.iloc[:-row_idx]
+
+        return df
