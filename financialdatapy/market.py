@@ -25,7 +25,7 @@ class Market:
 
     def __init__(self, country_code: str):
         """Initialize stock exchange."""
-        self.country_code = country_code
+        self.country_code = country_code.upper()
 
     def financial_statement(
                 self,
