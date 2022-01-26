@@ -1,20 +1,19 @@
 """This module retrieves stock lists."""
 import pandas as pd
-from financialdatapy.cik import get_stock_list
-from financialdatapy.cik import UsStockList
+from financialdatapy.cik import UsCikList
 
 
 class StockList():
     """A class representing stock list of listed companies.
 
-    :cvar us_stock_list: Stock list of stocks in the USA.
-    :vartype us_stock_list: pandas.DataFrame
+    :cvar us_cik_list: Stock list of stocks in the USA.
+    :vartype us_cik_list: pandas.DataFrame
 
     :Example:
 
     >>> from financialdatapy.stocklist import StockList
-    >>> us_stock_list = StockList.us_stock_list
-    >>> us_stock_list
+    >>> us_cik_list = StockList.us_cik_list
+    >>> us_cik_list
 
     Output::
 
@@ -25,8 +24,6 @@ class StockList():
 
     """
 
-    us_stock_list = get_stock_list(UsStockList())
-
     @staticmethod
     def update_stock_list():
         """Update stock list to the latest.
@@ -36,7 +33,7 @@ class StockList():
         >>> from financialdatapy.stocklist import StockList
         >>> StockList.update_stock_list()
         """
-        StockList.us_stock_list = get_stock_list(UsStockList(), update=True)
+    us_cik_list = UsCikList.get_cik_list()
 
     @staticmethod
     def search_cik(symbol: str) -> str:
@@ -47,9 +44,10 @@ class StockList():
         :return: CIK of the company searching for.
         :rtype: str
         """
+
         symbol = symbol.upper()
-        stock_list = StockList.us_stock_list
-        symbol_df = stock_list[stock_list['ticker'] == symbol]
+        cik_list = StockList.us_cik_list
+        symbol_df = cik_list[cik_list['ticker'] == symbol]
         cik = symbol_df['cik'].item()
 
         # cik number received from source excludes 0s that comes first.
