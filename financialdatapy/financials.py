@@ -102,9 +102,8 @@ class UsFinancials(Financials):
                'changereporttypeajax?action=change_report_type&'
                f'pair_ID={pair_id}&report_type={type}&period_type={period}')
         res = request.Request(url)
-        data = res.get_soup()
-
         financial_statement = self._convert_to_table(data)
+        data = res.get_text()
 
         return financial_statement
 
