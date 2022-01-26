@@ -159,38 +159,29 @@ class UsFinancials(Financials):
         :type report_type: str
         :rtype: pandas.DataFrame
         """
-        table_header = data.find_all('th')
-        table_header = [element.text for element in table_header]
-        table_header = table_header[1:]
-        table_header = [
-            element.translate(str.maketrans('', '', string.punctuation))
-            for element
-            in table_header
-        ]
-        header_length = len(table_header)
+        data_table = pd.read_html(data, index_col=0)[0]
 
-        statement_table = data.find_all('tbody')[0]
-        data = statement_table.find_all('td')
-        data = [element.text for element in data]
-        data.pop(5)
-        data = {
-            data[i]: data[i+1 : i+header_length]
-            for i
-            in range(0, len(data), header_length)
-        }
-        df = pd.DataFrame(data, index=table_header).T
-        df = df.replace(r'-$', '', regex=True)
+        if report_type == 'CAS':
+            data_table = self._convert_table_header(data_table, row_idx=2)
+        else:
+            data_table = self._convert_table_header(data_table, row_idx=1)
 
-        for i in df:
-            df[i] = pd.to_numeric(df[i])
+        data_table = data_table.replace(r'-$', '0', regex=True)
+
+        for i in data_table:
+            data_table[i] = pd.to_numeric(data_table[i], errors='coerce')
+
+        data_table.dropna(inplace=True)
 
         values_unit = 1_000_000
-        df = df * values_unit
-
+        data_table = data_table * values_unit
         ignore_word = ['eps', 'dps']
-        for i in df.index:
+
+        for i in data_table.index:
             for word in ignore_word:
                 if word in i.lower():
-                    df.loc[i] /= 1_000_000
+                    data_table.loc[i] /= 1_000_000
 
-        return df
+        data_table.index.rename(None, inplace=True)
+
+        return data_table
