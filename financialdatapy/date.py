@@ -51,3 +51,9 @@ def date_to_timestamp(period: datetime) -> int:
     timestamp = int(date.timestamp())
 
     return timestamp
+
+
+def convert_date_format(period: datetime, format: str) -> str:
+    new_date = period.strftime(format)
+
+    return new_date
