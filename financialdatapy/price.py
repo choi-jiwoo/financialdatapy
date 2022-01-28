@@ -12,7 +12,7 @@ class Price(ABC):
     """A Class representing a company's historical stock price data.
 
     :param symbol: Symbol of a company/stock.
-    :type symbol: datetime
+    :type symbol: str
     :param start: Starting date to search.
     :type start: `datetime.datetime`
     :param end: Ending date to search. 

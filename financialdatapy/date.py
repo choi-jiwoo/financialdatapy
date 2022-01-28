@@ -42,7 +42,7 @@ def date_to_timestamp(period: datetime) -> int:
     """Parse date passed in into a timestamp.
 
     :param period: `datetime.datetime` object.
-    :type period: datetime
+    :type period: `datetime.datetime`
     :return: The timestamp value equivalent to the date passed.
     :rtype: int
     """
