@@ -19,14 +19,11 @@ class Price(ABC):
     :type end: `datetime.datetime`
     """
 
-    #: Timestamp value equivalent to one day. 24hr * 3,600sec/hr = 86,400
-    one_day_in_timestamp = 86_400
-
     def __init__(self, symbol: str, start: datetime, end: datetime) -> None:
         """Initialize symbol, start date and optional end date to search."""
         self.symbol = symbol
-        self.start = date_to_timestamp(start)
-        self.end = date_to_timestamp(end) + Price.one_day_in_timestamp
+        self.start = start
+        self.end = end
 
     @abstractmethod
     def get_raw_price_data(self):
@@ -46,9 +43,13 @@ class UsMarket(Price):
         :return: Historical stock price data retrieved in JSON file.
         :rtype: dict
         """
+        one_day_in_timestamp = 86_400
+        start_date_timestamp = date_to_timestamp(self.start)
+        end_date_timestamp = (date_to_timestamp(self.end) +
+                              one_day_in_timestamp)
         url = ('https://query1.finance.yahoo.com/v8/finance/chart/'
                f'{self.symbol}?symbol={self.symbol}'
-               f'&period1={self.start}&period2={self.end}'
+               f'&period1={start_date_timestamp}&period2={end_date_timestamp}'
                '&interval=1d&corsDomain=finance.yahoo.com')
         res = request.Request(url)
         data = res.get_json()
