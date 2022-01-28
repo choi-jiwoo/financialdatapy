@@ -12,20 +12,17 @@ class Price(ABC):
     """A Class representing a company's historical stock price data.
 
     :param symbol: Symbol of a company/stock.
-    :type symbol: str
-    :param start: Starting date to search. If empty, 1900-01-01 is passed.
-    :type start: str
-    :param end: Ending date to search. One more day will be added to the
-        end date internally for the date range to correctly include
-        the end date. Otherwise, the date range will be until the day
-        before the end date.
-    :type end: str
+    :type symbol: datetime
+    :param start: Starting date to search.
+    :type start: `datetime.datetime`
+    :param end: Ending date to search. 
+    :type end: `datetime.datetime`
     """
 
     #: Timestamp value equivalent to one day. 24hr * 3,600sec/hr = 86,400
     one_day_in_timestamp = 86_400
 
-    def __init__(self, symbol: str, start: str, end: str) -> None:
+    def __init__(self, symbol: str, start: datetime, end: datetime) -> None:
         """Initialize symbol, start date and optional end date to search."""
         self.symbol = symbol
         self.start = date_to_timestamp(start)
