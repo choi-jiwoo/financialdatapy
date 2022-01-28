@@ -5,21 +5,29 @@ import json
 from bs4 import BeautifulSoup
 
 
-class Request():
+class Request:
     """A class sending and receiving http request.
 
     :param url: Url of the data source.
     :type url: str
     :param method: Which http methods to request, defaults to 'get'.
     :type method: str, optional
+    :param headers: Http request headers, defaults to `Request.headers`.
+    :type headers: dict, optional
     :param data: Data to pass when making POST request, defaults to None.
     :type data: Optional[dict], optional
     """
+    headers = {
+        'User-Agent': 'Mozilla',
+        'X-Requested-With': 'XMLHttpRequest',
+    }
 
     def __init__(self, url: str, method: str = 'get',
+                 headers: dict = headers,
                  data: Optional[dict] = None) -> None:
         """Initialize Response object."""
         self.url = url
+        self.headers = headers
         self.data = data
         self.res = self.http_request(method)
 
@@ -32,15 +40,13 @@ class Request():
         :return: A response object from the source.
         :rtype: requests.Response
         """
-        headers = {
-            'User-Agent': 'Mozilla',
-            'X-Requested-With': 'XMLHttpRequest',
-        }
 
         if method == 'post':
-            res = requests.post(self.url, data=self.form_data, headers=headers)
+            res = requests.post(
+                self.url, data=self.data, headers=self.headers
+            )
         else:
-            res = requests.get(self.url, headers=headers)
+            res = requests.get(self.url, headers=self.headers)
 
         if res.status_code != 200:
             res.raise_for_status()
