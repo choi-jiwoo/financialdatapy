@@ -38,15 +38,16 @@ def validate_date(period: str) -> datetime:
         print(e)
 
 
-def date_to_timestamp(period: Optional[str] = None) -> int:
-    """Parse date passed by an argument as string into a timestamp.
+def date_to_timestamp(period: datetime) -> int:
+    """Parse date passed in into a timestamp.
 
-    :param period: Date in string. If empty, None is assigned.
-    :type period: str, optional
+    :param period: `datetime.datetime` object.
+    :type period: datetime
     :return: The timestamp value equivalent to the date passed.
     :rtype: int
     """
-    date = _validate_date_format(period)
+
+    date = period.tz_localize(tz='Etc/GMT+4')
     timestamp = int(date.timestamp())
 
     return timestamp
