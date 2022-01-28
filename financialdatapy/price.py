@@ -51,7 +51,7 @@ class UsMarket(Price):
                f'{self.symbol}?symbol={self.symbol}'
                f'&period1={start_date_timestamp}&period2={end_date_timestamp}'
                '&interval=1d&corsDomain=finance.yahoo.com')
-        res = request.Request(url)
+        res = Request(url)
         data = res.get_json()
 
         return data
