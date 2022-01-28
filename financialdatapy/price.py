@@ -67,16 +67,20 @@ class UsMarket(Price):
         data = self.get_raw_price_data()
         timestamp = data['chart']['result'][0]['timestamp']
         price_data = data['chart']['result'][0]['indicators']['quote'][0]
-        columns = ['close', 'open', 'high', 'low', 'volume']
+        columns = ['Date', 'close', 'open', 'high', 'low', 'volume']
 
         date_range = [pd.to_datetime(x, unit='s').strftime('%Y-%m-%d')
-                      for x in timestamp]
+                      for x
+                      in timestamp]
+        price_data['Date'] = date_range
+
         price_table = pd.DataFrame(
             price_data,
-            index=date_range,
             columns=columns,
         )
         price_table = price_table.round(2)
+        table_col = price_table.columns.tolist()
+        price_table.columns = [x.capitalize() for x in table_col]
 
         return price_table
 
