@@ -1,8 +1,10 @@
 """This module handles logic of choosing which stock exchange to search."""
+from datetime import datetime
 import pandas as pd
 from typing import Optional
 from financialdatapy.financials import UsFinancials
 from financialdatapy.price import UsMarket
+from financialdatapy.price import KorMarket
 from financialdatapy.stocklist import StockList
 
 
@@ -59,6 +61,8 @@ class Market:
                 return market.get_standard_financials()
 
             return market.get_financials()
+        elif self.country_code == 'KOR':
+            pass
         else:
             raise NotAvailable()
 
@@ -78,5 +82,7 @@ class Market:
         """
         if self.country_code == 'USA':
             return UsMarket(symbol, start, end)
+        elif self.country_code == 'KOR':
+            return KorMarket(symbol, start, end)
         else:
             raise NotAvailable()
