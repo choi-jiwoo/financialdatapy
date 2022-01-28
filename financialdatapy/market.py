@@ -66,15 +66,16 @@ class Market:
         else:
             raise NotAvailable()
 
-    def historical_price(self, symbol, start, end) -> pd.DataFrame:
+    def historical_price(self, symbol: str,
+                         start: datetime, end: datetime) -> pd.DataFrame:
         """Get historical stock price data.
 
         :param symbol: Symbol of a company/stock.
         :type symbol: str
         :param start: Start date to query.
-        :type start: str
+        :type start: `datetime.datetime`
         :param end: End date to query.
-        :type end: str
+        :type end: `datetime.datetime`
         :raises: :class:`NotAvailable`: If the symbol is not listed in the
             stock exchange.
         :return: Historical stock price data.
