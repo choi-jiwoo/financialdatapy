@@ -12,15 +12,15 @@ class Request():
     :type url: str
     :param method: Which http methods to request, defaults to 'get'.
     :type method: str, optional
-    :param form_data: Form data to pass when making POST request, defaults to None
-    :type form_data: Optional[dict], optional
+    :param data: Data to pass when making POST request, defaults to None.
+    :type data: Optional[dict], optional
     """
 
     def __init__(self, url: str, method: str = 'get',
-                 form_data: Optional[dict] = None) -> None:
+                 data: Optional[dict] = None) -> None:
         """Initialize Response object."""
         self.url = url
-        self.form_data = form_data
+        self.data = data
         self.res = self.http_request(method)
 
     def http_request(self, method: str) -> requests.Response:
