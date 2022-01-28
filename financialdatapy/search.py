@@ -11,7 +11,7 @@ class Company:
         form_data = {
             'search_text': self.symbol,
         }
-        res = request.Request(url, method='post', form_data=form_data)
+        res = request.Request(url, method='post', data=form_data)
         data = res.get_json()
         pair_id = data['quotes'][0]['pairId']
 
