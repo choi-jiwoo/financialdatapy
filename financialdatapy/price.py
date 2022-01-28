@@ -1,8 +1,11 @@
 """This module retrieves the historical stock price of a company."""
 from abc import ABC, abstractmethod
+from datetime import datetime
 import pandas as pd
-from financialdatapy import request
 from financialdatapy.date import date_to_timestamp
+from financialdatapy.date import convert_date_format
+from financialdatapy.request import Request
+from financialdatapy import search
 
 
 class Price(ABC):
@@ -78,3 +81,60 @@ class UsMarket(Price):
         price_table = price_table.round(2)
 
         return price_table
+
+
+class KorMarket(Price):
+    """A class representing stock price of a South Korea company."""
+
+    def get_raw_price_data(self) -> dict:
+        """Get historical stock price data from source in a raw form.
+
+        :return: Historical stock price data retrieved in JSON file.
+        :rtype: dict
+        """
+
+        date_format = '%m/%d/%Y'
+        st_date = convert_date_format(self.start, date_format)
+        end_date = convert_date_format(self.end, date_format)
+
+        url = 'https://www.investing.com/instruments/HistoricalDataAjax'
+        company_search_result = search.Company(self.symbol)
+        data = {
+            'curr_id': company_search_result.pair_id,
+            'st_date': st_date,
+            'end_date': end_date,
+            'interval_sec': 'Daily',
+            'action': 'historical_data',
+        }
+        res = Request(url, method='post', data=data)
+        data = res.get_text()
+        data = pd.read_html(data)[0]
+
+        return data
+
+    def get_price_data(self) -> pd.DataFrame:
+        """Get historical stock price data.
+
+        :param data: Historical stock price data in JSON
+        :type data: dict
+        :return: Historical stock price data.
+        :rtype: pandas.DataFrame
+        """
+        data = self.get_raw_price_data()
+        data = data.replace(r'-$', float('NaN'), regex=True)
+
+        data.dropna(inplace=True)
+        data.reset_index(drop=True, inplace=True)
+        data.drop('Change %', axis=1, inplace=True)
+
+        data.rename(columns={'Price': 'Close', 'Vol.': 'Volume'}, inplace=True)
+
+        data['Volume'] = data['Volume'].apply(
+            lambda x: float(x[:-1])*1000000
+            if x[-1] == 'M'
+            else float(x[:-1])*1000
+        )
+        data['Volume'] = data['Volume'].astype('int')
+        data['Date'] = pd.to_datetime(data['Date'])
+
+        return data
