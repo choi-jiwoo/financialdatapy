@@ -1,4 +1,5 @@
 """This module retrieves financial data of a stock."""
+from financialdatapy.date import validate_date
 import pandas as pd
 import re
 from typing import Optional
@@ -110,15 +111,15 @@ class Stock:
         return self.market.financial_statement(self.symbol, financial,
                                                period, 'standard')
 
-    def historical(self, start: str = '1900-01-01',
+    def historical(self, start: Optional[str] = None,
                    end: Optional[str] = None) -> pd.DataFrame:
         """Get historical stock price data.
 
         :param start: Start date to query. Format should be in ISO 8601,
-            defaults to 1900-01-01.
+            defaults to None.
         :type start: str, optional
         :param end: End date to query. Format should be in ISO 8601, defaults to
-            the date of today.
+            None
         :type end: str, optional
         :return: Historical stock price data.
         :rtype: pandas.DataFrame
@@ -138,6 +139,10 @@ class Stock:
             | 2022-01-05 | xxxx.xx | xxxx.xx | xxxx.xx | xxxx.xx | xxxxxxx |
 
         """
+
+        start = validate_date(start)
+        end = validate_date(end)
+
         price = self.market.historical_price(self.symbol, start, end)
         price_data = price.get_price_data()
 
