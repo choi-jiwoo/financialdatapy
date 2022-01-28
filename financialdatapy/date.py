@@ -9,7 +9,7 @@ class IntegerDateInputError(Exception):
     pass
 
 
-def _validate_date_format(period: str) -> datetime:
+def validate_date(period: str) -> datetime:
     """Validate the format of date passed as a string.
 
     :param period: Date in string. If None, date of today is assigned.
@@ -21,14 +21,15 @@ def _validate_date_format(period: str) -> datetime:
     if isinstance(period, int):
         raise IntegerDateInputError('Date should be in string.')
 
-    if period is None:
-        date = pd.Timestamp.today().normalize()
-    else:
-        date = pd.to_datetime(period, yearfirst=True)
+    try:
+        if period is None:
+            date = _convert_none_to_date()
+        else:
+            date = pd.to_datetime(period, yearfirst=True, format='%Y-%m-%d')
 
-    date = date.tz_localize(tz='Etc/GMT+4')
-
-    return date
+        return date
+    except (TypeError, ValueError) as e:
+        print(e)
 
 
 def date_to_timestamp(period: Optional[str] = None) -> int:
