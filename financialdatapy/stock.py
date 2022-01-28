@@ -10,7 +10,7 @@ class CountryCodeValidationFailed(Exception):
     pass
 
 
-class Stock():
+class Stock:
     """A class representing a stock or a company.
 
     :param symbol: Symbol of a company/stock.
@@ -22,6 +22,7 @@ class Stock():
 
     def __init__(self, symbol: str, country_code: str = 'USA') -> None:
         """Initialize symbol to search."""
+
         self.symbol = symbol
         self.country_code = self.__validate_country_code(country_code)
         self.market = Market(self.country_code)
@@ -36,6 +37,7 @@ class Stock():
         :return: Country code in alpha-3 code (ISO-3166).
         :rtype: str
         """
+
         try:
             country_code = re.search(r'\b[a-zA-Z]{3}\b', country_code).group()
             country_code = country_code.upper()
@@ -74,6 +76,7 @@ class Stock():
             |                                  Net sales |          xxxxxx |        xxxxxx |        xxxxxx |
 
         """
+
         return self.market.financial_statement(self.symbol, financial, period)
 
     def standard_financials(self, financial: str = 'income_statement',
@@ -103,6 +106,7 @@ class Stock():
             | Total Revenue |       xxxxxx |       xxxxxx| ... |
 
         """
+
         return self.market.financial_statement(self.symbol, financial,
                                                period, 'standard')
 
@@ -130,8 +134,8 @@ class Stock():
 
             |            |   close |    open |    high |     low |  volume |
             |------------|---------|---------|---------|---------|---------|
-            | 20xx-01-04 | xxxx.xx | xxxx.xx | xxxx.xx | xxxx.xx | xxxxxxx |
-            | 20xx-01-05 | xxxx.xx | xxxx.xx | xxxx.xx | xxxx.xx | xxxxxxx |
+            | 2021-01-04 | xxxx.xx | xxxx.xx | xxxx.xx | xxxx.xx | xxxxxxx |
+            | 2022-01-05 | xxxx.xx | xxxx.xx | xxxx.xx | xxxx.xx | xxxxxxx |
 
         """
         price = self.market.historical_price(self.symbol, start, end)
