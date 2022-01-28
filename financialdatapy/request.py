@@ -1,7 +1,6 @@
 """This module requests data from web."""
 from typing import Optional
 import requests
-import json
 from bs4 import BeautifulSoup
 
 
@@ -67,7 +66,7 @@ class Request:
         :return: A JSON format data
         :rtype: dict
         """
-        return json.loads(self.res.text)
+        return self.res.json()
 
     def get_soup(self) -> BeautifulSoup:
         """Convert response object's content to BeautifulSoup object.
