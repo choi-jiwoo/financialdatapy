@@ -9,6 +9,12 @@ class IntegerDateInputError(Exception):
     pass
 
 
+def _convert_none_to_date() -> datetime:
+    today = pd.Timestamp.today().normalize()
+
+    return today
+
+
 def validate_date(period: str) -> datetime:
     """Validate the format of date passed as a string.
 
