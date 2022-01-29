@@ -3,6 +3,7 @@ from financialdatapy.date import validate_date
 import pandas as pd
 import re
 from typing import Optional
+from financialdatapy.companycode import search_code
 from financialdatapy.market import Market
 
 
@@ -24,11 +25,24 @@ class Stock:
     def __init__(self, symbol: str, country_code: str = 'USA') -> None:
         """Initialize symbol to search."""
 
-        self.symbol = symbol
-        self.country_code = self.__validate_country_code(country_code)
+        self.country_code = self._validate_country_code(country_code)
+        self.symbol = self._convert_symbol_to_code_in_krx(symbol,
+                                                          self.country_code)
         self.market = Market(self.country_code)
 
-    def __validate_country_code(self, country_code: str) -> str:
+    def _convert_symbol_to_code_in_krx(self,
+                                       symbol: str,
+                                       country_code: str) -> str:
+        if country_code != 'KOR':
+            return symbol
+
+        try:
+            is_code = int(symbol)
+            return symbol
+        except ValueError:
+            return search_code(symbol)
+
+    def _validate_country_code(self, country_code: str) -> str:
         """Validate if country code is in alpha-3 code (ISO 3166).
 
         :param country_code: Country where the stock is listed.
