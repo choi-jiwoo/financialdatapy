@@ -23,10 +23,12 @@ class Request:
 
     def __init__(self, url: str, method: str = 'get',
                  headers: dict = headers,
+                 params: Optional[dict] = None,
                  data: Optional[dict] = None) -> None:
         """Initialize Response object."""
         self.url = url
         self.headers = headers
+        self.params = params
         self.data = data
         self.res = self.http_request(method)
 
@@ -45,7 +47,9 @@ class Request:
                 self.url, data=self.data, headers=self.headers
             )
         else:
-            res = requests.get(self.url, headers=self.headers)
+            res = requests.get(
+                self.url, params=self.params, headers=self.headers
+                )
 
         if res.status_code != 200:
             res.raise_for_status()
