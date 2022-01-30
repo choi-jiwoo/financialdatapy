@@ -56,6 +56,14 @@ class Request:
 
         return res
 
+    def get_content(self) -> bytes:
+        """Return response object in bytes.
+        
+        :return: Response object in bytes
+        :rtype: bytes
+        """
+        return self.res.content
+
     def get_text(self) -> str:
         """Return response object in string.
 
