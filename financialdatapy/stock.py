@@ -71,7 +71,7 @@ class Stock:
                 should be either 'income_statement', 'balance_sheet', or
                 'cash_flow', defaults to 'income_statement'
         :type financial: str, optional
-        :param period: Either 'annual' or 'quarter, defaults to 'annual'.
+        :param period: Either 'annual' or 'quarter', defaults to 'annual'.
         :type period: str, optional
         :return: Financial statement as reported.
         :rtype: pandas.DataFrame
@@ -81,15 +81,6 @@ class Stock:
         >>> from financialdatapy.stock import Stock
         >>> comp = Stock('AAPL')
         >>> ic_as_reported = comp.financials('income_statement', 'annual')
-        >>> ic_as_reported
-
-        Output::
-
-            |      CONSOLIDATED STATEMENTS OF OPERATIONS | 12 Months Ended                                 |
-            | USD ($) shares in Thousands, $ in Millions |   Sep. 26, 20xx | Sep. 28, 20xx | Sep. 29, 20xx |
-            |--------------------------------------------|-----------------|---------------|---------------|
-            |                                  Net sales |          xxxxxx |        xxxxxx |        xxxxxx |
-
         """
 
         return self.market.financial_statement(self.symbol, financial, period)
@@ -112,14 +103,6 @@ class Stock:
         >>> from financialdatapy.stock import Stock
         >>> comp = Stock('AAPL')
         >>> std_ic = comp.standard_financials('income_statement', 'annual')
-        >>> std_ic
-
-        Output::
-
-            |               |          TTM |    9/26/20xx| ... |
-            |---------------|--------------|-------------|-----|
-            | Total Revenue |       xxxxxx |       xxxxxx| ... |
-
         """
 
         return self.market.financial_statement(self.symbol, financial,
@@ -133,7 +116,7 @@ class Stock:
             defaults to None.
         :type start: str, optional
         :param end: End date to query. Format should be in ISO 8601, defaults to
-            None
+            None.
         :type end: str, optional
         :return: Historical stock price data.
         :rtype: pandas.DataFrame
@@ -143,15 +126,6 @@ class Stock:
         >>> from financialdatapy.stock import Stock
         >>> comp = Stock('AAPL')
         >>> price = comp.historical('2021-1-1', '2021-1-5')
-        >>> price
-
-        Output::
-
-            |            |   close |    open |    high |     low |  volume |
-            |------------|---------|---------|---------|---------|---------|
-            | 2021-01-04 | xxxx.xx | xxxx.xx | xxxx.xx | xxxx.xx | xxxxxxx |
-            | 2022-01-05 | xxxx.xx | xxxx.xx | xxxx.xx | xxxx.xx | xxxxxxx |
-
         """
 
         start = validate_date(start)
