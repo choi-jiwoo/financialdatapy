@@ -58,7 +58,7 @@ class Request:
 
     def get_content(self) -> bytes:
         """Return response object in bytes.
-        
+
         :return: Response object in bytes
         :rtype: bytes
         """
