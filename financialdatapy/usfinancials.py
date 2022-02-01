@@ -3,6 +3,7 @@ import pandas as pd
 import string
 from financialdatapy.filings import get_latest_form
 from financialdatapy.filings import get_filings_list
+from financialdatapy.request import Request
 from financialdatapy import search
 from financialdatapy.financials import Financials
 from financialdatapy.financials import EmptyDataFrameError
@@ -82,8 +83,9 @@ class UsFinancials(Financials):
         :rtype: pandas.DataFrame
         """
 
-        res = request.Request(link)
-        df = pd.read_html(res.res.text)[0]
+        res = Request(link)
+        data = res.get_text()
+        df = pd.read_html(data)[0]
 
         first_column = df.columns[0]
         multi_index = len(first_column)
