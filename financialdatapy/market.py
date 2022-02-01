@@ -2,7 +2,8 @@
 from datetime import datetime
 import pandas as pd
 from typing import Optional
-from financialdatapy.financials import UsFinancials
+from financialdatapy.usfinancials import UsFinancials
+from financialdatapy.korfinancials import KorFinancials
 from financialdatapy.price import UsMarket
 from financialdatapy.price import KorMarket
 from financialdatapy.stocklist import StockList
@@ -62,7 +63,12 @@ class Market:
 
             return market.get_financials()
         elif self.country_code == 'KOR':
-            pass
+            market = KorFinancials(symbol, financial, period)
+
+            if type_of_financial == 'standard':
+                return market.get_standard_financials()
+
+            return market.get_financials()
         else:
             raise NotAvailable()
 
