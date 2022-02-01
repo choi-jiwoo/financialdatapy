@@ -187,3 +187,17 @@ class TestPriceData:
         assert first_row_close == close
 
 
+class TestCompanyCode:
+    """Test validating company name and its code listed in Korea Exchange."""
+
+    def test_getting_company_code(self):
+        """Test if company name and its code match."""
+        company_code = search_code('삼성전자')
+        assert company_code == '005930'
+
+    def test_corp_code_from_dart_api(self, api_key):
+        corp_list = StockList.get_comp_code_list(api_key)
+        symbol = '005930'
+        result = corp_list[corp_list['stock_code'] == symbol]
+        corp_code = result.get('corp_code').item()
+        assert corp_code == '00126380'
