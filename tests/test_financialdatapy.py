@@ -1,9 +1,31 @@
+from dotenv import load_dotenv
+import os
 import pandas as pd
 import pytest
 from financialdatapy import cik
-from financialdatapy import filings
 from financialdatapy import date
+from financialdatapy import filings
 from financialdatapy.date import IntegerDateInputError
+from financialdatapy.stock import Stock
+from financialdatapy.stocklist import StockList
+from financialdatapy.companycode import search_code
+
+
+@pytest.fixture(scope='class')
+def api_key():
+    load_dotenv()
+    api_key = os.environ.get('DART_API_KEY')
+    return api_key
+
+
+@pytest.fixture(scope='class')
+def us_company():
+    return Stock('AAPL')
+
+
+@pytest.fixture(scope='class')
+def kor_company():
+    return Stock('005930', 'KOR')
 
 
 @pytest.fixture(scope='class')
@@ -13,15 +35,6 @@ def cik_list():
     Used in TestCik inside test_integration.py.
     """
     return cik.get_cik_list()
-
-
-@pytest.fixture(scope='class')
-def price(company):
-    """Get historical price data.
-
-    Used in class TestPrice.
-    """
-    return company.historical('2021-8-3', '2021-8-10')
 
 
 class TestDate:
@@ -72,7 +85,7 @@ class TestDate:
 
 @pytest.mark.usefixtures('cik_list')
 class TestCik:
-    """Test for getting a CIK list, and searching cik."""
+    """Test getting a CIK list, and searching cik."""
 
     def test_get_cik(self, cik_list):
         """Test get_cik returns DataFrame."""
@@ -84,8 +97,8 @@ class TestCik:
         assert res == '0000320193'
 
 
-class TestFilings:
-    """Test for getting list of filings a company."""
+class TestUsaFilings:
+    """Test getting list of filings a company."""
 
     def test_filings(self):
         """Test get_filings_list returns DataFrame."""
@@ -93,34 +106,58 @@ class TestFilings:
         assert isinstance(res, pd.DataFrame)
 
 
-class TestFinancials:
-    """Test for getting financial statements."""
+class TestUsaFinancials:
+    """Test getting financial statement of company in USA market."""
 
     @pytest.mark.parametrize(
-        'form',
+        'period',
         [
-            '10-K',
-            '10-Q',
+            'annual',
+            'quarter',
         ]
     )
-    def test_getting_financials_as_reported(self, company, form):
+    def test_getting_financials_as_reported(self, us_company, period):
         """Test all 3 major annual or quarterly financials are returned."""
-        ic = company.financials(form, 'income_statement')
-        bs = company.financials(form, 'balance_sheet')
-        cf = company.financials(form, 'cash_flow')
+        ic = us_company.financials('income_statement', period)
+        bs = us_company.financials('balance_sheet', period)
+        cf = us_company.financials('cash_flow', period)
         assert len(ic) > 0
         assert len(bs) > 0
         assert len(cf) > 0
+
+
+class TestKrxFinancials:
+    """Test getting financial statement of company in South Korea market."""
+
+    @pytest.mark.parametrize(
+        'period',
+        [
+            'annual',
+            'quarter',
+        ]
+    )
+    def test_getting_financials_as_reported(self, kor_company, period):
+        """Test all 3 major annual or quarterly financials are returned."""
+        ic = kor_company.financials('income_statement', period)
+        bs = kor_company.financials('balance_sheet', period)
+        cf = kor_company.financials('cash_flow', period)
+        assert len(ic) > 0
+        assert len(bs) > 0
+        assert len(cf) > 0
+
+
+class TestStandardFinancials:
+    """Test getting standard financial statements."""
 
     @pytest.mark.parametrize(
         'which_financial, period',
         [
             ('income_statement', 'annual'),
             ('balance_sheet', 'annual'),
-            ('income_statement', 'annual'),
+            ('cash_flow', 'annual'),
             ('income_statement', 'quarter'),
             ('balance_sheet', 'quarter'),
-            ('income_statement', 'quarter'),
+            ('cash_flow', 'quarter'),
         ]
     )
     def test_get_std_financials(self, company, which_financial, period):
@@ -130,19 +167,23 @@ class TestFinancials:
 
 
 class TestPriceData:
-    """Tests for getting historical stock price data."""
+    """Tests getting historical stock price data."""
 
-    def test_getting_price_data(self, price):
-        """Test the type of historical stock price data is dictionary."""
-        assert isinstance(price, pd.DataFrame)
-
-    def test_price_data(self, price):
-        """Test stock price data returns OHLC data."""
-        quotes = ['close', 'open', 'high', 'low', 'volume']
-
-        for i, v in enumerate(price.columns):
-            assert v == quotes[i]
-
-    def test_date_and_price_match(self, price):
+    @pytest.mark.parametrize(
+            'symbol, close, company',
+            [
+                ('AAPL', 147.36, us_company),
+                ('005930', 80200, kor_company),
+            ]
+        )
+    def test_date_and_price_match(self, symbol, close, company):
         """Test the price of a stock on a certain day matches together."""
-        assert price['close'][0] == 147.36
+
+        price = {
+            'symbol': company.symbol,
+            'historical_price': company.historical('2021-8-3', '2021-8-10'),
+        }
+        first_row_close = price_data['historical_price']['Close'][0]
+        assert first_row_close == close
+
+
