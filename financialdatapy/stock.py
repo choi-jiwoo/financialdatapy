@@ -33,6 +33,15 @@ class Stock:
     def _convert_symbol_to_code_in_krx(self,
                                        symbol: str,
                                        country_code: str) -> str:
+        """Convert symbol to company code for stocks in Korea Exchange.
+
+        :param symbol: Company name.
+        :type symbol: str
+        :param country_code: Country where the stock is listed.
+        :type country_code: str
+        :return: Company code
+        :rtype: str
+        """
         if country_code != 'KOR':
             return symbol
 
