@@ -196,6 +196,7 @@ class TestCompanyCode:
         assert company_code == '005930'
 
     def test_corp_code_from_dart_api(self, api_key):
+        """Test getting corporate code of a stock in dart.fss.or.kr"""
         corp_list = StockList.get_comp_code_list(api_key)
         symbol = '005930'
         result = corp_list[corp_list['stock_code'] == symbol]
