@@ -67,11 +67,6 @@ class KorFinancials(Financials):
         }
         res = Request(url, params=params)
         data = res.get_json()
-
-        return data
-
-    def _get_raw_financial(self, period, year) -> pd.DataFrame:
-        data = self._get_report(period, year)
         raw_financial = pd.DataFrame(data['list'])
 
         return raw_financial
@@ -129,9 +124,9 @@ class KorFinancials(Financials):
 
         if input_period == 'annual':
             try:
-                raw_financial = self._get_raw_financial(input_period, year_now-1)
+                raw_financial = self._get_report(input_period, year_now-1)
             except KeyError:
-                raw_financial = self._get_raw_financial(input_period, year_now-2)
+                raw_financial = self._get_report(input_period, year_now-2)
         elif input_period == 'quarter':
             latest_q = latest_date.month
             try:
@@ -143,7 +138,7 @@ class KorFinancials(Financials):
                     year_now = year_now - 1
                     input_period = '3q'
 
-                raw_financial = self._get_raw_financial(input_period, year_now)
+                raw_financial = self._get_report(input_period, year_now)
             except KeyError:
                 print('공시정보없음')
 
