@@ -11,16 +11,32 @@ from financialdatapy.stocklist import StockList
 
 
 class KorFinancials(Financials):
+    """Class representing financial statements of stocks in Korea Exchange.
+
+    :param symbol: Symbol of a company/stock.
+    :type symbol: str
+    :param financial: Which financial statement to retrieve, defaults to
+        'income_statement'
+    :type financial: str, optional
+    :param period: Either 'annual' or 'quarter., defaults to 'annual'
+    :type period: str, optional
+    """
 
     load_dotenv()
     API_KEY = os.environ.get('DART_API_KEY')
 
     def __init__(self, symbol: str, financial: str = 'income_statement',
                  period: str = 'annual') -> None:
+        """Initialize KorFinancials"""
         super().__init__(symbol, financial, period)
         self.corp_code = self._get_corp_code()
 
     def _get_corp_code(self) -> str:
+        """Get corporate code from dart.fss.or.kr.
+
+        :return: Corporate code.
+        :rtype: str
+        """
         corp_list = StockList.get_comp_code_list(KorFinancials.API_KEY)
         result = corp_list[corp_list['stock_code'] == self.symbol]
         corp_code = result.get('corp_code').item()
@@ -28,7 +44,14 @@ class KorFinancials(Financials):
         return corp_code
 
     @lru_cache
-    def _get_latest_report_date(self, year) -> datetime:
+    def _get_latest_report_date(self, year: int) -> datetime:
+        """Get the latest date a financial report is submitted to dart.fss.or.kr
+
+        :param year: Current year.
+        :type year: int
+        :return: Latest date a financial report is submitted.
+        :rtype: `datetime.datetime`
+        """
         url = 'https://opendart.fss.or.kr/api/list.json'
         last_year = year - 1
         bgn_de = f'{last_year}0101'
@@ -50,7 +73,16 @@ class KorFinancials(Financials):
         return latest_date
 
     @lru_cache
-    def _get_report(self, period, year):
+    def _get_report(self, period: str, year: int) -> pd.DataFrame:
+        """Retrieve financial statement of a company from dart.fss.or.kr.
+
+        :param period: Either 'annual' or 'quarter'.
+        :type period: str
+        :param year: Business year.
+        :type year: int
+        :return: Financial statement of a company.
+        :rtype: pandas.DataFrame
+        """
         url = 'https://opendart.fss.or.kr/api/fnlttSinglAcntAll.json'
         report_type = {
             '1q': '11013',
@@ -71,8 +103,19 @@ class KorFinancials(Financials):
 
         return raw_financial
 
-    def _clean_financials(self, raw_financials,
-                          report_type, period) -> pd.DataFrame:
+    def _clean_financials(self, raw_financials: pd.DataFrame,
+                          report_type: str, period: str) -> pd.DataFrame:
+        """Clean financial statement retrieved from dart.fss.or.kr.
+
+        :param raw_financials: Financial statement.
+        :type raw_financials: pandas.DataFrame
+        :param report_type: Which financial statement.
+        :type report_type: str
+        :param period: Either 'annual' or 'quarter'.
+        :type period: str
+        :return: Financial statement of a company.
+        :rtype: pandas.DataFrame
+        """
         statement = raw_financials[raw_financials['sj_div'] == report_type]
 
         if period == 'annual':
@@ -111,6 +154,11 @@ class KorFinancials(Financials):
         return statement
 
     def get_financials(self) -> pd.DataFrame:
+        """Get financial statement of a company.
+
+        :return: Financial statement.
+        :rtype: pandas.DataFrame
+        """
         report_type = {
             'income_statement': 'IS',
             'balance_sheet': 'BS',
@@ -149,4 +197,9 @@ class KorFinancials(Financials):
         return financial_statement
 
     def get_standard_financials(self) -> pd.DataFrame:
+        """Get standard financial statement of a company.
+
+        :return: Standard financial statement.
+        :rtype: pandas.DataFrame
+        """
         pass
