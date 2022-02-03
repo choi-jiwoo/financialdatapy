@@ -25,7 +25,7 @@ def validate_date(period: str) -> datetime:
     :rtype: datetime.datetime
     """
     if isinstance(period, int):
-        raise IntegerDateInputError('Date should be in string.')
+        raise IntegerDateInputError('Input type of period should be in string.')
 
     try:
         if period is None:
@@ -35,7 +35,7 @@ def validate_date(period: str) -> datetime:
 
         return date
     except (TypeError, ValueError) as e:
-        print(e)
+        raise RuntimeError('Bad input of \'period\'.') from e
 
 
 def date_to_timestamp(period: datetime) -> int:
