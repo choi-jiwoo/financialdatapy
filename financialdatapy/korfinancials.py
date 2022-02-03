@@ -195,11 +195,3 @@ class KorFinancials(Financials):
             )
 
         return financial_statement
-
-    def get_standard_financials(self) -> pd.DataFrame:
-        """Get standard financial statement of a company.
-
-        :return: Standard financial statement.
-        :rtype: pandas.DataFrame
-        """
-        pass
