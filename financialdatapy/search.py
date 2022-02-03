@@ -2,10 +2,10 @@ from financialdatapy import request
 
 
 class Company:
-    def __init__(self, symbol: str) -> dict:
+    def __init__(self, symbol: str) -> None:
         self.symbol = symbol
 
-    def search_pair_id(self):
+    def search_pair_id(self) -> str:
         url = 'https://www.investing.com/search/service/searchTopBar'
         form_data = {
             'search_text': self.symbol,
