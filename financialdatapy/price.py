@@ -101,8 +101,9 @@ class KorMarket(Price):
 
         url = 'https://www.investing.com/instruments/HistoricalDataAjax'
         company_search_result = search.Company(self.symbol)
+        curr_id = company_search_result.search_pair_id()
         data = {
-            'curr_id': company_search_result.pair_id,
+            'curr_id': curr_id,
             'st_date': st_date,
             'end_date': end_date,
             'interval_sec': 'Daily',

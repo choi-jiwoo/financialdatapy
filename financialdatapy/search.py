@@ -4,7 +4,6 @@ from financialdatapy import request
 class Company:
     def __init__(self, symbol: str) -> dict:
         self.symbol = symbol
-        self.pair_id = self.search_pair_id()
 
     def search_pair_id(self):
         url = 'https://www.investing.com/search/service/searchTopBar'
