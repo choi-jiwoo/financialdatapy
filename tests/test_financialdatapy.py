@@ -173,7 +173,7 @@ class TestPriceData:
         assert first_row_close == close
 
 
-class TestCompanyCode:
+class TestCompanyCodeInKrx:
     """Test validating company name and its code listed in Korea Exchange."""
 
     def test_getting_company_code(self):
