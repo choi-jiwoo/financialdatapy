@@ -18,14 +18,22 @@ def api_key():
     return api_key
 
 
-@pytest.fixture(scope='class')
-def us_company():
-    return Stock('AAPL')
+@pytest.fixture(scope='class',
+                params=[
+                    {'symbol': 'AAPL', 'country': 'USA'},
+                    {'symbol': '005930', 'country': 'KOR'},
+                ])
+def company(request):
+    """Fixture of company objects for different stocks.
 
-
-@pytest.fixture(scope='class')
-def kor_company():
-    return Stock('005930', 'KOR')
+    :param request: Special object that access each parameters.
+    :type request: list
+    :return: Instance object of :class:`Stock`:.
+    :rtype: :class:`Stock`:
+    """
+    symbol = request.param['symbol']
+    country = request.param['country']
+    return Stock(symbol, country)
 
 
 @pytest.fixture(scope='class')
@@ -106,8 +114,8 @@ class TestUsaFilings:
         assert isinstance(res, pd.DataFrame)
 
 
-class TestUsaFinancials:
-    """Test getting financial statement of company in USA market."""
+class TestFinancials:
+    """Test getting financial statement of company"""
 
     @pytest.mark.parametrize(
         'period',
@@ -116,31 +124,11 @@ class TestUsaFinancials:
             'quarter',
         ]
     )
-    def test_getting_financials_as_reported(self, us_company, period):
+    def test_getting_financials_as_reported(self, company, period):
         """Test all 3 major annual or quarterly financials are returned."""
-        ic = us_company.financials('income_statement', period)
-        bs = us_company.financials('balance_sheet', period)
-        cf = us_company.financials('cash_flow', period)
-        assert len(ic) > 0
-        assert len(bs) > 0
-        assert len(cf) > 0
-
-
-class TestKrxFinancials:
-    """Test getting financial statement of company in South Korea market."""
-
-    @pytest.mark.parametrize(
-        'period',
-        [
-            'annual',
-            'quarter',
-        ]
-    )
-    def test_getting_financials_as_reported(self, kor_company, period):
-        """Test all 3 major annual or quarterly financials are returned."""
-        ic = kor_company.financials('income_statement', period)
-        bs = kor_company.financials('balance_sheet', period)
-        cf = kor_company.financials('cash_flow', period)
+        ic = company.financials('income_statement', period)
+        bs = company.financials('balance_sheet', period)
+        cf = company.financials('cash_flow', period)
         assert len(ic) > 0
         assert len(bs) > 0
         assert len(cf) > 0
@@ -169,21 +157,19 @@ class TestStandardFinancials:
 class TestPriceData:
     """Tests getting historical stock price data."""
 
-    @pytest.mark.parametrize(
-            'symbol, close, company',
-            [
-                ('AAPL', 147.36, us_company),
-                ('005930', 80200, kor_company),
-            ]
-        )
-    def test_date_and_price_match(self, symbol, close, company):
+    def test_date_and_price_match(self, company):
         """Test the price of a stock on a certain day matches together."""
 
         price = {
             'symbol': company.symbol,
             'historical_price': company.historical('2021-8-3', '2021-8-10'),
         }
-        first_row_close = price_data['historical_price']['Close'][0]
+        first_row_close = price['historical_price']['Close'][0]
+        if company.country_code == 'USA':
+            close = 147.36
+        elif company.country_code == 'KOR':
+            close = 80200
+
         assert first_row_close == close
 
 
