@@ -75,4 +75,4 @@ class StockList:
 
             return corp_code_list
         except Exception as e:
-            print(e)
+            raise RuntimeError('Failed in getting company code list.') from e
