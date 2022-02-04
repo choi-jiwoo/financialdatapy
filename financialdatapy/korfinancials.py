@@ -17,9 +17,9 @@ class KorFinancials(Financials):
     :param symbol: Symbol of a company/stock.
     :type symbol: str
     :param financial: Which financial statement to retrieve, defaults to
-        'income_statement'
+        'income_statement'.
     :type financial: str, optional
-    :param period: Either 'annual' or 'quarter., defaults to 'annual'
+    :param period: Either 'annual' or 'quarter', defaults to 'annual'.
     :type period: str, optional
     :param api_key: Api key for opendart.fss.or.kr, defaults to None.
     :type api_key: str
