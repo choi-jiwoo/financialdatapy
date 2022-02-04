@@ -3,10 +3,10 @@ from datetime import datetime
 from functools import lru_cache
 import os
 import pandas as pd
-from financialdatapy.financials import Financials
 from typing import Optional
 from financialdatapy.dartapi import Dart
 from financialdatapy.financials import EmptyDataFrameError
+from financialdatapy.financials import Financials
 from financialdatapy.request import Request
 from financialdatapy.stocklist import StockList
 
