@@ -10,6 +10,12 @@ from financialdatapy.financials import EmptyDataFrameError
 class UsFinancials(Financials):
     """A class representing financial statements of a company in US."""
 
+    def __init__(self, symbol: str, cik: str,
+                 financial: str = 'income_statement',
+                 period: str = 'annual') -> None:
+        super().__init__(symbol, financial, period)
+        self.cik = cik
+
     def get_financials(self) -> pd.DataFrame:
         """Get financial statement as reported.
 

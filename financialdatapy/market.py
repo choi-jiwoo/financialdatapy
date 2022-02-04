@@ -56,7 +56,7 @@ class Market:
         """
         if self.country_code == 'USA':
             comp_cik = StockList.search_cik(symbol)
-            market = UsFinancials(symbol, financial, period, comp_cik)
+            market = UsFinancials(symbol, comp_cik, financial, period)
 
             if type_of_financial == 'standard':
                 return market.get_standard_financials()
