@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import os
 import pandas as pd
 import pytest
-from financialdatapy import cik
+from financialdatapy.cik import CikList
 from financialdatapy import date
 from financialdatapy import filings
 from financialdatapy.date import IntegerDateInputError
@@ -42,7 +42,7 @@ def cik_list():
 
     Used in TestCik inside test_integration.py.
     """
-    return cik.get_cik_list()
+    return CikList()
 
 
 class TestDate:
@@ -83,11 +83,11 @@ class TestCik:
 
     def test_get_cik(self, cik_list):
         """Test get_cik returns DataFrame."""
-        assert isinstance(cik_list, pd.DataFrame)
+        assert isinstance(cik_list.get_cik_list(), pd.DataFrame)
 
     def test_search_cik(self, cik_list):
         """Test the returned cik number matches with the company's cik number."""
-        res = cik.search_cik(cik_list, 'AAPL')
+        res = cik_list.search_cik('AAPL')
         assert res == '0000320193'
 
 
