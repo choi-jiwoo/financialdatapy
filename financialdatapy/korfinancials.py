@@ -4,10 +4,10 @@ from functools import lru_cache
 import os
 import pandas as pd
 from typing import Optional
+from financialdatapy.companycode import CompanyCode
 from financialdatapy.dartapi import Dart
 from financialdatapy.financials import Financials
 from financialdatapy.request import Request
-from financialdatapy.stocklist import StockList
 
 
 class KorFinancials(Financials):
@@ -37,7 +37,7 @@ class KorFinancials(Financials):
         :return: Corporate code.
         :rtype: str
         """
-        corp_list = StockList.get_comp_code_list(self.api_key)
+        corp_list = CompanyCode.get_comp_code_list(self.api_key)
         result = corp_list[corp_list['stock_code'] == self.symbol]
         corp_code = result.get('corp_code').item()
 
