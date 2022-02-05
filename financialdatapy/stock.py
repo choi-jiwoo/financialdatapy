@@ -3,7 +3,7 @@ from financialdatapy.date import validate_date
 import pandas as pd
 import re
 from typing import Optional
-from financialdatapy.companycode import search_code
+from financialdatapy.companycode import CompanyCode
 from financialdatapy.market import Market
 
 
@@ -49,7 +49,7 @@ class Stock:
             is_code = int(symbol)
             return symbol
         except ValueError:
-            return search_code(symbol)
+            return CompanyCode.search_code(symbol)
 
     def _validate_country_code(self, country_code: str) -> str:
         """Validate if country code is in alpha-3 code (ISO 3166).
