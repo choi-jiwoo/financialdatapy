@@ -27,15 +27,20 @@ def validate_date(period: str) -> datetime:
     if isinstance(period, int):
         raise IntegerDateInputError('Input type of period should be in string.')
 
-    try:
-        if period is None:
-            date = _convert_none_to_date()
-        else:
-            date = pd.to_datetime(period, yearfirst=True, format='%Y-%m-%d')
+    if period is None:
+        date = _convert_none_to_date()
+    else:
+        try:
+            date_format = '%y-%m-%d'
+            period = datetime.strptime(period, date_format)
+        except ValueError:
+            date_format = '%Y-%m-%d'
+        finally:
+            date = string_to_date(period, date_format)
 
-        return date
-    except (TypeError, ValueError) as e:
-        raise RuntimeError('Bad input of \'period\'.') from e
+    return date
+
+
 def string_to_date(period: str or datetime, date_format: str) -> pd.Timestamp:
     date = pd.to_datetime(period, yearfirst=True, format=date_format)
 
