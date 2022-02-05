@@ -2,11 +2,11 @@
 from datetime import datetime
 import pandas as pd
 from typing import Optional
+from financialdatapy.cik import CikList
 from financialdatapy.usfinancials import UsFinancials
 from financialdatapy.korfinancials import KorFinancials
 from financialdatapy.price import UsMarket
 from financialdatapy.price import KorMarket
-from financialdatapy.stocklist import StockList
 
 
 class NotAvailable(Exception):
@@ -55,7 +55,8 @@ class Market:
         :rtype: pandas.DataFrame
         """
         if self.country_code == 'USA':
-            comp_cik = StockList.search_cik(symbol)
+            cik_list = CikList()
+            comp_cik = cik_list.search_cik(symbol)
             market = UsFinancials(symbol, comp_cik, financial, period)
 
             if type_of_financial == 'standard':
