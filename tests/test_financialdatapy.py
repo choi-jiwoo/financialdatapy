@@ -59,23 +59,22 @@ class TestDate:
     )
     def test_parsing_date_to_timestamp(self, start, end):
         """Test the date correctly converts to timestamp."""
-        s_timestamp = date.date_to_timestamp(start)
-        e_timestamp = date.date_to_timestamp(end) + 86400
-
-        assert s_timestamp == 1627963200
-        assert e_timestamp == 1628654400
-
+        start_datetime = date.validate_date(start)
+        end_datetime = date.validate_date(end)
+        start_timestamp = date.date_to_timestamp(start_datetime)
+        end_timestamp = date.date_to_timestamp(end_datetime) + 86400
+        assert start_timestamp == 1627963200
+        assert end_timestamp == 1628654400
 
     def test_year_only_date_input(self):
         """Test YYYY format string as an argument returns YYYY-01-01 format."""
-        timestamp = date.date_to_timestamp('2021')
-
-        assert timestamp == 1609473600
+        datetime = date.validate_date('2021')
+        assert datetime.strftime('%Y-%m-%d') == '2021-01-01'
 
     def test_integer_input_error(self):
         """Test the function returns error when integer is inputted."""
         with pytest.raises(IntegerDateInputError):
-            date.date_to_timestamp(1)
+            date.validate_date(1)
 
 
 @pytest.mark.usefixtures('cik_list')
