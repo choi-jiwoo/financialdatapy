@@ -6,11 +6,6 @@ from financialdatapy.request import Request
 from financialdatapy import search
 
 
-class EmptyDataFrameError(Exception):
-    """Raised when retreived dataframe is empty."""
-    pass
-
-
 class Financials(ABC):
     """A Class representing financial statements of a company.
 

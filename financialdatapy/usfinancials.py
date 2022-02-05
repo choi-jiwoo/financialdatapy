@@ -4,7 +4,11 @@ from financialdatapy.filings import get_latest_form
 from financialdatapy.filings import get_filings_list
 from financialdatapy.request import Request
 from financialdatapy.financials import Financials
-from financialdatapy.financials import EmptyDataFrameError
+
+
+class EmptyDataFrameError(Exception):
+    """Raised when retreived dataframe is empty."""
+    pass
 
 
 class UsFinancials(Financials):
