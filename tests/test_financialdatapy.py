@@ -154,7 +154,6 @@ class TestPriceData:
             close = 147.36
         elif company.country_code == 'KOR':
             close = 80200
-
         assert first_row_close == close
 
 
