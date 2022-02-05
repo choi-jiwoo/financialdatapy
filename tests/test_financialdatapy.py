@@ -57,7 +57,7 @@ class TestDate:
             ('21-08-03', '21-08-10'),
         ]
     )
-    def test_parsing_date(self, start, end):
+    def test_parsing_date_to_timestamp(self, start, end):
         """Test the date correctly converts to timestamp."""
         s_timestamp = date.date_to_timestamp(start)
         e_timestamp = date.date_to_timestamp(end) + 86400
