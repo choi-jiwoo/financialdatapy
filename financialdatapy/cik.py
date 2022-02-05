@@ -5,8 +5,8 @@ import re
 from financialdatapy import request
 
 
-class UsCikList:
-    """A class representing stock list of listed companies in USA."""
+class CikList:
+    """Class representing cik list of stocks in US exchange."""
 
     @staticmethod
     def get_cik_list() -> pd.DataFrame:
