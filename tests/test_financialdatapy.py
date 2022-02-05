@@ -65,19 +65,6 @@ class TestDate:
         assert s_timestamp == 1627963200
         assert e_timestamp == 1628654400
 
-    def test_empty_start_date(self):
-        """Test default start date returns timestamp of 1900-01-01."""
-        s_timestamp = date.date_to_timestamp('1900-01-01')
-
-        assert s_timestamp == -2208974400
-
-    def test_empty_end_date(self):
-        """Test default end date returns type int which is a timestamp."""
-        e_timestamp = date.date_to_timestamp()
-        end = pd.to_datetime(e_timestamp, unit='s').normalize()
-        today = pd.Timestamp.today().normalize()
-
-        assert end == today
 
     def test_year_only_date_input(self):
         """Test YYYY format string as an argument returns YYYY-01-01 format."""
