@@ -58,6 +58,16 @@ class KorFinancials(Financials):
 
         return corp_code
 
+    def _validate_status(self, data: dict) -> None:
+        """Validate if data is successfully retrieved.
+
+        :param data: Response object received.
+        :type data: dict
+        :raises StatusMessageException: Failed in getting requested data.
+        """
+        if data['status'] != '000':
+            raise StatusMessageException(data['message'])
+
     @lru_cache
     def _get_latest_report_date(self, year: int) -> datetime:
         """Get the latest date a financial report is submitted to dart.fss.or.kr
@@ -79,6 +89,7 @@ class KorFinancials(Financials):
         }
         res = Request(url, params=params)
         data = res.get_json()
+        self._validate_status(data)
         report_list = pd.DataFrame(data['list'])
 
         latest_report = data['list'][0]
@@ -115,6 +126,7 @@ class KorFinancials(Financials):
         res = Request(url, params=params)
         data = res.get_json()
         raw_financial = pd.DataFrame(data['list'])
+        self._validate_status(data)
 
         return raw_financial
 
