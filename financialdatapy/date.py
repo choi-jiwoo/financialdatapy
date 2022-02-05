@@ -36,7 +36,10 @@ def validate_date(period: str) -> datetime:
         return date
     except (TypeError, ValueError) as e:
         raise RuntimeError('Bad input of \'period\'.') from e
+def string_to_date(period: str or datetime, date_format: str) -> pd.Timestamp:
+    date = pd.to_datetime(period, yearfirst=True, format=date_format)
 
+    return date
 
 def date_to_timestamp(period: datetime) -> int:
     """Parse date passed in into a timestamp.
