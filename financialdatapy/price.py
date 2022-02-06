@@ -19,8 +19,10 @@ class Price(ABC):
     :type end: `datetime.datetime`
     """
 
-    def __init__(self, symbol: str, start: datetime, end: datetime) -> None:
         """Initialize symbol, start date and optional end date to search."""
+    def __init__(self, symbol: str,
+                 start: pd.Timestamp,
+                 end: pd.Timestamp) -> None:
         self.symbol = symbol
         self.start = start
         self.end = end

@@ -9,13 +9,13 @@ class IntegerDateInputError(Exception):
     pass
 
 
-def _convert_none_to_date() -> datetime:
+def _convert_none_to_date() -> pd.Timestamp:
     today = pd.Timestamp.today().normalize()
 
     return today
 
 
-def validate_date(period: str) -> datetime:
+def validate_date(period: str) -> pd.Timestamp:
     """Validate the format of date passed as a string.
 
     :param period: Date in string. If None, date of today is assigned.
@@ -46,7 +46,8 @@ def string_to_date(period: str or datetime, date_format: str) -> pd.Timestamp:
 
     return date
 
-def date_to_timestamp(period: datetime) -> int:
+
+def date_to_timestamp(period: pd.Timestamp) -> int:
     """Parse date passed in into a timestamp.
 
     :param period: `datetime.datetime` object.
@@ -61,7 +62,7 @@ def date_to_timestamp(period: datetime) -> int:
     return timestamp
 
 
-def convert_date_format(period: datetime, format: str) -> str:
+def convert_date_format(period: pd.Timestamp, format: str) -> str:
     new_date = period.strftime(format)
 
     return new_date
