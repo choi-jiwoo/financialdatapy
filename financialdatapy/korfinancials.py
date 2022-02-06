@@ -4,6 +4,7 @@ from functools import lru_cache
 import os
 import pandas as pd
 from typing import Optional
+import webbrowser
 from financialdatapy.companycode import CompanyCode
 from financialdatapy.dartapi import Dart
 from financialdatapy.financials import Financials
@@ -226,3 +227,9 @@ class KorFinancials(Financials):
         )
 
         return financial_statement
+
+    def open_report(self) -> None:
+        raw_financial, period = self._get_raw_financials()
+        rcept_no = raw_financial['rcept_no'].iloc[0]
+        link = f'https://dart.fss.or.kr/dsaf001/main.do?rcpNo={rcept_no}'
+        webbrowser.open(link)
