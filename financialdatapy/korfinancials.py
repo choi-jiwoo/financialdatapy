@@ -177,17 +177,7 @@ class KorFinancials(Financials):
 
         return statement
 
-    def get_financials(self) -> pd.DataFrame:
-        """Get financial statement of a company.
-
-        :return: Financial statement.
-        :rtype: pandas.DataFrame
-        """
-        report_type = {
-            'income_statement': 'IS',
-            'balance_sheet': 'BS',
-            'cash_flow': 'CF',
-        }
+    def _get_raw_financials(self) -> tuple[pd.DataFrame, str]:
         today = datetime.now()
         year_now = today.year
         month_now = today.month
@@ -217,8 +207,22 @@ class KorFinancials(Financials):
             except KeyError:
                 print('공시정보없음')
 
+        return raw_financial, input_period
+
+    def get_financials(self) -> pd.DataFrame:
+        """Get financial statement of a company.
+
+        :return: Financial statement.
+        :rtype: pandas.DataFrame
+        """
+        report_type = {
+            'income_statement': 'IS',
+            'balance_sheet': 'BS',
+            'cash_flow': 'CF',
+        }
+        raw_financial, period = self._get_raw_financials()
         financial_statement = self._clean_financials(
-                raw_financial, report_type[self.financial], input_period
-            )
+            raw_financial, report_type[self.financial], period
+        )
 
         return financial_statement
