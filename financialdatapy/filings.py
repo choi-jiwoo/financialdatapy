@@ -1,9 +1,11 @@
 """This module retrieves company filings data from EDGAR."""
+from functools import lru_cache
 import pandas as pd
 import re
 from financialdatapy import request
 
 
+@lru_cache
 def get_filings_list(cik: str) -> pd.DataFrame:
     """Retrieve whole list of filings a company made in the SEC EDGAR system.
 
