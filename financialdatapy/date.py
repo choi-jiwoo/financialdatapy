@@ -10,6 +10,11 @@ class IntegerDateInputError(Exception):
 
 
 def _convert_none_to_date() -> pd.Timestamp:
+    """Returns current date.
+
+    :return: Current date.
+    :rtype: pandas.Timestamp
+    """
     today = pd.Timestamp.today().normalize()
 
     return today
@@ -63,6 +68,15 @@ def date_to_timestamp(period: pd.Timestamp) -> int:
 
 
 def convert_date_format(period: pd.Timestamp, format: str) -> str:
+    """Convert date object to desired date format.
+
+    :param period: Date object.
+    :type period: `pandas.Timestamp`
+    :param format: Desired date format to convert to.
+    :type format: str
+    :return: Converted date in string.
+    :rtype: str
+    """
     new_date = period.strftime(format)
 
     return new_date
