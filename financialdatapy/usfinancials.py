@@ -33,14 +33,7 @@ class UsFinancials(Financials):
         super().__init__(symbol, financial, period)
         self.cik = cik
 
-    def get_financials(self) -> pd.DataFrame:
-        """Get financial statement as reported.
-
-        :raises EmptyDataFrameError: If retreived dataframe is empty.
-        :return: Financial statement as reported.
-        :rtype: pandas.DataFrame
-        """
-
+    def _get_latest_filing_info(self) -> pd.DataFrame:
         if self.period == 'annual':
             form_type = '10-K'
         else:
@@ -51,11 +44,22 @@ class UsFinancials(Financials):
         if submission[submission['Form'] == form_type].empty:
             raise EmptyDataFrameError('Failed in getting financials.')
 
-        # get latest filing
         form = submission[submission['Form'] == form_type]
-        latest_filing = form.iloc[0].at['AccessionNumber']
-        links = get_latest_form(self.cik, latest_filing)
+        latest_filing = form.iloc[0]
 
+        return latest_filing
+
+
+    def get_financials(self) -> pd.DataFrame:
+        """Get financial statement as reported.
+
+        :raises EmptyDataFrameError: If retreived dataframe is empty.
+        :return: Financial statement as reported.
+        :rtype: pandas.DataFrame
+        """
+        latest_filing = self._get_latest_filing_info()
+        accession_number = latest_filing['AccessionNumber']
+        links = get_latest_form(self.cik, accession_number)
         which_financial = links[self.financial]
         financial_statement = self._get_values(which_financial)
 
