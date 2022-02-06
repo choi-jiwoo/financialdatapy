@@ -42,10 +42,7 @@ def company(request):
 
 @pytest.fixture(scope='class')
 def cik_list():
-    """Get CIK list and use it as a fixture.
-
-    Used in TestCik inside test_integration.py.
-    """
+    """Get CIK list and use it as a fixture."""
     return CikList()
 
 
