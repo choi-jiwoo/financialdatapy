@@ -65,6 +65,13 @@ class UsFinancials(Financials):
 
         return financial_statement
 
+    def _get_link_to_latest_filing(self, accession_number: str,
+                                   file_name: str) -> str:
+        base_url = 'https://www.sec.gov/Archives/edgar/data/'
+        link = f'{base_url}/{self.cik}/{accession_number}/{file_name}'
+
+        return link
+
     def _get_values(self, link: str) -> pd.DataFrame:
         """Extract a financial statement values from web.
 
