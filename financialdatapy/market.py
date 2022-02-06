@@ -35,7 +35,8 @@ class Market:
                 symbol: str,
                 financial: str,
                 period: str,
-                type_of_financial: Optional[str] = None
+                web: bool,
+                type_of_financial: Optional[str] = None,
     ) -> pd.DataFrame:
         """Get financial statements.
 
@@ -45,6 +46,8 @@ class Market:
         :type financial: str
         :param period: Either 'annual' or 'quarter.
         :type period: str
+        :param web: Option for opening filings in a web browser.
+        :type web: bool
         :param type_of_financial: Pass 'standard' for the method to return
             standard financials. If empty, finanicials as reported will be
             returned, defaults to None.
@@ -62,14 +65,18 @@ class Market:
             if type_of_financial == 'standard':
                 return market.get_standard_financials()
 
-            return market.get_financials()
+            if not web:
+                return market.get_financials()
+            market.open_report()
         elif self.country_code == 'KOR':
             market = KorFinancials(symbol, financial, period)
 
             if type_of_financial == 'standard':
                 return market.get_standard_financials()
 
-            return market.get_financials()
+            if not web:
+                return market.get_financials()
+            market.open_report()
         else:
             raise NotAvailable()
 
