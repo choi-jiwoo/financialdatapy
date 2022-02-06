@@ -73,7 +73,7 @@ class Stock:
             return country_code
 
     def financials(self, financial: str = 'income_statement',
-                   period: str = 'annual') -> pd.DataFrame:
+                   period: str = 'annual', web: bool = False) -> pd.DataFrame:
         """Get financial statements as reported.
 
         :param financial: Which financial statement to retrieve. Input string
@@ -82,6 +82,9 @@ class Stock:
         :type financial: str, optional
         :param period: Either 'annual' or 'quarter', defaults to 'annual'.
         :type period: str, optional
+        :param web: Option for opening filings in a web browser,
+            defaults to False.
+        :type web: bool, optional
         :return: Financial statement as reported.
         :rtype: pandas.DataFrame
 
@@ -92,7 +95,14 @@ class Stock:
         >>> ic_as_reported = comp.financials('income_statement', 'annual')
         """
 
-        return self.market.financial_statement(self.symbol, financial, period)
+        financial_statement = self.market.financial_statement(
+            self.symbol,
+            financial,
+            period,
+            web,
+        )
+
+        return financial_statement
 
     def standard_financials(self, financial: str = 'income_statement',
                             period: str = 'annual') -> pd.DataFrame:
