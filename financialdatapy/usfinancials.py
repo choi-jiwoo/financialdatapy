@@ -1,5 +1,6 @@
 """This module retrieves financial statements of a company in US."""
 import pandas as pd
+import webbrowser
 from financialdatapy.filings import get_latest_form
 from financialdatapy.filings import get_filings_list
 from financialdatapy.request import Request
@@ -49,6 +50,13 @@ class UsFinancials(Financials):
 
         return latest_filing
 
+    def open_report(self) -> None:
+        latest_filing = self._get_latest_filing_info()
+        accession_number = latest_filing['AccessionNumber']
+        file_name = latest_filing['PrimaryDocument']
+        report_link = self._get_link_to_latest_filing(accession_number,
+                                                      file_name)
+        webbrowser.open(report_link, new=0)
 
     def get_financials(self) -> pd.DataFrame:
         """Get financial statement as reported.
