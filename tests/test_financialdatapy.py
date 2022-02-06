@@ -12,6 +12,11 @@ from financialdatapy.companycode import CompanyCode
 
 @pytest.fixture(scope='class')
 def api_key():
+    """Api key for opendart.fss.or.kr.
+
+    :return: Api key stored in `.env`.
+    :rtype: str
+    """
     load_dotenv()
     api_key = os.environ.get('DART_API_KEY')
     return api_key
