@@ -69,7 +69,7 @@ class KorFinancials(Financials):
             raise StatusMessageException(data['message'])
 
     @lru_cache
-    def _get_latest_report_date(self, year: int) -> datetime:
+    def _get_latest_report_info(self, year: int) -> datetime:
         """Get the latest date a financial report is submitted to dart.fss.or.kr
 
         :param year: Current year.
@@ -93,12 +93,9 @@ class KorFinancials(Financials):
         report_list = pd.DataFrame(data['list'])
 
         latest_report = data['list'][0]
-        latest_date = latest_report['rcept_dt']
-        latest_date = datetime.strptime(latest_date, '%Y%m%d')
 
-        return latest_date
+        return latest_report
 
-    @lru_cache
     def _get_report(self, period: str, year: int) -> pd.DataFrame:
         """Retrieve financial statement of a company from dart.fss.or.kr.
 
@@ -194,7 +191,10 @@ class KorFinancials(Financials):
         today = datetime.now()
         year_now = today.year
         month_now = today.month
-        latest_date = self._get_latest_report_date(year_now)
+        latest_report = self._get_latest_report_info(year_now)
+        latest_date = latest_report['rcept_dt']
+        latest_date = datetime.strptime(latest_date, '%Y%m%d')
+
         input_period = self.period
 
         if input_period == 'annual':
