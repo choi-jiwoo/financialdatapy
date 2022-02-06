@@ -23,7 +23,7 @@ class Financials(ABC):
 
     def __init__(self, symbol: str, financial: str = 'income_statement',
                  period: str = 'annual') -> None:
-        """Initialize financial statement."""
+        """Initialize Financials."""
         self.symbol = symbol.upper()
         self.financial = financial.lower()
         self.period = period.lower()

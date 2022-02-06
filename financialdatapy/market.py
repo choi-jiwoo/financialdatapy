@@ -27,7 +27,7 @@ class Market:
     """
 
     def __init__(self, country_code: str):
-        """Initialize stock exchange."""
+        """Initialize Market."""
         self.country_code = country_code.upper()
 
     def financial_statement(
@@ -49,7 +49,7 @@ class Market:
             standard financials. If empty, finanicials as reported will be
             returned, defaults to None.
         :type type_of_financial: Optional[str], optional
-        :raises: :class:`NotAvailable`: If the symbol is not listed in the
+        :raises NotAvailable: If the symbol is not listed in the
             stock exchange.
         :return: Either financials as reported or standard financials.
         :rtype: pandas.DataFrame
@@ -83,7 +83,7 @@ class Market:
         :type start: `datetime.datetime`
         :param end: End date to query.
         :type end: `datetime.datetime`
-        :raises: :class:`NotAvailable`: If the symbol is not listed in the
+        :raises NotAvailable: If the symbol is not listed in the
             stock exchange.
         :return: Historical stock price data.
         :rtype: pandas.DataFrame

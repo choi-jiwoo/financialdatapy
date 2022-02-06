@@ -12,18 +12,31 @@ class EmptyDataFrameError(Exception):
 
 
 class UsFinancials(Financials):
-    """A class representing financial statements of a company in US."""
+    """A class representing financial statements of a company in US.
+
+    :param symbol: Symbol of a company.
+    :type symbol: str
+    :param cik: Cik of a company.
+    :type cik: str, optional
+    :param financial: One of the three financial statement.
+        'income_statement' or 'balance_sheet' or 'cash_flow', defaults to
+        'income_statement'.
+    :type financial: str, optional
+    :param period: Either 'annual' or 'quarter', defaults to 'annual'
+    :type period: str, optional
+    """
 
     def __init__(self, symbol: str, cik: str,
                  financial: str = 'income_statement',
                  period: str = 'annual') -> None:
+        """Initializes UsFinancials."""
         super().__init__(symbol, financial, period)
         self.cik = cik
 
     def get_financials(self) -> pd.DataFrame:
         """Get financial statement as reported.
 
-        :raises: :class:`EmptyDataFrameError`: If retreived dataframe is empty.
+        :raises EmptyDataFrameError: If retreived dataframe is empty.
         :return: Financial statement as reported.
         :rtype: pandas.DataFrame
         """

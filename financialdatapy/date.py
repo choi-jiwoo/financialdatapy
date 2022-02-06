@@ -20,9 +20,9 @@ def validate_date(period: str) -> pd.Timestamp:
 
     :param period: Date in string. If None, date of today is assigned.
     :type period: str
-    :raises: :class:`IntegerDateInputError`: If integer type object is passed.
+    :raises IntegerDateInputError: If integer type object is passed.
     :return: Date with format YYYY-MM-DD or YY-MM-DD.
-    :rtype: datetime.datetime
+    :rtype: pandas.Timestamp
     """
     if isinstance(period, int):
         raise IntegerDateInputError('Input type of period should be in string.')
@@ -50,8 +50,8 @@ def string_to_date(period: str or datetime, date_format: str) -> pd.Timestamp:
 def date_to_timestamp(period: pd.Timestamp) -> int:
     """Parse date passed in into a timestamp.
 
-    :param period: `datetime.datetime` object.
-    :type period: `datetime.datetime`
+    :param period: Date object.
+    :type period: `pandas.Timestamp`
     :return: The timestamp value equivalent to the date passed.
     :rtype: int
     """

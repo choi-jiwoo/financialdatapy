@@ -14,15 +14,15 @@ class Price(ABC):
     :param symbol: Symbol of a company/stock.
     :type symbol: str
     :param start: Starting date to search.
-    :type start: `datetime.datetime`
-    :param end: Ending date to search. 
-    :type end: `datetime.datetime`
+    :type start: pandas.Timestamp
+    :param end: Ending date to search.
+    :type end: pandas.Timestamp
     """
 
-        """Initialize symbol, start date and optional end date to search."""
     def __init__(self, symbol: str,
                  start: pd.Timestamp,
                  end: pd.Timestamp) -> None:
+        """Initialize Price"""
         self.symbol = symbol
         self.start = start
         self.end = end

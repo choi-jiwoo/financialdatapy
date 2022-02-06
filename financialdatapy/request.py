@@ -25,7 +25,7 @@ class Request:
                  headers: dict = headers,
                  params: Optional[dict] = None,
                  data: Optional[dict] = None) -> None:
-        """Initialize Response object."""
+        """Initialize Request."""
         self.url = url
         self.headers = headers
         self.params = params
@@ -37,7 +37,7 @@ class Request:
 
         :param method: Which http methods to request.
         :type method: str
-        :raises :class:`requests.ConnectionError`: HTTP connection failure.
+        :raises: :class:`requests.ConnectionError`: HTTP connection failure.
         :return: A response object from the source.
         :rtype: requests.Response
         """
@@ -59,7 +59,7 @@ class Request:
     def get_content(self) -> bytes:
         """Return response object in bytes.
 
-        :return: Response object in bytes
+        :return: Response object in bytes.
         :rtype: bytes
         """
         return self.res.content
@@ -75,7 +75,7 @@ class Request:
     def get_json(self) -> dict:
         """Convert response object's content to dictionary.
 
-        :return: A JSON format data
+        :return: A JSON format data.
         :rtype: dict
         """
         return self.res.json()
@@ -83,7 +83,7 @@ class Request:
     def get_soup(self) -> BeautifulSoup:
         """Convert response object's content to BeautifulSoup object.
 
-        :return: A HTML format data
+        :return: A HTML format data.
         :rtype: Beautifulsoup
         """
         return BeautifulSoup(self.res.text, 'html.parser')

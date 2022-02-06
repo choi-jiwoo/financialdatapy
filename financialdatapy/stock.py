@@ -23,7 +23,7 @@ class Stock:
     """
 
     def __init__(self, symbol: str, country_code: str = 'USA') -> None:
-        """Initialize symbol to search."""
+        """Initialize Stock."""
 
         self.country_code = self._validate_country_code(country_code)
         self.symbol = self._convert_symbol_to_code_in_krx(symbol,
@@ -56,7 +56,7 @@ class Stock:
 
         :param country_code: Country where the stock is listed.
         :type country_code: str
-        :raises: :class:`CountryCodeValidationFailed`: If country code is not
+        :raises CountryCodeValidationFailed: If country code is not
             in alpha-3 code format.
         :return: Country code in alpha-3 code (ISO-3166).
         :rtype: str
