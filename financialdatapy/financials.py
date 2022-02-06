@@ -32,6 +32,10 @@ class Financials(ABC):
     def get_financials(self) -> pd.DataFrame:
         pass
 
+    @abstractmethod
+    def open_report(self) -> None:
+        pass
+
     def get_standard_financials(self) -> pd.DataFrame:
         """Get standard financial statements of a company from investing.com.
 
