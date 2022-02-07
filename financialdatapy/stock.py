@@ -94,7 +94,7 @@ class Stock:
         except (TypeError, AttributeError):
             raise CountryCodeValidationFailed(
                 'Country code should be in alpha-3 code (ISO 3166) e.g. USA'
-            ) from None
+            )
         else:
             return country_code
 
