@@ -84,7 +84,6 @@ class UsFinancials(Financials):
     def get_financials(self) -> pd.DataFrame:
         """Get financial statement as reported.
 
-        :raises EmptyDataFrameError: If retreived dataframe is empty.
         :return: Financial statement as reported.
         :rtype: pandas.DataFrame
         """
