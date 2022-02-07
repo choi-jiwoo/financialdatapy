@@ -34,7 +34,7 @@ class UsFinancials(Financials):
         super().__init__(symbol, financial, period)
         self.cik = cik
 
-    def _get_latest_filing_info(self) -> pd.DataFrame:
+    def _get_latest_filing_info(self) -> pd.Series:
         if self.period == 'annual':
             form_type = '10-K'
         else:
