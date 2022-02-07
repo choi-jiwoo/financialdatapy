@@ -87,7 +87,6 @@ class Stock:
         :return: Country code in alpha-3 code (ISO-3166).
         :rtype: str
         """
-
         try:
             country_code = re.search(r'\b[a-zA-Z]{3}\b', country_code).group()
             country_code = country_code.upper()
@@ -120,7 +119,6 @@ class Stock:
         >>> comp = Stock('AAPL')
         >>> ic_as_reported = comp.financials('income_statement', 'annual')
         """
-
         financial_statement = self.market.financial_statement(
             self.symbol,
             financial,
@@ -153,7 +151,6 @@ class Stock:
         >>> comp = Stock('AAPL')
         >>> std_ic = comp.standard_financials('income_statement', 'annual')
         """
-
         return self.market.financial_statement(self.symbol, financial,
                                                period, web, 'standard')
 
@@ -176,7 +173,6 @@ class Stock:
         >>> comp = Stock('AAPL')
         >>> price = comp.historical('2021-1-1', '2021-1-5')
         """
-
         start = validate_date(start)
         end = validate_date(end)
 
