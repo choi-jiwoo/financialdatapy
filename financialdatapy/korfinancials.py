@@ -179,6 +179,13 @@ class KorFinancials(Financials):
         return statement
 
     def _get_raw_financials(self) -> tuple[pd.DataFrame, str]:
+        """Assign period and year according to the user input.
+
+        Pass appropriate parameters for getting financials data in dart system.
+
+        :return: Uncleaned financial statement and assigned input period
+        :rtype: tuple[pandas.DataFrame, str]
+        """
         today = datetime.now()
         year_now = today.year
         month_now = today.month
@@ -229,6 +236,7 @@ class KorFinancials(Financials):
         return financial_statement
 
     def open_report(self) -> None:
+        """Open a link of the corporate filing in a web browser."""
         raw_financial, period = self._get_raw_financials()
         rcept_no = raw_financial['rcept_no'].iloc[0]
         link = f'https://dart.fss.or.kr/dsaf001/main.do?rcpNo={rcept_no}'

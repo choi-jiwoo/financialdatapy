@@ -35,6 +35,12 @@ class UsFinancials(Financials):
         self.cik = cik
 
     def _get_latest_filing_info(self) -> pd.Series:
+        """Retrieve latest filing that is submitted either 10-K or 10-Q.
+
+        :raises EmptyDataFrameError: Failed getting filing list data.
+        :return: Information on latest filing.
+        :rtype: pandas.Series
+        """
         if self.period == 'annual':
             form_type = '10-K'
         else:
@@ -52,12 +58,22 @@ class UsFinancials(Financials):
 
     def _get_link_to_latest_filing(self, accession_number: str,
                                    file_name: str) -> str:
+        """Get a link to a corporate filing in SEC EDGAR system.
+
+        :param accession_number: Filing identitry number.
+        :type accession_number: str
+        :param file_name: File name of the filing.
+        :type file_name: str
+        :return: Link to the filing.
+        :rtype: str
+        """
         base_url = 'https://www.sec.gov/Archives/edgar/data/'
         link = f'{base_url}/{self.cik}/{accession_number}/{file_name}'
 
         return link
 
     def open_report(self) -> None:
+        """Open a link of the corporate filing in a web browser."""
         latest_filing = self._get_latest_filing_info()
         accession_number = latest_filing['AccessionNumber']
         file_name = latest_filing['PrimaryDocument']
