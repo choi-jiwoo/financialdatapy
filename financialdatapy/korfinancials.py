@@ -182,6 +182,7 @@ class KorFinancials(Financials):
                 )
 
         statement.columns = cols
+        statement.reset_index(drop=True, inplace=True)
 
         return statement
 
