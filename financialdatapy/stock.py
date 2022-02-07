@@ -131,7 +131,8 @@ class Stock:
         return financial_statement
 
     def standard_financials(self, financial: str = 'income_statement',
-                            period: str = 'annual') -> pd.DataFrame:
+                            period: str = 'annual',
+                            web: bool = False) -> pd.DataFrame:
         """Get standard financial statements.
 
         :param financial: One of the three financial statement.
@@ -140,6 +141,9 @@ class Stock:
         :type financial: str, optional
         :param period: Either 'annual' or 'quarter', defaults to 'annual'.
         :type period: str, optional
+        :param web: Option for opening filings in a web browser,
+            defaults to False.
+        :type web: bool, optional
         :return: Standard financial statement.
         :rtype: pandas.DataFrame
 
@@ -151,7 +155,7 @@ class Stock:
         """
 
         return self.market.financial_statement(self.symbol, financial,
-                                               period, 'standard')
+                                               period, web, 'standard')
 
     def historical(self, start: Optional[str] = None,
                    end: Optional[str] = None) -> pd.DataFrame:
