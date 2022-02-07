@@ -20,27 +20,57 @@ class Stock:
 
     def __init__(self, symbol: str, country_code: str = 'USA') -> None:
         """Initialize Stock."""
-
-        self.country_code = self._validate_country_code(country_code)
-        self.symbol = self._convert_symbol_to_code_in_krx(symbol,
-                                                          self.country_code)
+        self.country_code = country_code
+        self.symbol = symbol
         self.market = Market(self.country_code)
 
-    def _convert_symbol_to_code_in_krx(self,
-                                       symbol: str,
-                                       country_code: str) -> str:
+    @property
+    def symbol(self) -> str:
+        """Getter method of property symbol.
+
+        :return: Symbol of a company/stock.
+        :rtype: str
+        """
+        return self._symbol
+
+    @symbol.setter
+    def symbol(self, symbol: str) -> None:
+        """Setter method of property symbol
+
+        :param symbol: Symbol of a company/stock.
+        :type symbol: str
+        """
+        if self.country_code == 'KOR':
+            self._symbol = self._convert_symbol_to_code_in_krx(symbol)
+        else:
+            self._symbol = symbol
+
+    @property
+    def country_code(self) -> str:
+        """Getter method of property country_code.
+
+        :return: Country code
+        :rtype: str
+        """
+        return self._country_code
+
+    @country_code.setter
+    def country_code(self, country_code: str) -> None:
+        """Setter method of property country_code.
+
+        :param country_code: Country code
+        :type country_code: str
+        """
+        self._country_code = self._validate_country_code(country_code)
+
+    def _convert_symbol_to_code_in_krx(self, symbol: str) -> str:
         """Convert symbol to company code for stocks in Korea Exchange.
 
-        :param symbol: Company name.
+        :param symbol: Symbol of a company/stock.
         :type symbol: str
-        :param country_code: Country where the stock is listed.
-        :type country_code: str
         :return: Company code
         :rtype: str
         """
-        if country_code != 'KOR':
-            return symbol
-
         try:
             is_code = int(symbol)
             return symbol
