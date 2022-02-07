@@ -18,12 +18,21 @@ class Dart:
 
     @property
     def dart_api_key(self) -> str:
-        """Getter of dart_api_key."""
+        """Getter method of property dart_api_key.
+
+        :return: Api key from opendart.fss.or.kr
+        :rtype: str
+        """
         return self._dart_api_key
 
     @dart_api_key.setter
     def dart_api_key(self, dart_api_key: Optional[str] = None) -> None:
-        """Setter of dart_api_key."""
+        """Setter method of property dart_api_key.
+
+        :param dart_api_key: Api key from opendart.fss.or.kr, defaults to None.
+        :type dart_api_key: Optional[str], optional
+        :raises EmptyApiKeyException: Api key is not submitted.
+        """
         if dart_api_key is None:
             load_dotenv()
             self._dart_api_key = os.environ.get('DART_API_KEY')

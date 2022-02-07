@@ -9,6 +9,7 @@ from financialdatapy.request import Request
 
 
 class CompanyCode:
+    """This class represents company code of a company."""
 
     @staticmethod
     @lru_cache
