@@ -3,6 +3,7 @@ from string import capwords
 from functools import lru_cache
 import pandas as pd
 import re
+from financialdatapy.exception import EmptyDataFrameError
 from financialdatapy import request
 
 
@@ -55,6 +56,8 @@ class CikList:
         symbol_uppercase = symbol.upper()
         cik_list = self.get_cik_list()
         symbol_df = cik_list[cik_list['ticker'] == symbol_uppercase]
+        if symbol_df.empty:
+            raise EmptyDataFrameError('Cannot search for the symbol.')
         cik = symbol_df['cik'].item()
 
         # cik number received from source excludes 0s that comes first.

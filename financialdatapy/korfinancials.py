@@ -42,6 +42,8 @@ class KorFinancials(Financials):
         """
         corp_list = CompanyCode.get_comp_code_list(self.api_key)
         result = corp_list[corp_list['stock_code'] == self.symbol]
+        if result.empty:
+            raise EmptyDataFrameError('Cannot search for the symbol.')
         corp_code = result.get('corp_code').item()
 
         return corp_code
