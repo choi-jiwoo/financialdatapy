@@ -107,30 +107,32 @@ class UsFinancials(Financials):
 
         res = Request(link)
         data = res.get_text()
-        df = pd.read_html(data)[0]
+        financial_statement = pd.read_html(data)[0]
 
-        first_column = df.columns[0]
+        first_column = financial_statement.columns[0]
         multi_index = len(first_column)
 
         if multi_index == 2:
-            first_column_header = df.columns[0][0]
+            first_column_header = financial_statement.columns[0][0]
         else:
-            first_column_header = df.columns[0]
+            first_column_header = financial_statement.columns[0]
 
         title, unit = first_column_header.split(' - ')
-        elements = df.iloc[:, 0].rename((title, unit))
+        elements = financial_statement.iloc[:, 0].rename((title, unit))
 
-        df = df.drop(columns=df.columns[0])
-        df.insert(
+        financial_statement = financial_statement.drop(
+            columns=financial_statement.columns[0]
+        )
+        financial_statement.insert(
             loc=0,
             column=elements.name,
             value=list(elements.values),
             allow_duplicates=True,
         )
 
-        df = df.fillna('')
+        financial_statement = financial_statement.fillna('')
 
-        df.iloc[:, 1:] = df.iloc[:, 1:].apply(
+        financial_statement.iloc[:, 1:] = financial_statement.iloc[:, 1:].apply(
             lambda x: [
                 ''.join(filter(str.isdigit, i))
                 for i
@@ -138,4 +140,4 @@ class UsFinancials(Financials):
             ]
         )
 
-        return df
+        return financial_statement
