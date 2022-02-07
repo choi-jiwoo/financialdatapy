@@ -31,10 +31,28 @@ class KorFinancials(Financials):
                  period: str = 'annual', api_key: Optional[str] = None) -> None:
         """Initialize KorFinancials"""
         super().__init__(symbol, financial, period)
-        self.api_key = Dart(api_key).dart_api_key
-        self.corp_code = self._get_corp_code()
+        self.api_key = api_key
 
-    def _get_corp_code(self) -> str:
+    @property
+    def api_key(self) -> str:
+        """Getter method of property api_key.
+
+        :return: Api key from opendart.fss.or.kr
+        :rtype: str
+        """
+        return self._api_key
+
+    @api_key.setter
+    def api_key(self, api_key: Optional[str] = None) -> None:
+        """Setter method of property api_key.
+
+        :param api_key: Api key from opendart.fss.or.kr, defaults to None.
+        :type api_key: Optional[str], optional
+        """
+        self._api_key = Dart(api_key).dart_api_key
+
+    @property
+    def corp_code(self) -> str:
         """Get corporate code from dart.fss.or.kr.
 
         :return: Corporate code.
