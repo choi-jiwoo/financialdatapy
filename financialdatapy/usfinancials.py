@@ -43,7 +43,7 @@ class UsFinancials(Financials):
         submission = get_filings_list(self.cik)
 
         if submission[submission['Form'] == form_type].empty:
-            raise EmptyDataFrameError('Failed in getting financials.')
+            raise EmptyDataFrameError('Failed in getting filings list.')
 
         form = submission[submission['Form'] == form_type]
         latest_filing = form.iloc[0]
