@@ -113,7 +113,8 @@ class KorMarket(Price):
         }
         res = Request(url, method='post', data=data)
         data = res.get_text()
-        data = pd.read_html(data)[0]
+        tables = pd.read_html(data)
+        historicl_price = tables[0]
 
         return data
 

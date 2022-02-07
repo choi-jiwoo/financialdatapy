@@ -25,6 +25,7 @@ class Company:
         }
         res = request.Request(url, method='post', data=form_data)
         data = res.get_json()
-        pair_id = data['quotes'][0]['pairId']
+        first_quote_result = data['quotes'][0]
+        pair_id = first_quote_result['pairId']
 
         return pair_id
