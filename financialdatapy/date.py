@@ -2,11 +2,7 @@
 from datetime import datetime
 from typing import Optional
 import pandas as pd
-
-
-class IntegerDateInputError(Exception):
-    """Raised when integer is passed."""
-    pass
+from financialdatapy.exception import IntegerDateInputError
 
 
 def _convert_none_to_date() -> pd.Timestamp:

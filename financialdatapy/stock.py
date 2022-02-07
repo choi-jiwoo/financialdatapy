@@ -4,12 +4,8 @@ import pandas as pd
 import re
 from typing import Optional
 from financialdatapy.companycode import CompanyCode
+from financialdatapy.exception import CountryCodeValidationFailed
 from financialdatapy.market import Market
-
-
-class CountryCodeValidationFailed(Exception):
-    """Raised when country code is not in alpha-3 code format."""
-    pass
 
 
 class Stock:

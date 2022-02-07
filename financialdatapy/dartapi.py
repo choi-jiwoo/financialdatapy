@@ -2,21 +2,7 @@
 from dotenv import load_dotenv
 from typing import Optional
 import os
-
-
-class EmptyApiKeyException(Exception):
-    """Raised when Api key is not provided.
-
-    :param msg: Error message, defaults to None.
-    :type msg: Optional[str], optional
-    """
-
-    def __init__(self, msg: Optional[str] = None, *args, **kwargs) -> None:
-        """Initialize EmptyApiKeyException."""
-        if msg is None:
-            msg = ('No API key is provided.'
-                   'Check out the documentation for more details.')
-        super().__init__(msg, *args, **kwargs)
+from financialdatapy.exception import EmptyApiKeyException
 
 
 class Dart:

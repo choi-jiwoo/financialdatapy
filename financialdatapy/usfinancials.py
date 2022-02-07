@@ -1,15 +1,11 @@
 """This module retrieves financial statements of a company in US."""
 import pandas as pd
 import webbrowser
+from financialdatapy.exception import EmptyDataFrameError
 from financialdatapy.filings import get_latest_form
 from financialdatapy.filings import get_filings_list
 from financialdatapy.request import Request
 from financialdatapy.financials import Financials
-
-
-class EmptyDataFrameError(Exception):
-    """Raised when retreived dataframe is empty."""
-    pass
 
 
 class UsFinancials(Financials):

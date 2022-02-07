@@ -7,23 +7,10 @@ from typing import Optional
 import webbrowser
 from financialdatapy.companycode import CompanyCode
 from financialdatapy.dartapi import Dart
+from financialdatapy.exception import EmptyDataFrameError
+from financialdatapy.exception import StatusMessageException
 from financialdatapy.financials import Financials
 from financialdatapy.request import Request
-
-
-class StatusMessageException(Exception):
-    """Raised when failed in getting requested data from source.
-
-    :param msg: Error message,
-        defaults to 'Failed getting data from dart.fss.or.kr.'
-    :type msg: str, optional
-    """
-
-    def __init__(self,
-                 msg: str = 'Failed getting data from dart.fss.or.kr.',
-                 *args, **kwargs) -> None:
-        """Initialize StatusMessageException."""
-        super().__init__(msg, *args, **kwargs)
 
 
 class KorFinancials(Financials):

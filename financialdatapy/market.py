@@ -3,20 +3,11 @@ from datetime import datetime
 import pandas as pd
 from typing import Optional
 from financialdatapy.cik import CikList
+from financialdatapy.exception import NotAvailable
 from financialdatapy.usfinancials import UsFinancials
 from financialdatapy.korfinancials import KorFinancials
 from financialdatapy.price import UsMarket
 from financialdatapy.price import KorMarket
-
-
-class NotAvailable(Exception):
-    """Raised when a company is not listed in the stock exchange.
-
-    :param msg: Error message, defaults to 'Data is not available.'
-    :type msg: str, optional
-    """
-    def __init__(self, msg: str = 'Data is not available.', *args, **kwargs):
-        super().__init__(msg, *args, **kwargs)
 
 
 class Market:
