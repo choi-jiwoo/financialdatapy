@@ -113,9 +113,9 @@ class KorMarket(Price):
         res = Request(url, method='post', data=data)
         data = res.get_text()
         tables = pd.read_html(data)
-        historicl_price = tables[0]
+        historical_price = tables[0]
 
-        return data
+        return historical_price
 
     def get_price_data(self) -> pd.DataFrame:
         """Get historical stock price data.
