@@ -112,12 +112,6 @@ class Stock:
         :type web: bool, optional
         :return: Financial statement as reported.
         :rtype: pandas.DataFrame
-
-        :Example:
-
-        >>> from financialdatapy.stock import Stock
-        >>> comp = Stock('AAPL')
-        >>> ic_as_reported = comp.financials('income_statement', 'annual')
         """
         financial_statement = self.market.financial_statement(
             self.symbol,
@@ -144,15 +138,14 @@ class Stock:
         :type web: bool, optional
         :return: Standard financial statement.
         :rtype: pandas.DataFrame
-
-        :Example:
-
-        >>> from financialdatapy.stock import Stock
-        >>> comp = Stock('AAPL')
-        >>> std_ic = comp.standard_financials('income_statement', 'annual')
         """
-        return self.market.financial_statement(self.symbol, financial,
-                                               period, web, 'standard')
+        return self.market.financial_statement(
+            self.symbol,
+            financial,
+            period,
+            web,
+            'standard'
+        )
 
     def historical(self, start: Optional[str] = None,
                    end: Optional[str] = None) -> pd.DataFrame:
@@ -166,12 +159,6 @@ class Stock:
         :type end: str, optional
         :return: Historical stock price data.
         :rtype: pandas.DataFrame
-
-        :Example:
-
-        >>> from financialdatapy.stock import Stock
-        >>> comp = Stock('AAPL')
-        >>> price = comp.historical('2021-1-1', '2021-1-5')
         """
         start = validate_date(start)
         end = validate_date(end)
