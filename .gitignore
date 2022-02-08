@@ -6,7 +6,5 @@
 *.egg-info
 /.idea
 /.vscode
-/usstock
+/venv/**
 **/__pycache__
-/config
-/rawdata
