@@ -1,6 +1,5 @@
 """This module retrieves the historical stock price of a company."""
 from abc import ABC, abstractmethod
-from datetime import datetime
 import pandas as pd
 from financialdatapy.date import date_to_timestamp
 from financialdatapy.date import convert_date_format

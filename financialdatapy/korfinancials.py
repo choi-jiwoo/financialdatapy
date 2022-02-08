@@ -1,7 +1,6 @@
 """This module retrieves financial statements of a company in South Korea."""
 from datetime import datetime
 from functools import lru_cache
-import os
 import pandas as pd
 from typing import Optional
 import webbrowser

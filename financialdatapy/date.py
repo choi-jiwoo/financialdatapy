@@ -1,6 +1,5 @@
 """This module parses and converts objects to date format objects"""
 from datetime import datetime
-from typing import Optional
 import pandas as pd
 from financialdatapy.exception import IntegerDateInputError
 
