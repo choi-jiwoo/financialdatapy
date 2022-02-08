@@ -28,7 +28,7 @@ class CikList:
         cik_list['exchange'] = cik_list['exchange'].str.upper()
         cik_list = cik_list[
             (cik_list['exchange'] == 'NASDAQ') | (cik_list['exchange'] == 'NYSE')
-        ]
+            ]
         cik_list = cik_list.reset_index(drop=True)
         cik_list = cik_list.drop('exchange', axis=1)
 
@@ -40,7 +40,6 @@ class CikList:
         regex = re.compile(pattern, flags=re.I)
         cik_list['name'] = [regex.sub('', x) for x in cik_list['name']]
 
-        # comapany names in Title Case
         cik_list['name'] = [capwords(x) for x in cik_list['name']]
 
         return cik_list

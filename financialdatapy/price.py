@@ -136,9 +136,9 @@ class KorMarket(Price):
         data.rename(columns={'Price': 'Close', 'Vol.': 'Volume'}, inplace=True)
 
         data['Volume'] = data['Volume'].apply(
-            lambda x: float(x[:-1])*1000000
+            lambda x: float(x[:-1]) * 1000000
             if x[-1] == 'M'
-            else float(x[:-1])*1000
+            else float(x[:-1]) * 1000
         )
         data['Volume'] = data['Volume'].astype('int')
         data['Date'] = pd.to_datetime(data['Date'])
