@@ -48,28 +48,23 @@ class Market:
         :return: Either financials as reported or standard financials.
         :rtype: pandas.DataFrame
         """
-        if self.country_code == 'USA':
-            cik_list = CikList()
-            comp_cik = cik_list.search_cik(symbol)
-            market = UsFinancials(symbol, comp_cik, financial, period)
+        match self.country_code:
+            case 'USA':
+                cik_list = CikList()
+                comp_cik = cik_list.search_cik(symbol)
+                market = UsFinancials(symbol, comp_cik, financial, period)
+            case 'KOR':
+                market = KorFinancials(symbol, financial, period)
+            case _:
+                raise NotAvailable()
 
-            if type_of_financial == 'standard':
-                return market.get_standard_financials()
-
-            if not web:
-                return market.get_financials()
-            market.open_report()
-        elif self.country_code == 'KOR':
-            market = KorFinancials(symbol, financial, period)
-
-            if type_of_financial == 'standard':
-                return market.get_standard_financials()
-
-            if not web:
-                return market.get_financials()
+        if web:
             market.open_report()
         else:
-            raise NotAvailable()
+            if type_of_financial == 'standard':
+                return market.get_standard_financials()
+            else:
+                return market.get_financials()
 
     def historical_price(self, symbol: str,
                          start: datetime, end: datetime) -> pd.DataFrame:
