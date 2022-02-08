@@ -120,8 +120,6 @@ class KorMarket(Price):
     def get_price_data(self) -> pd.DataFrame:
         """Get historical stock price data.
 
-        :param data: Historical stock price data in JSON
-        :type data: dict
         :return: Historical stock price data.
         :rtype: pandas.DataFrame
         """
