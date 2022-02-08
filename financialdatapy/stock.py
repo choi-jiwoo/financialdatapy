@@ -147,8 +147,8 @@ class Stock:
             'standard'
         )
 
-    def historical(self, start: Optional[str] = None,
-                   end: Optional[str] = None) -> pd.DataFrame:
+    def price(self, start: Optional[str] = None,
+              end: Optional[str] = None) -> pd.DataFrame:
         """Get historical stock price data.
 
         :param start: Start date to query. Format should be in ISO 8601,
