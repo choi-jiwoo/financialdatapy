@@ -73,8 +73,10 @@ class KorFinancials(Financials):
         :type data: dict
         :raises StatusMessageException: Failed in getting requested data.
         """
-        if data['status'] != '000':
-            raise StatusMessageException(data['message'])
+        response_status = data['status']
+        if response_status != '000':
+            status_message = data['message']
+            raise StatusMessageException(status_message)
 
     @lru_cache
     def _get_latest_report_info(self, year: int) -> datetime:
@@ -152,34 +154,34 @@ class KorFinancials(Financials):
 
         if period == 'annual':
             cols = statement.iloc[0, :].get(
-                    [
-                        'sj_nm',
-                        'thstrm_nm',
-                        'frmtrm_nm',
-                        'bfefrmtrm_nm',
-                    ]
-                ).to_numpy()
+                [
+                    'sj_nm',
+                    'thstrm_nm',
+                    'frmtrm_nm',
+                    'bfefrmtrm_nm',
+                ]
+            ).to_numpy()
             statement = statement.get(
-                    [
-                        'account_nm',
-                        'thstrm_amount',
-                        'frmtrm_amount',
-                        'bfefrmtrm_amount',
-                    ]
-                )
+                [
+                    'account_nm',
+                    'thstrm_amount',
+                    'frmtrm_amount',
+                    'bfefrmtrm_amount',
+                ]
+            )
         else:
             cols = statement.iloc[0, :].get(
-                    [
-                        'sj_nm',
-                        'thstrm_nm'
-                    ]
-                ).to_numpy()
+                [
+                    'sj_nm',
+                    'thstrm_nm'
+                ]
+            ).to_numpy()
             statement = statement.get(
-                    [
-                        'account_nm',
-                        'thstrm_amount'
-                    ]
-                )
+                [
+                    'account_nm',
+                    'thstrm_amount'
+                ]
+            )
 
         statement.columns = cols
         statement.reset_index(drop=True, inplace=True)
@@ -205,9 +207,9 @@ class KorFinancials(Financials):
 
         if input_period == 'annual':
             try:
-                raw_financial = self._get_report(input_period, year_now-1)
+                raw_financial = self._get_report(input_period, year_now - 1)
             except KeyError:
-                raw_financial = self._get_report(input_period, year_now-2)
+                raw_financial = self._get_report(input_period, year_now - 2)
         elif input_period == 'quarter':
             latest_q = latest_date.month
             try:
