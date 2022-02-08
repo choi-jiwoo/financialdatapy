@@ -1,9 +1,10 @@
 # financialdatapy
 
 `financialdatapy` is a package for getting a fundamental financial data of a company. Currently it supports financial
-data of companies listed in United States (NASDAQ, NYSE) and Korea Exchange (KOSPI, KOSDAQ). The user can see the
-company's latest financial statement reported, standard financials, and historical stock price. `financialdatapy` will
-be a good choice for research purposes, and making an investment portfolio.
+data of companies listed in United States (NASDAQ, NYSE) and South Korea (KOSPI, KOSDAQ).
+
+User can see the company's latest financial statement reported, standard financials, and historical stock
+price. `financialdatapy` will be a good choice for research purposes, and managing an investment portfolio.
 
 ## Installation
 
@@ -36,6 +37,10 @@ Periods:
 | Quarter | `quarter` |
 
 #### FINANCIAL STATEMENTS AS REPORTED
+
+##### United States Stock Exchange
+
+##### Korea Stock Exchange
 
 Financial statements reported by the company to a financial regulator. The elements in the financial statements are
 different from others, depending on the comapany.
