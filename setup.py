@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-from setuptools import setup, find_packages
 import os
+from setuptools import setup
+from setuptools import find_packages
 import sys
-
+from financialdatapy import __version__ as VERSION
 
 # 'setup.py publish' shortcut.
 if sys.argv[-1] == 'publish':
@@ -16,16 +17,21 @@ with open('README.md', 'r') as f:
     long_description = f.read()
 
 install_requires = [
-    '',
+    'pandas>=1.4.0',  # should fill in before deploying on pypi
+    'requests>=2.27.1',
+    'xmltodict>=0.12.0',
+    'python-dotenv>=0.19.2',
+    'beautifulsoup4>=4.10.0'
+
 ]
 
 project_urls = {
-  'Source': 'https://github.com/choi-jiwoo/financialdatapy',
+    'Source': 'https://github.com/choi-jiwoo/financialdatapy',
 }
 
 setup(
     name='financialdatapy',
-    version='0.1.0',
+    version=VERSION,
     author='Choi Jiwoo',
     author_email='cho2.jiwoo@gmail.com',
     description=description,
