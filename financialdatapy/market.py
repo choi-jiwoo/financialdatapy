@@ -22,12 +22,12 @@ class Market:
         self.country_code = country_code.upper()
 
     def financial_statement(
-                self,
-                symbol: str,
-                financial: str,
-                period: str,
-                web: bool,
-                type_of_financial: Optional[str] = None,
+            self,
+            symbol: str,
+            financial: str,
+            period: str,
+            web: bool,
+            type_of_financial: Optional[str] = None,
     ) -> pd.DataFrame:
         """Get financial statements.
 
