@@ -27,7 +27,7 @@ class Price(ABC):
         self.end = end
 
     @abstractmethod
-    def get_raw_price_data(self):
+    def _get_raw_price_data(self):
         pass
 
     @abstractmethod
@@ -38,7 +38,7 @@ class Price(ABC):
 class UsMarket(Price):
     """A class representing stock price of a US company."""
 
-    def get_raw_price_data(self) -> dict:
+    def _get_raw_price_data(self) -> dict:
         """Get historical stock price data from source in a raw form.
 
         :return: Historical stock price data retrieved in JSON file.
@@ -65,7 +65,7 @@ class UsMarket(Price):
         :return: Historical stock price data.
         :rtype: pandas.DataFrame
         """
-        data = self.get_raw_price_data()
+        data = self._get_raw_price_data()
         timestamp = data['chart']['result'][0]['timestamp']
         price_data = data['chart']['result'][0]['indicators']['quote'][0]
         columns = ['Date', 'close', 'open', 'high', 'low', 'volume']
@@ -89,7 +89,7 @@ class UsMarket(Price):
 class KorMarket(Price):
     """A class representing stock price of a South Korea company."""
 
-    def get_raw_price_data(self) -> dict:
+    def _get_raw_price_data(self) -> pd.DataFrame:
         """Get historical stock price data from source in a raw form.
 
         :return: Historical stock price data retrieved in JSON file.
@@ -125,7 +125,7 @@ class KorMarket(Price):
         :return: Historical stock price data.
         :rtype: pandas.DataFrame
         """
-        data = self.get_raw_price_data()
+        data = self._get_raw_price_data()
         data = data.replace(r'-$', float('NaN'), regex=True)
 
         data.dropna(inplace=True)
