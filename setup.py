@@ -17,12 +17,12 @@ with open('README.md', 'r') as f:
     long_description = f.read()
 
 install_requires = [
-    'pandas>=1.4.0',  # should fill in before deploying on pypi
+    'pandas>=1.4.0',
     'requests>=2.27.1',
     'xmltodict>=0.12.0',
     'python-dotenv>=0.19.2',
-    'beautifulsoup4>=4.10.0'
-
+    'beautifulsoup4>=4.10.0',
+    'lxml>=4.7.1',
 ]
 
 project_urls = {
