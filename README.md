@@ -14,6 +14,15 @@ price. `financialdatapy` will be a good choice for research purposes, and managi
 
 🪵🪚 on the process...
 
+### Initialization
+
+```python
+from financialdatapy.stock import Stock
+
+us_comp = Stock('aapl')
+kor_comp = Stock('005930', country_code='kor')  # should set 'country_code' for stock exchange other than US
+```
+
 ### Financial statements
 
 financialdatapy supports three major financial statements of a company. Income statement, balance sheet, and cash flow.
@@ -38,29 +47,29 @@ Periods:
 
 #### FINANCIAL STATEMENTS AS REPORTED
 
-##### United States Stock Exchange
-
-##### Korea Stock Exchange
-
 Financial statements reported by the company to a financial regulator. The elements in the financial statements are
 different from others, depending on the comapany.
 
+##### United States Stock Exchange
+
 ```python
->> > from financialdatapy.stock import Stock
->> > comp = Stock('AAPL')
->> > ic_as_reported = comp.financials('income_statement', 'annual')
->> > ic_as_reported
+from financialdatapy.stock import Stock
+
+us_comp = Stock('aapl')
+ic_as_reported = us_comp.financials('income_statement', 'annual')
 ```
+
+##### Korea Stock Exchange
 
 #### STANDARD FINANCIAL STATEMENTS
 
 Summarized financial statements of a company.
 
 ```python
->> > from financialdatapy.stock import Stock
->> > comp = Stock('AAPL')
->> > std_ic = comp.standard_financials('income_statement', 'annual')
->> > std_ic
+from financialdatapy.stock import Stock
+
+us_comp = Stock('aapl')
+std_ic = us_comp.standard_financials('income_statement', 'annual')
 ```
 
 ## Stock data
@@ -70,10 +79,10 @@ Summarized financial statements of a company.
 Historical stock price of the company. ...
 
 ```python
->> > from financialdatapy.stock import Stock
->> > comp = Stock('AAPL')
->> > price = comp.historical('2021-1-1', '2021-1-5')
->> > price
+from financialdatapy.stock import Stock
+
+us_comp = Stock('aapl')
+price = us_comp.price('2021-1-1', '2021-1-5')
 ```
 
 All of the above will return in `pandas.DataFrame`.
