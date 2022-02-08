@@ -180,3 +180,6 @@ class Stock:
         price_data = price.get_price_data()
 
         return price_data
+
+    def __repr__(self) -> None:
+        return f"Stock('{self.symbol}', country_code='{self.country_code}')"
