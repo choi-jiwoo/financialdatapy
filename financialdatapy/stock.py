@@ -168,5 +168,5 @@ class Stock:
 
         return price_data
 
-    def __repr__(self) -> None:
+    def __repr__(self) -> str:
         return f"Stock('{self.symbol}', country_code='{self.country_code}')"
