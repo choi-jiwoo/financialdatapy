@@ -7,10 +7,8 @@ from financialdatapy import search
 
 
 class Financials(ABC):
-    """A Class representing financial statements of a company.
+    """Abstract class representing financial statements of a company.
 
-    :param cik: Cik of a company.
-    :type cik: str, optional
     :param symbol: Symbol of a company.
     :type symbol: str
     :param financial: One of the three financial statement.
