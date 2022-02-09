@@ -3,11 +3,11 @@ from datetime import datetime
 from functools import lru_cache
 import pandas as pd
 import webbrowser
-from financialdatapy.companycode import CompanyCode
 from financialdatapy.exception import EmptyDataFrameError
 from financialdatapy.exception import StatusMessageException
 from financialdatapy.financials import Financials
 from financialdatapy.request import Request
+from financialdatapy.stocklist import KorStockList
 
 
 class KorFinancials(Financials):
@@ -38,7 +38,7 @@ class KorFinancials(Financials):
         :return: Corporate code.
         :rtype: str
         """
-        corp_list = CompanyCode.get_comp_code_list(self.api_key)
+        corp_list = KorStockList(self.api_key).get_stock_list()
         result = corp_list[corp_list['stock_code'] == self.symbol]
         if result.empty:
             raise EmptyDataFrameError('Cannot search for the symbol.')
