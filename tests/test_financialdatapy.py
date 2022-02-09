@@ -2,12 +2,12 @@ from dotenv import load_dotenv
 import os
 import pandas as pd
 import pytest
-from financialdatapy.cik import CikList
 from financialdatapy import date
 from financialdatapy import filings
 from financialdatapy.date import IntegerDateInputError
 from financialdatapy.stock import Stock
 from financialdatapy.companycode import CompanyCode
+from financialdatapy.stocklist import UsStockList
 
 
 @pytest.fixture(scope='class')
@@ -43,7 +43,7 @@ def company(request):
 @pytest.fixture(scope='class')
 def cik_list():
     """Get CIK list and use it as a fixture."""
-    return CikList()
+    return UsStockList()
 
 
 class TestDate:
@@ -84,11 +84,11 @@ class TestCik:
 
     def test_get_cik(self, cik_list):
         """Test get_cik returns DataFrame."""
-        assert isinstance(cik_list.get_cik_list(), pd.DataFrame)
+        assert isinstance(cik_list.get_stock_list(), pd.DataFrame)
 
     def test_search_cik(self, cik_list):
         """Test the returned cik number matches with the company's cik number."""
-        res = cik_list.search_cik('AAPL')
+        res = cik_list.search('AAPL')
         assert res == '0000320193'
 
 
