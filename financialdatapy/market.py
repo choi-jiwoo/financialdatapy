@@ -2,10 +2,10 @@
 from datetime import datetime
 import pandas as pd
 from typing import Optional
-from financialdatapy.cik import CikList
+from financialdatapy.stocklist import UsStockList
 from financialdatapy.exception import NotAvailable
-from financialdatapy.usfinancials import UsFinancials
 from financialdatapy.korfinancials import KorFinancials
+from financialdatapy.usfinancials import UsFinancials
 from financialdatapy.price import UsMarket
 from financialdatapy.price import KorMarket
 
@@ -50,8 +50,8 @@ class Market:
         """
         match self.country_code:
             case 'USA':
-                cik_list = CikList()
-                comp_cik = cik_list.search_cik(symbol)
+                cik_list = UsStockList()
+                comp_cik = cik_list.search(symbol)
                 market = UsFinancials(symbol, comp_cik, financial, period)
             case 'KOR':
                 market = KorFinancials(symbol, financial, period)
