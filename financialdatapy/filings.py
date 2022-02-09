@@ -2,7 +2,7 @@
 from functools import lru_cache
 import pandas as pd
 import re
-from financialdatapy import request
+from financialdatapy.request import Request
 
 
 @lru_cache
@@ -15,7 +15,7 @@ def get_filings_list(cik: str) -> pd.DataFrame:
     :rtype: pandas.DataFrame
     """
     url = f'http://data.sec.gov/submissions/CIK{cik}.json'
-    res = request.Request(url)
+    res = Request(url)
     data = res.get_json()
     info = data['filings']['recent']
 
@@ -49,7 +49,7 @@ def get_latest_form(cik: str, latest: str) -> dict:
     """
     url = ('https://www.sec.gov/cgi-bin/viewer?action=view&'
            f'cik={cik}&accession_number={latest}&xbrl_type=v')
-    res = request.Request(url)
+    res = Request(url)
     soup = res.get_soup()
 
     menu = soup.find(id='menu')
