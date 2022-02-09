@@ -2,6 +2,7 @@
 from datetime import datetime
 import pandas as pd
 from typing import Optional
+from financialdatapy.dartapi import Dart
 from financialdatapy.stocklist import UsStockList
 from financialdatapy.exception import NotAvailable
 from financialdatapy.korfinancials import KorFinancials
@@ -54,7 +55,9 @@ class Market:
                 comp_cik = cik_list.search(symbol)
                 market = UsFinancials(symbol, comp_cik, financial, period)
             case 'KOR':
-                market = KorFinancials(symbol, financial, period)
+                dart = Dart()
+                api_key = dart.api_key
+                market = KorFinancials(symbol, api_key, financial, period)
             case _:
                 raise NotAvailable()
 
