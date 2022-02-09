@@ -149,7 +149,7 @@ class TestPriceData:
 
         price = {
             'symbol': company.symbol,
-            'historical_price': company.historical('2021-8-3', '2021-8-10'),
+            'historical_price': company.price('2021-8-3', '2021-8-10'),
         }
         first_row_close = price['historical_price']['Close'][0]
         if company.country_code == 'USA':
