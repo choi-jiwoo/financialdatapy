@@ -6,8 +6,8 @@ from financialdatapy import date
 from financialdatapy import filings
 from financialdatapy.date import IntegerDateInputError
 from financialdatapy.stock import Stock
-from financialdatapy.companycode import CompanyCode
 from financialdatapy.stocklist import UsStockList
+from financialdatapy.stocklist import KorStockList
 
 
 @pytest.fixture(scope='class')
@@ -162,14 +162,14 @@ class TestPriceData:
 class TestCompanyCodeInKrx:
     """Test validating company name and its code listed in Korea Exchange."""
 
-    def test_getting_company_code(self):
+    def test_getting_company_code(self, api_key):
         """Test if company name and its code match."""
-        company_code = CompanyCode.search_code('삼성전자')
+        company_code = KorStockList(api_key).search('삼성전자')
         assert company_code == '005930'
 
     def test_corp_code_from_dart_api(self, api_key):
         """Test getting corporate code of a stock in dart.fss.or.kr"""
-        corp_list = CompanyCode.get_comp_code_list(api_key)
+        corp_list = KorStockList(api_key).get_stock_list()
         symbol = '005930'
         result = corp_list[corp_list['stock_code'] == symbol]
         corp_code = result.get('corp_code').item()
