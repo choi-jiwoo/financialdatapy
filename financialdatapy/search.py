@@ -1,5 +1,5 @@
 """This module searches pair_id of a company from investing.com."""
-from financialdatapy import request
+from financialdatapy.request import Request
 
 
 class Company:
@@ -23,7 +23,7 @@ class Company:
         form_data = {
             'search_text': self.symbol,
         }
-        res = request.Request(url, method='post', data=form_data)
+        res = Request(url, method='post', data=form_data)
         data = res.get_json()
         first_quote_result = data['quotes'][0]
         pair_id = first_quote_result['pairId']
