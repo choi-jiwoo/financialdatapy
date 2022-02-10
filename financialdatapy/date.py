@@ -37,13 +37,11 @@ def validate_date(period: str) -> pd.Timestamp:
             date_format = '%Y-%m-%d'
         finally:
             date = string_to_date(period, date_format)
-
     return date
 
 
 def string_to_date(period: str or datetime, date_format: str) -> pd.Timestamp:
     date = pd.to_datetime(period, yearfirst=True, format=date_format)
-
     return date
 
 
@@ -58,7 +56,6 @@ def date_to_timestamp(period: pd.Timestamp) -> int:
 
     date = period.tz_localize(tz='Etc/GMT+4')
     timestamp = int(date.timestamp())
-
     return timestamp
 
 
@@ -73,5 +70,4 @@ def convert_date_format(period: pd.Timestamp, format: str) -> str:
     :rtype: str
     """
     new_date = period.strftime(format)
-
     return new_date
