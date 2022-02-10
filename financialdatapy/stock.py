@@ -160,7 +160,7 @@ class Stock:
         :return: Historical stock price data.
         :rtype: pandas.DataFrame
         """
-        start = validate_date(start)
+        start = validate_date(start, start=True)
         end = validate_date(end)
 
         price = self.market.historical_price(self.symbol, start, end)
