@@ -139,7 +139,7 @@ class Stock:
             self.symbol,
             financial,
             period,
-            'standard'
+            type_of_financial='standard'
         )
 
     def price(self, start: Optional[str] = None,
