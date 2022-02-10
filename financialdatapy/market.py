@@ -27,7 +27,7 @@ class Market:
             symbol: str,
             financial: str,
             period: str,
-            web: bool,
+            web: bool = False,
             type_of_financial: Optional[str] = None,
     ) -> pd.DataFrame:
         """Get financial statements.
@@ -38,8 +38,9 @@ class Market:
         :type financial: str
         :param period: Either 'annual' or 'quarter.
         :type period: str
-        :param web: Option for opening filings in a web browser.
-        :type web: bool
+        :param web: Option for opening filings in a web browser, defaults to
+            False.
+        :type web: bool, optional
         :param type_of_financial: Pass 'standard' for the method to return
             standard financials. If empty, finanicials as reported will be
             returned, defaults to None.
