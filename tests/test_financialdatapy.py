@@ -77,6 +77,15 @@ class TestDate:
         with pytest.raises(IntegerDateInputError):
             date.validate_date(1)
 
+    def test_empty_date_input(self):
+        """Test empty input returns date range of last one month."""
+        start_datetime = date.validate_date(None, start=True)
+        end_datetime = date.validate_date(None)
+        today = pd.Timestamp.today().normalize()
+        one_month = pd.Timedelta(days=30)
+        assert start_datetime == today - one_month
+        assert end_datetime == today
+
 
 @pytest.mark.usefixtures('cik_list')
 class TestCik:
