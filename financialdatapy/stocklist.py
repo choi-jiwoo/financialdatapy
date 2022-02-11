@@ -91,7 +91,7 @@ class KorStockList(StockList):
     :type api_key: str, optional
     """
 
-    def __init__(self, api_key: Optional[str] = None) -> None:
+    def __init__(self, api_key: str) -> None:
         """Initialize KorStockList."""
         self.api_key = api_key
 
