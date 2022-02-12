@@ -36,7 +36,7 @@ from financialdatapy.stock import Stock
 # Apple
 us_comp = Stock('aapl')
 # Samsung Electronics
-kor_comp = Stock('005930', country_code='kor')  # should set 'country_code' for stock exchange other than US
+kor_comp = Stock('005930', country_code='kor')  # should specify 'country_code' for stock exchange other than US
 ```
 
 Values passed for financial statements and periods should follow the format below. If no argument is passed, it
@@ -98,6 +98,38 @@ price = us_comp.price('2021-1-1', '2021-1-5')
 ```
 
 All of the above will return in `pandas.DataFrame`.
+
+❗️**Note**
+
+Data source of stock price data differ from US stock exchange to KOR stock exchange.
+
+| Exchange |Source|
+|:--------:|------|
+|   USA    |[finance.yahoo.com](https://finance.yahoo.com/)|
+|   KOR    |[investing.com](https://www.investing.com/)|
+
+### List of Companies in Stock Exchange
+
+**United States Stock Exchange**
+
+```python
+from financialdatapy.stocklist import UsStockList
+
+stock_list = UsStockList().get_stock_list()
+```
+
+**Korea Stock Exchange**
+
+Api key is required to get the stock list of companies in Korea stock exchange. See more about the api key in the **_API
+Key_** section above.
+
+```python
+from financialdatapy.dartapi import Dart
+from financialdatapy.stocklist import KorStockList
+
+api_key = Dart().api_key
+stock_list = KorStockList(api_key).get_stock_list()
+```
 
 ## Contribute
 
