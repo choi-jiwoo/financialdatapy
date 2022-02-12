@@ -8,3 +8,4 @@
 /.vscode
 /venv/**
 **/__pycache__
+docs/build
