@@ -14,9 +14,13 @@ Installation
 
 To use **financialdatapy**, first install it using pip:
 
-.. warning::
+.. note::
 
-   This project is not deployed yet.
+   Python version above `3.10 <https://www.python.org/downloads/release/python-3100/>`_ is required to use **financialdatapy**.
+
+.. code-block:: none
+
+    pip install financialdatapy
 
 Quick Start
 -----------

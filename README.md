@@ -8,7 +8,14 @@ price. `financialdatapy` will be a good choice for research purposes, and managi
 
 ## Installation
 
-🪜🔨 on the process...
+To use `financialdatapy`, first install it using pip:
+
+❗Python version above [3.10](https://www.python.org/downloads/release/python-3100/) is required to use `financialdatapy`
+.
+
+```commandline
+pip install financialdatapy
+```
 
 ## Quick Start
 
