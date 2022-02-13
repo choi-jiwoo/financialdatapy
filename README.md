@@ -164,6 +164,8 @@ The project basically follows Conventional Commits. Click on the badge to see th
 
 ## Documentation
 
+See the full documentation [here](https://financialdatapy.readthedocs.io/en/latest/).
+
 The documentation is built with [Sphinx](https://www.sphinx-doc.org/en/master/index.html) and deployed
 with [Read the Docs](https://readthedocs.org/).
 
