@@ -164,7 +164,8 @@ The project basically follows Conventional Commits. Click on the badge to see th
 Documentation
 -------------
 
-The documentation is built with `Sphinx <https://www.sphinx-doc.org/en/master/index.html>`_.
+The documentation is built with `Sphinx <https://www.sphinx-doc.org/en/master/index.html>`_ and deployed
+with `Read the Docs <https://readthedocs.org/>`_.
 
 License
 --------
