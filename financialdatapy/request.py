@@ -31,29 +31,28 @@ class Request:
                  data: Optional[dict] = None) -> None:
         """Initialize Request."""
         self.url = url
+        self.method = method
         self.headers = headers
         self.params = params
         self.data = data
-        self.res = self.http_request(method)
 
-    def http_request(self, method: str) -> requests.Response:
-        """Sends a GET request to a data source url.
+    @property
+    def response(self) -> requests.Response:
+        """Sends a HTTP request to a data source url.
 
-        :param method: Which http methods to request.
-        :type method: str
         :raises requests.ConnectionError: HTTP connection failure.
         :return: A response object from the source.
         :rtype: requests.Response
         """
 
-        if method == 'post':
+        if self.method == 'post':
             res = requests.post(
                 self.url, data=self.data, headers=self.headers
             )
         else:
             res = requests.get(
                 self.url, params=self.params, headers=self.headers
-                )
+            )
 
         if res.status_code != 200:
             res.raise_for_status()
@@ -66,7 +65,7 @@ class Request:
         :return: Response object in bytes.
         :rtype: bytes
         """
-        return self.res.content
+        return self.response.content
 
     def get_text(self) -> str:
         """Return response object in string.
@@ -74,7 +73,7 @@ class Request:
         :return: Response object in string.
         :rtype: str
         """
-        return self.res.text
+        return self.response.text
 
     def get_json(self) -> dict:
         """Convert response object's content to dictionary.
@@ -82,7 +81,7 @@ class Request:
         :return: A JSON format data.
         :rtype: dict
         """
-        return self.res.json()
+        return self.response.json()
 
     def get_soup(self) -> BeautifulSoup:
         """Convert response object's content to BeautifulSoup object.
@@ -90,4 +89,4 @@ class Request:
         :return: A HTML format data.
         :rtype: Beautifulsoup
         """
-        return BeautifulSoup(self.res.text, 'html.parser')
+        return BeautifulSoup(self.response.text, 'html.parser')
