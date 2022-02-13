@@ -11,7 +11,7 @@ if sys.argv[-1] == 'publish':
     os.system('twine upload dist/*')
     sys.exit()
 
-description = 'Financial data of a company.'
+description = 'Extract financial data of a company.'
 
 with open('README.md', 'r') as f:
     long_description = f.read()
