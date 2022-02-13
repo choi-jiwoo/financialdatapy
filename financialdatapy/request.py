@@ -13,9 +13,13 @@ class Request:
     :type method: str, optional
     :param headers: Http request headers, defaults to `Request.headers`.
     :type headers: dict, optional
+    :param params: URL parameters to attach, defaults to None.
+    :type params: dict, optional
     :param data: Data to pass when making POST request, defaults to None.
     :type data: Optional[dict], optional
     """
+
+    #: Default headers to send in request.
     headers = {
         'User-Agent': 'Mozilla',
         'X-Requested-With': 'XMLHttpRequest',
@@ -37,7 +41,7 @@ class Request:
 
         :param method: Which http methods to request.
         :type method: str
-        :raises: :class:`requests.ConnectionError`: HTTP connection failure.
+        :raises requests.ConnectionError: HTTP connection failure.
         :return: A response object from the source.
         :rtype: requests.Response
         """
