@@ -23,6 +23,7 @@ install_requires = [
     'python-dotenv>=0.19.2',
     'beautifulsoup4>=4.10.0',
     'lxml>=4.7.1',
+    'user_agent>=0.1.10',
 ]
 
 project_urls = {
