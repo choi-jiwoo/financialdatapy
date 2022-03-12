@@ -1,7 +1,8 @@
 """This module requests data from web."""
-from typing import Optional
-import requests
 from bs4 import BeautifulSoup
+import requests
+from typing import Optional
+from user_agent import generate_user_agent
 
 
 class Request:
@@ -21,7 +22,7 @@ class Request:
 
     #: Default headers to send in request.
     headers = {
-        'User-Agent': 'Mozilla',
+        'User-Agent': generate_user_agent(),
         'X-Requested-With': 'XMLHttpRequest',
     }
 
