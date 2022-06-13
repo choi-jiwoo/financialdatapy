@@ -110,10 +110,10 @@ All of the above will return in `pandas.DataFrame`.
 
 Data source of stock price data differ from US stock exchange to KOR stock exchange.
 
-| Exchange |Source|
-|:--------:|------|
-|   USA    |[finance.yahoo.com](https://finance.yahoo.com/)|
-|   KOR    |[investing.com](https://www.investing.com/)|
+| Exchange | Source                                          |
+| :------: | ----------------------------------------------- |
+|   USA    | [finance.yahoo.com](https://finance.yahoo.com/) |
+|   KOR    | [investing.com](https://www.investing.com/)     |
 
 ### List of Companies in Stock Exchange
 
@@ -163,8 +163,6 @@ The project basically follows Conventional Commits. Click on the badge to see th
 ```
 
 ## Documentation
-
-⚠️ Document is not complete yet
 
 See the full documentation [here](https://financialdatapy.readthedocs.io/en/latest/).
 
