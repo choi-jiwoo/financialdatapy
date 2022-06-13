@@ -67,9 +67,9 @@ If no argument is passed, it automatically retrieves income statement from annua
     cash_flow = us_comp.financials('cash_flow')
 
     # Annual Report
-    income_statement = kor_comp.financials('income-statement', 'annual')
+    income_statement = kor_comp.financials('income_statement', 'annual')
     # Quarterly Report
-    income_statement = kor_comp.financials('income-statement', 'quarter')
+    income_statement = kor_comp.financials('income_statement', 'quarter')
 
 Financial Statement as reported
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
