@@ -6,7 +6,6 @@ import json
 import pandas as pd
 import re
 from string import capwords
-from typing import Optional
 import xmltodict
 from zipfile import ZipFile
 from financialdatapy.dartapi import Dart
@@ -123,9 +122,9 @@ class KorStockList(StockList, Dart):
     def search_stock_code(comp_name: str) -> str:
         """Search stock code with company name in dart.fss.or.kr.
 
-        :param symbol: Company name.
-        :type symbol: str
-        :return: Company code.
+        :param comp_name: Company name.
+        :type comp_name: str
+        :return: Stock code.
         :rtype: str
         """
         url = 'https://kind.krx.co.kr/common/searchcorpname.do'

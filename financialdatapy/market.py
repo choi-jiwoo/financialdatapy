@@ -2,6 +2,7 @@
 from datetime import datetime
 import pandas as pd
 from typing import Optional
+from typing import Union
 from financialdatapy.stocklist import UsStockList
 from financialdatapy.exception import NotAvailable
 from financialdatapy.korfinancials import KorFinancials
@@ -16,7 +17,6 @@ class Market:
     :param country_code: Country where the stock is listed.
     :type country_code: str
     """
-
     def __init__(self, country_code: str):
         """Initialize Market."""
         self.country_code = country_code.upper()
@@ -28,7 +28,7 @@ class Market:
             period: str,
             web: bool = False,
             type_of_financial: Optional[str] = None,
-    ) -> pd.DataFrame:
+    ) -> Optional[pd.DataFrame]:
         """Get financial statements.
 
         :param symbol: Symbol of a company/stock.
@@ -47,7 +47,7 @@ class Market:
         :raises NotAvailable: If the symbol is not listed in the
             stock exchange.
         :return: Either financials as reported or standard financials.
-        :rtype: pandas.DataFrame
+        :rtype: pandas.DataFrame or None
         """
         match self.country_code:
             case 'USA':
