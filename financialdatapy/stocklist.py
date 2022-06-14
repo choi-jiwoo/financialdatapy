@@ -21,10 +21,6 @@ class StockList(ABC):
     def get_stock_list(self) -> pd.DataFrame:
         pass
 
-    @abstractmethod
-    def search(self, symbol: str) -> str:
-        pass
-
 
 class UsStockList(StockList):
     """Class representing stock list in US exchange."""
@@ -62,7 +58,7 @@ class UsStockList(StockList):
 
         return cik_list
 
-    def search(self, symbol: str) -> str:
+    def search_cik(self, symbol: str) -> str:
         """Search CIK of specific a company.
 
         :param symbol: Company symbol to search.
@@ -124,8 +120,8 @@ class KorStockList(StockList, Dart):
             raise RuntimeError(e)
 
     @staticmethod
-    def search(symbol: str) -> str:
-        """Search company code with company name in dart.fss.or.kr.
+    def search_stock_code(comp_name: str) -> str:
+        """Search stock code with company name in dart.fss.or.kr.
 
         :param symbol: Company name.
         :type symbol: str

@@ -52,7 +52,7 @@ class Market:
         match self.country_code:
             case 'USA':
                 cik_list = UsStockList()
-                comp_cik = cik_list.search(symbol)
+                comp_cik = cik_list.search_cik(symbol)
                 market = UsFinancials(symbol, comp_cik, financial, period)
             case 'KOR':
                 market = KorFinancials(symbol, financial, period)
