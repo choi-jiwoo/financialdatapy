@@ -3,6 +3,7 @@ from datetime import datetime
 from functools import lru_cache
 import pandas as pd
 import webbrowser
+from financialdatapy.dartapi import Dart
 from financialdatapy.exception import EmptyDataFrameError
 from financialdatapy.exception import StatusMessageException
 from financialdatapy.financials import Financials
@@ -10,7 +11,7 @@ from financialdatapy.request import Request
 from financialdatapy.stocklist import KorStockList
 
 
-class KorFinancials(Financials):
+class KorFinancials(Financials, Dart):
     """Class representing financial statements of stocks in Korea Exchange.
 
     :param symbol: Symbol of a company/stock.
@@ -24,12 +25,22 @@ class KorFinancials(Financials):
     :type api_key: str
     """
 
-    def __init__(self, symbol: str, api_key: str,
-                 financial: str = 'income_statement',
+    def __init__(self, symbol: str, financial: str = 'income_statement',
                  period: str = 'annual') -> None:
         """Initialize KorFinancials"""
-        super().__init__(symbol, financial, period)
-        self.api_key = api_key
+        Financials.__init__(self, symbol, financial, period)
+        Dart.__init__(self)
+
+    @property
+    def corp_list(self) -> pd.DataFrame:
+        """Get list of companies in Korea Exchange.
+
+        :return: A company list.
+        :rtype: pandas.DataFrame
+        """
+
+        corp_list = KorStockList().get_stock_list()
+        return corp_list
 
     @property
     def corp_code(self) -> str:
@@ -38,8 +49,7 @@ class KorFinancials(Financials):
         :return: Corporate code.
         :rtype: str
         """
-        corp_list = KorStockList(self.api_key).get_stock_list()
-        result = corp_list[corp_list['stock_code'] == self.symbol]
+        result = self.corp_list[self.corp_list['stock_code'] == self.symbol]
         if result.empty:
             raise EmptyDataFrameError('Cannot search for the symbol.')
         corp_code = result.get('corp_code').item()

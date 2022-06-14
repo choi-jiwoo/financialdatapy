@@ -9,6 +9,7 @@ from string import capwords
 from typing import Optional
 import xmltodict
 from zipfile import ZipFile
+from financialdatapy.dartapi import Dart
 from financialdatapy.exception import EmptyDataFrameError
 from financialdatapy.request import Request
 
@@ -84,16 +85,16 @@ class UsStockList(StockList):
         return cik
 
 
-class KorStockList(StockList):
+class KorStockList(StockList, Dart):
     """This class represents stock list in KOR exchange.
 
     :param api_key: Api key for opendart.fss.or.kr, defaults to None.
     :type api_key: str, optional
     """
 
-    def __init__(self, api_key: str) -> None:
+    def __init__(self) -> None:
         """Initialize KorStockList."""
-        self.api_key = api_key
+        Dart.__init__(self)
 
     @lru_cache
     def get_stock_list(self) -> pd.DataFrame:
