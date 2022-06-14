@@ -131,7 +131,7 @@ class KorStockList(StockList, Dart):
         data = {
             'method': 'searchCorpNameJson',
             'searchCodeType': 'char',
-            'searchCorpName': symbol,
+            'searchCorpName': comp_name,
         }
         headers = {
             'User-Agent': 'Mozilla',
