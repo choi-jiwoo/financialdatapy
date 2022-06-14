@@ -142,8 +142,6 @@ Key** section above.
 
 .. code-block:: python
 
-    from financialdatapy.dartapi import Dart
     from financialdatapy.stocklist import KorStockList
 
-    api_key = Dart().api_key
-    stock_list = KorStockList(api_key).get_stock_list()
+    stock_list = KorStockList().get_stock_list()
