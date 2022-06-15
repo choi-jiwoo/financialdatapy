@@ -28,7 +28,7 @@ Quick Start
 **financialdatapy** supports three major financial statements of a company. Income statement, balance sheet, and cash flow.
 Also the user can select between annual and quarter financial statements.
 
-More features can be found in :doc:`usage`
+Checkout the usage in :doc:`source/usage` page, and `notebook <https://github.com/choi-jiwoo/financialdatapy/tree/master/notebook>`_
 
 API Key
 ~~~~~~~
@@ -38,7 +38,7 @@ from `DART <https://opendart.fss.or.kr/>`_ should be provided in the system to s
 
 After receiving API key, store it on a ``.env`` file in the root directory of your project.
 
-Inside ``.env`` file.
+Inside ``.env`` file, provide api key as shown below.
 
 .. code-block:: none
 
@@ -187,5 +187,5 @@ Find More About Financialdatapy
     :maxdepth: 1
     :caption: Financialdatapy
 
-    usage.rst
-    module.rst
+    source/usage.rst
+    source/module.rst
