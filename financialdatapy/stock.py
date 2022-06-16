@@ -75,7 +75,7 @@ class Stock:
             is_code = int(symbol)
             return symbol
         except ValueError:
-            return KorStockList.search(symbol)
+            return KorStockList.search_stock_code(symbol)
 
     def _validate_country_code(self, country_code: str) -> str:
         """Validate if country code is in alpha-3 code (ISO 3166).
