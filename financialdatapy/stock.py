@@ -72,10 +72,11 @@ class Stock:
         :rtype: str
         """
         try:
-            is_code = int(symbol)
-            return symbol
+            isinstance(int(symbol), int)
         except ValueError:
             return KorStockList.search_stock_code(symbol)
+        else:
+            return symbol
 
     def _validate_country_code(self, country_code: str) -> str:
         """Validate if country code is in alpha-3 code (ISO 3166).
