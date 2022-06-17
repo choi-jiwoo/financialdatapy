@@ -2,7 +2,6 @@
 from datetime import datetime
 import pandas as pd
 from typing import Optional
-from typing import Union
 from financialdatapy.stocklist import UsStockList
 from financialdatapy.exception import NotAvailable
 from financialdatapy.korfinancials import KorFinancials
