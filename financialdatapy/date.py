@@ -1,5 +1,6 @@
 """This module parses and converts objects to date format objects"""
 from datetime import datetime
+from typing import Union
 import pandas as pd
 from financialdatapy.exception import IntegerDateInputError
 
@@ -52,7 +53,16 @@ def validate_date(period: str, start: bool = False) -> pd.Timestamp:
     return date
 
 
-def string_to_date(period: str or datetime, date_format: str) -> pd.Timestamp:
+def string_to_date(period: Union[str, datetime], date_format: str) -> pd.Timestamp:
+    """Convert date in string format or datetime object to pandas.Timestamp.
+
+    :param period: Date object either string or datetime.datetime.
+    :type period: Union[str, datetime]
+    :param date_format: Date format to convert to.
+    :type date_format: str
+    :return: Date in :class:`Pandas.Timestamp`.
+    :rtype: pd.Timestamp
+    """
     date = pd.to_datetime(period, yearfirst=True, format=date_format)
     return date
 
@@ -61,7 +71,7 @@ def date_to_timestamp(period: pd.Timestamp) -> int:
     """Parse date passed in into a timestamp.
 
     :param period: Date object.
-    :type period: `pandas.Timestamp`
+    :type period: pandas.Timestamp
     :return: The timestamp value equivalent to the date passed.
     :rtype: int
     """
@@ -75,7 +85,7 @@ def convert_date_format(period: pd.Timestamp, format: str) -> str:
     """Convert date object to desired date format.
 
     :param period: Date object.
-    :type period: `pandas.Timestamp`
+    :type period: pandas.Timestamp
     :param format: Desired date format to convert to.
     :type format: str
     :return: Converted date in string.
