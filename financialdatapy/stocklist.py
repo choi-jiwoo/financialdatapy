@@ -1,6 +1,6 @@
 """This module retrieves stock lists."""
 from abc import ABC, abstractmethod
-from functools import lru_cache
+from functools import cached_property
 from io import BytesIO
 import json
 import pandas as pd
@@ -16,6 +16,10 @@ from financialdatapy.request import Request
 class StockList(ABC):
     """Abstract class representing stock list of a stock exchange."""
 
+    @cached_property
+    def stock_list(self) -> pd.DataFrame:
+        return self.get_stock_list()
+
     @abstractmethod
     def get_stock_list(self) -> pd.DataFrame:
         pass
@@ -24,7 +28,6 @@ class StockList(ABC):
 class UsStockList(StockList):
     """Class representing stock list in US exchange."""
 
-    @lru_cache
     def get_stock_list(self) -> pd.DataFrame:
         """Get a list of companies CIK(Central Index Key) from SEC.
 
@@ -91,7 +94,6 @@ class KorStockList(StockList, Dart):
         """Initialize KorStockList."""
         Dart.__init__(self)
 
-    @lru_cache
     def get_stock_list(self) -> pd.DataFrame:
         """Retrieve company code list of stocks listed in Korea Exchange.
 

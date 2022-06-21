@@ -79,7 +79,7 @@ class TestCik:
 
     def test_get_cik(self, cik_list):
         """Test get_cik returns DataFrame."""
-        assert isinstance(cik_list.get_stock_list(), pd.DataFrame)
+        assert isinstance(cik_list.stock_list, pd.DataFrame)
 
     def test_search_cik(self, cik_list):
         """Test the returned cik number matches with the company's cik number."""
