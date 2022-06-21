@@ -69,7 +69,7 @@ class UsStockList(StockList):
         :rtype: str
         """
         symbol_uppercase = symbol.upper()
-        cik_list = self.get_stock_list()
+        cik_list = self.stock_list
         symbol_df = cik_list[cik_list['ticker'] == symbol_uppercase]
         if symbol_df.empty:
             raise EmptyDataFrameError('Cannot search for the symbol.')

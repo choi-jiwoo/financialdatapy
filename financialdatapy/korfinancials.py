@@ -38,9 +38,8 @@ class KorFinancials(Financials, Dart):
         :return: A company list.
         :rtype: pandas.DataFrame
         """
-
-        corp_list = KorStockList().get_stock_list()
-        return corp_list
+        corp_list = KorStockList()
+        return corp_list.stock_list
 
     @property
     def corp_code(self) -> str:

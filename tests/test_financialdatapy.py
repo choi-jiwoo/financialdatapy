@@ -164,7 +164,8 @@ class TestCompanyCodeInKrx:
 
     def test_corp_code_from_dart_api(self):
         """Test getting corporate code of a stock in dart.fss.or.kr"""
-        corp_list = KorStockList().get_stock_list()
+        corp_list = KorStockList()
+        corp_list = corp_list.stock_list
         symbol = '005930'
         result = corp_list[corp_list['stock_code'] == symbol]
         corp_code = result.get('corp_code').item()
