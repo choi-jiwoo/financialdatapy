@@ -122,7 +122,8 @@ Data source of stock price data differ from US stock exchange to KOR stock excha
 ```python
 from financialdatapy.stocklist import UsStockList
 
-stock_list = UsStockList().get_stock_list()
+us_stock_list = UsStockList()
+us_stock_list = us_stock_list.stock_list
 ```
 
 **Korea Stock Exchange**
@@ -131,11 +132,10 @@ Api key is required to get the stock list of companies in Korea stock exchange. 
 Key_** section above.
 
 ```python
-from financialdatapy.dartapi import Dart
 from financialdatapy.stocklist import KorStockList
 
-api_key = Dart().api_key
-stock_list = KorStockList(api_key).get_stock_list()
+kor_stock_list = KorStockList()
+kor_stock_list = kor_stock_list.stock_list
 ```
 
 ## Contribute
