@@ -1,2 +1,2 @@
 furo==2022.1.2
-financialdatapy==1.0.4
+financialdatapy==1.1.0
