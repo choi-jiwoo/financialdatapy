@@ -137,7 +137,8 @@ List of Companies in Stock Exchange
 
     from financialdatapy.stocklist import UsStockList
 
-    us_stock_list = UsStockList().get_stock_list()
+    us_stock_list = UsStockList()
+    us_stock_list = us_stock_list.stock_list
 
 
 **Korea Stock Exchange**
@@ -149,7 +150,8 @@ Key** section above.
 
     from financialdatapy.stocklist import KorStockList
 
-    kor_stock_list = KorStockList().get_stock_list()
+    kor_stock_list = KorStockList()
+    kor_stock_list = kor_stock_list.stock_list
 
 Getting CIK of US Companies
 ---------------------------
