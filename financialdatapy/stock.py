@@ -22,7 +22,6 @@ class Stock:
         """Initialize Stock."""
         self.country_code = country_code
         self.symbol = symbol
-        self.market = Market(self.country_code)
 
     @property
     def symbol(self) -> str:
@@ -62,6 +61,10 @@ class Stock:
         :type country_code: str
         """
         self._country_code = self._validate_country_code(country_code)
+
+    @property
+    def market(self) -> Market:
+        return Market(self.country_code)
 
     def _convert_symbol_to_code_in_krx(self, symbol: str) -> str:
         """Convert symbol to company code for stocks in Korea Exchange.
