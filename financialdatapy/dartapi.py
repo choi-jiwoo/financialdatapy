@@ -2,7 +2,6 @@
 from dotenv import load_dotenv
 from typing import Optional
 import os
-from financialdatapy.exception import EmptyApiKeyException
 
 
 class Dart:
@@ -36,7 +35,5 @@ class Dart:
         if api_key is None:
             load_dotenv()
             self._api_key = os.environ.get('DART_API_KEY')
-            if self._api_key is None:
-                raise EmptyApiKeyException()
         else:
             self._api_key = api_key
