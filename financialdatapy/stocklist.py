@@ -10,6 +10,7 @@ import xmltodict
 from zipfile import ZipFile
 from financialdatapy.dartapi import Dart
 from financialdatapy.exception import EmptyDataFrameError
+from financialdatapy.exception import DartError
 from financialdatapy.request import Request
 
 
@@ -117,8 +118,8 @@ class KorStockList(StockList, Dart):
             corp_code_list.dropna(inplace=True)
 
             return corp_code_list
-        except Exception as e:
-            raise RuntimeError(e)
+        except Exception:
+            raise DartError('Failed in getting data from Dart.')
 
     @staticmethod
     def search_stock_code(comp_name: str) -> str:

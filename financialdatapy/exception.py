@@ -53,3 +53,9 @@ class StatusMessageException(Exception):
 class IntegerDateInputError(Exception):
     """Raised when integer is passed in date parameter."""
     pass
+
+
+class DartError(Exception):
+    """Raised when retrieving data from Dart failed."""
+    def __init__(self, msg: str = 'Data is not available.', *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
