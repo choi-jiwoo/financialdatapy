@@ -7,7 +7,7 @@ class CountryCodeValidationFailed(Exception):
 
 
 class NotAvailable(Exception):
-    """Raised when a company is not listed in the stock exchange.
+    """Raised when a response is not available.
 
     :param msg: Error message, defaults to 'Data is not available.'
     :type msg: str, optional
