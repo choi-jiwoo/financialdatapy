@@ -101,7 +101,7 @@ class UsFinancials(Financials):
         """
 
         res = Request(link)
-        data = res.get_text()
+        data = res.response_data('text')
         financial_statement = pd.read_html(data)[0]
 
         first_column = financial_statement.columns[0]

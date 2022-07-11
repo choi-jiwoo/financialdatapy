@@ -53,7 +53,7 @@ class UsMarket(Price):
                f'&period1={start_date_timestamp}&period2={end_date_timestamp}'
                '&interval=1d&corsDomain=finance.yahoo.com')
         res = Request(url)
-        data = res.get_json()
+        data = res.response_data('json')
 
         return data
 
@@ -111,7 +111,7 @@ class KorMarket(Price):
             'action': 'historical_data',
         }
         res = Request(url, method='post', data=data)
-        data = res.get_text()
+        data = res.response_data('text')
         tables = pd.read_html(data)
         historical_price = tables[0]
 

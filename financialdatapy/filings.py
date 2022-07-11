@@ -16,7 +16,7 @@ def get_filings_list(cik: str) -> pd.DataFrame:
     """
     url = f'http://data.sec.gov/submissions/CIK{cik}.json'
     res = Request(url)
-    data = res.get_json()
+    data = res.response_data('json')
     info = data['filings']['recent']
 
     acc = info['accessionNumber']
@@ -50,7 +50,7 @@ def get_latest_form(cik: str, latest: str) -> dict:
     url = ('https://www.sec.gov/cgi-bin/viewer?action=view&'
            f'cik={cik}&accession_number={latest}&xbrl_type=v')
     res = Request(url)
-    soup = res.get_soup()
+    soup = res.response_data('beautifulsoup')
 
     menu = soup.find(id='menu')
     a = menu.find_next('a', string='Financial Statements')

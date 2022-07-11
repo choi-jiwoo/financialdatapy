@@ -63,7 +63,7 @@ class Financials(ABC):
         url = ('https://www.investing.com/instruments/Financials/'
                'changereporttypeajax')
         res = Request(url, params=params)
-        data = res.get_text()
+        data = res.response_data('text')
         financial_statement = self._convert_to_table(data, report_type)
 
         return financial_statement

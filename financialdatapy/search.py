@@ -24,7 +24,7 @@ class Company:
             'search_text': self.symbol,
         }
         res = Request(url, method='post', data=form_data)
-        data = res.get_json()
+        data = res.response_data('json')
         first_quote_result = data['quotes'][0]
         pair_id = first_quote_result['pairId']
 
