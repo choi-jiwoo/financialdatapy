@@ -2,6 +2,7 @@ import pandas as pd
 import pytest
 from financialdatapy import date
 from financialdatapy import filings
+from financialdatapy.dartapi import Dart
 from financialdatapy.date import IntegerDateInputError
 from financialdatapy.stock import Stock
 from financialdatapy.stocklist import UsStockList
@@ -30,6 +31,11 @@ def company(request):
 def cik_list():
     """Get CIK list and use it as a fixture."""
     return UsStockList()
+
+@pytest.fixture(scope='class')
+def api_key():
+    """Get Api key stored in .env file."""
+    return Dart().api_key
 
 
 class TestDate:
@@ -170,3 +176,12 @@ class TestCompanyCodeInKrx:
         result = corp_list[corp_list['stock_code'] == symbol]
         corp_code = result.get('corp_code').item()
         assert corp_code == '00126380'
+
+
+@pytest.mark.usefixtures('api_key')
+class TestEnvFile:
+    """Tests if .env file is in the local directory."""
+
+    def test_env_file(self, api_key):
+        """Tests if Api key is assigned in the .env file."""
+        assert api_key is not None
