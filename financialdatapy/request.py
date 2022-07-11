@@ -63,38 +63,6 @@ class Request:
 
         return res
 
-    def get_content(self) -> bytes:
-        """Return response object in bytes.
-
-        :return: Response object in bytes.
-        :rtype: bytes
-        """
-        return self.response.content
-
-    def get_text(self) -> str:
-        """Return response object in string.
-
-        :return: Response object in string.
-        :rtype: str
-        """
-        return self.response.text
-
-    def get_json(self) -> dict:
-        """Convert response object's content to dictionary.
-
-        :return: A JSON format data.
-        :rtype: dict
-        """
-        return self.response.json()
-
-    def get_soup(self) -> BeautifulSoup:
-        """Convert response object's content to BeautifulSoup object.
-
-        :return: A HTML format data.
-        :rtype: Beautifulsoup
-        """
-        return BeautifulSoup(self.response.text, 'html.parser')
-
     def response_data(self, res_type: str) -> ResponseType:
         match res_type:
             case 'content':
