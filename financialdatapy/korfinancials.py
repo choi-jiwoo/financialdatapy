@@ -87,7 +87,7 @@ class KorFinancials(Financials, Dart):
             'bgn_de': bgn_de,
         }
         res = Request(url, params=params)
-        data = res.get_json()
+        data = res.response_data('json')
         self._validate_status(data)
         report_list = pd.DataFrame(data['list'])
 
@@ -120,7 +120,7 @@ class KorFinancials(Financials, Dart):
             'fs_div': 'CFS',
         }
         res = Request(url, params=params)
-        data = res.get_json()
+        data = res.response_data('json')
         raw_financial = pd.DataFrame(data['list'])
         self._validate_status(data)
 

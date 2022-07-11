@@ -39,7 +39,7 @@ class UsStockList(StockList):
         """
         url = 'https://www.sec.gov/files/company_tickers_exchange.json'
         res = Request(url)
-        cik_data = res.get_json()
+        cik_data = res.response_data('json')
 
         cik_list = pd.DataFrame(cik_data['data'], columns=cik_data['fields'])
 
@@ -106,7 +106,7 @@ class KorStockList(StockList, Dart):
             'crtfc_key': self.api_key
         }
         res = Request(url, params=params)
-        zip_file = res.get_content()
+        zip_file = res.response_data('content')
         try:
             xml_zip_file = ZipFile(BytesIO(zip_file))
             xml_file = xml_zip_file.read('CORPCODE.xml').decode('utf-8')
@@ -142,7 +142,7 @@ class KorStockList(StockList, Dart):
             'Content-Type': 'application/x-www-form-urlencoded'
         }
         res = Request(url, method='post', headers=headers, data=data)
-        comp_info_first_result = res.get_json()[0]
+        comp_info_first_result = res.response_data('json')[0]
         company_code = comp_info_first_result['repisusrtcd2']
 
         return company_code
