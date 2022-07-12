@@ -52,19 +52,19 @@ class Market:
             case 'USA':
                 cik_list = UsStockList()
                 comp_cik = cik_list.search_cik(symbol)
-                market = UsFinancials(symbol, comp_cik, financial, period)
+                stock = UsFinancials(symbol, comp_cik, financial, period)
             case 'KOR':
-                market = KorFinancials(symbol, financial, period)
+                stock = KorFinancials(symbol, financial, period)
             case _:
                 raise NotAvailable()
 
         if web:
-            market.open_report()
+            stock.open_report()
         else:
             if type_of_financial == 'standard':
-                return market.get_standard_financials()
+                return stock.get_standard_financials()
             else:
-                return market.get_financials()
+                return stock.get_financials()
 
     def historical_price(self, symbol: str,
                          start: datetime, end: datetime) -> pd.DataFrame:
