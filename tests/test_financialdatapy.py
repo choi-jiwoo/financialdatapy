@@ -138,7 +138,7 @@ class TestStandardFinancials:
     )
     def test_get_std_financials(self, company, which_financial, period):
         """Test standard financial statement is in DataFrame."""
-        std_fs = company.standard_financials(which_financial, period)
+        std_fs = company.financials(which_financial, period, is_standard=True)
         assert isinstance(std_fs, pd.DataFrame)
 
 
