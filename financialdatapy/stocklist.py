@@ -120,6 +120,19 @@ class KorStockList(StockList, Dart):
             return corp_code_list
         except Exception:
             raise DartError('Failed in getting data from Dart.')
+    def search_corp_code(self, symbol: str) -> str:
+        """Get corporate code from dart.fss.or.kr.
+
+        :param symbol: Symbol of a company/stock.
+        :type symbol: str
+        :return: Corporate code.
+        :rtype: str
+        """
+        result = self.stock_list[self.stock_list['stock_code'] == symbol]
+        if result.empty:
+            raise EmptyDataFrameError('Cannot search for the symbol.')
+        corp_code = result.get('corp_code').item()
+        return corp_code
 
     @staticmethod
     def search_stock_code(comp_name: str) -> str:
