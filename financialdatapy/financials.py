@@ -22,9 +22,33 @@ class Financials(ABC):
     def __init__(self, symbol: str, financial: str = 'income_statement',
                  period: str = 'annual') -> None:
         """Initialize Financials."""
-        self.symbol = symbol.upper()
-        self.financial = financial.lower()
-        self.period = period.lower()
+        self.symbol = symbol
+        self.financial = financial
+        self.period = period
+
+    @property
+    def symbol(self) -> str:
+        return self._symbol
+
+    @symbol.setter
+    def symbol(self, symbol: str) -> None:
+        self._symbol = symbol.upper()
+    
+    @property
+    def financial(self) -> str:
+        return self._financial
+
+    @financial.setter
+    def financial(self, financial: str) -> None:
+        self._financial = financial.lower()
+    
+    @property
+    def period(self) -> str:
+        return self._period
+
+    @period.setter
+    def period(self, period: str) -> None:
+        self._period = period.lower()
 
     @abstractmethod
     def get_financials(self) -> pd.DataFrame:
