@@ -55,9 +55,9 @@ balance_sheet = us_comp.financials('balance_sheet')
 cash_flow = us_comp.financials('cash_flow')
 
 # Annual Report
-income_statement = kor_comp.financials('income-statement', 'annual')
+income_statement = kor_comp.financials('income_statement', 'annual')
 # Quarterly Report
-income_statement = kor_comp.financials('income-statement', 'quarter')
+income_statement = kor_comp.financials('income_statement', 'quarter')
 ```
 
 ### Financial Statement as reported
@@ -92,7 +92,7 @@ Summarized financial statements of a company.
 
 ```python
 us_comp = Stock('msft')
-std_ic = us_comp.standard_financials('income_statement', 'annual')
+std_ic = us_comp.financials('income_statement', 'annual', is_standard=True)
 ```
 
 ### Historical Stock Data
