@@ -4,7 +4,7 @@ from typing import Optional
 import os
 
 
-class Dart:
+class DartApiKey:
     """This class represents api key from opendart.fss.or.kr.
 
     :param api_key: Api key from opendart.fss.or.kr, defaults to None.
