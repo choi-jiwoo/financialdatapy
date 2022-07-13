@@ -39,13 +39,9 @@ class Market:
         :type is_standard: bool
         :param web: Option for opening filings in a web browser.
         :type web: bool
-        :param type_of_financial: Pass 'standard' for the method to return
-            standard financials. If empty, finanicials as reported will be
-            returned, defaults to None.
-        :type type_of_financial: Optional[str], optional
         :raises NotAvailable: If the symbol is not listed in the
             stock exchange.
-        :return: Either financials as reported or standard financials.
+        :return: Financials as reported or standard financials or None.
         :rtype: pandas.DataFrame or None
         """
         match self.country_code:
