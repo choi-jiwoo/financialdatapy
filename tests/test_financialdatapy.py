@@ -179,7 +179,7 @@ class TestCompanyCodeInKrx:
 
 
 @pytest.mark.usefixtures('api_key')
-class TestEnvFile:
+class TestDartApi:
     """Tests if .env file is in the local directory."""
 
     def test_env_file(self, api_key):
