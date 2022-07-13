@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 from financialdatapy import date
 from financialdatapy import filings
-from financialdatapy.dartapi import Dart
+from financialdatapy.dartapi import DartApiKey
 from financialdatapy.date import IntegerDateInputError
 from financialdatapy.stock import Stock
 from financialdatapy.stocklist import UsStockList
@@ -35,7 +35,7 @@ def cik_list():
 @pytest.fixture(scope='class')
 def api_key():
     """Get Api key stored in .env file."""
-    return Dart().api_key
+    return DartApiKey().api_key
 
 
 class TestDate:
