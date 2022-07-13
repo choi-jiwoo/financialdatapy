@@ -8,9 +8,9 @@ import re
 from string import capwords
 import xmltodict
 from zipfile import ZipFile
-from financialdatapy.dartapi import Dart
-from financialdatapy.exception import EmptyDataFrameError
+from financialdatapy.dartapi import OpenDart
 from financialdatapy.exception import DartError
+from financialdatapy.exception import EmptyDataFrameError
 from financialdatapy.request import Request
 
 
@@ -84,16 +84,8 @@ class UsStockList(StockList):
         return cik
 
 
-class KorStockList(StockList, Dart):
-    """This class represents stock list in KOR exchange.
-
-    :param api_key: Api key for opendart.fss.or.kr, defaults to None.
-    :type api_key: str, optional
-    """
-
-    def __init__(self) -> None:
-        """Initialize KorStockList."""
-        Dart.__init__(self)
+class KorStockList(StockList):
+    """This class represents stock list in KOR exchange."""
 
     def get_stock_list(self) -> pd.DataFrame:
         """Retrieve company code list of stocks listed in Korea Exchange.
@@ -101,25 +93,22 @@ class KorStockList(StockList, Dart):
         :return: List of company codes.
         :rtype: pandas.DataFrame
         """
-        url = 'https://opendart.fss.or.kr/api/corpCode.xml'
-        params = {
-            'crtfc_key': self.api_key
-        }
-        res = Request(url, params=params)
-        zip_file = res.response_data('content')
+        open_dart = OpenDart()
+        corp_code_file = open_dart.get_corp_code_file()
         try:
-            xml_zip_file = ZipFile(BytesIO(zip_file))
-            xml_file = xml_zip_file.read('CORPCODE.xml').decode('utf-8')
+            xml_zip_file = ZipFile(BytesIO(corp_code_file))
+            extracted_filename = 'CORPCODE.xml'
+            xml_file = xml_zip_file.read(extracted_filename).decode('utf-8')
             raw_corp_code = xmltodict.parse(xml_file)
             encoded_corp_code = json.dumps(raw_corp_code)
-            corp_code = json.loads(encoded_corp_code)
-
-            corp_code_list = pd.DataFrame(corp_code['result']['list'])
-            corp_code_list.dropna(inplace=True)
-
-            return corp_code_list
+            corp_code_list = json.loads(encoded_corp_code)
         except Exception:
             raise DartError('Failed in getting data from Dart.')
+        else:
+            corp_code_list = pd.DataFrame(corp_code_list['result']['list'])
+            corp_code_list.dropna(inplace=True)
+            return corp_code_list
+    
     def search_corp_code(self, symbol: str) -> str:
         """Get corporate code from dart.fss.or.kr.
 
