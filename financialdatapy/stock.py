@@ -102,8 +102,13 @@ class Stock:
         else:
             return country_code
 
-    def financials(self, financial: str = 'income_statement',
-                   period: str = 'annual', web: bool = False) -> pd.DataFrame:
+    def financials(
+        self,
+        financial: str = 'income_statement',
+        period: str = 'annual',
+        is_standard: bool = False,
+        web: bool = False,
+    ) -> pd.DataFrame | None:
         """Get financial statements as reported.
 
         :param financial: Which financial statement to retrieve. Input string
@@ -112,6 +117,9 @@ class Stock:
         :type financial: str, optional
         :param period: Either 'annual' or 'quarter', defaults to 'annual'.
         :type period: str, optional
+        :param is_standard: Option for retrieving standard financial statements,
+            defaults to False.
+        :type is_standard: bool, optional
         :param web: Option for opening filings in a web browser,
             defaults to False.
         :type web: bool, optional
@@ -122,30 +130,10 @@ class Stock:
             self.symbol,
             financial,
             period,
+            is_standard,
             web,
         )
-
         return financial_statement
-
-    def standard_financials(self, financial: str = 'income_statement',
-                            period: str = 'annual') -> pd.DataFrame:
-        """Get standard financial statements.
-
-        :param financial: One of the three financial statement.
-            'income_statement' or 'balance_sheet' or 'cash_flow', defaults to
-            'income_statement'.
-        :type financial: str, optional
-        :param period: Either 'annual' or 'quarter', defaults to 'annual'.
-        :type period: str, optional
-        :return: Standard financial statement.
-        :rtype: pandas.DataFrame
-        """
-        return self.market.financial_statement(
-            self.symbol,
-            financial,
-            period,
-            type_of_financial='standard'
-        )
 
     def price(self, start: Optional[str] = None,
               end: Optional[str] = None) -> pd.DataFrame:
