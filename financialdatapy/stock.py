@@ -60,7 +60,8 @@ class Stock:
         :param country_code: Country code
         :type country_code: str
         """
-        self._country_code = self._validate_country_code(country_code)
+        country_code = self._validate_country_code(country_code)
+        self._country_code = country_code.upper()
 
     @property
     def market(self) -> Market:
