@@ -53,6 +53,7 @@ class OpenDart(DartApiKey):
     :type api_key: str, optional
     """
     def __init__(self) -> None:
+        """Initialize OpenDart."""
         super().__init__()
 
     def _validate_status(self, data: dict) -> None:
@@ -79,6 +80,8 @@ class OpenDart(DartApiKey):
     def get_latest_report_info(self, corp_code: str, year: int) -> datetime:
         """Get the latest date a financial report is submitted to dart.fss.or.kr
 
+        :param corp_code: Corporate code of a company.
+        :type corp_code: str
         :param year: Current year.
         :type year: int
         :return: Latest date a financial report is submitted.
@@ -104,6 +107,8 @@ class OpenDart(DartApiKey):
     def get_report(self, corp_code: str, period: str, year: int) -> pd.DataFrame:
         """Retrieve financial statement of a company from dart.fss.or.kr.
 
+        :param corp_code: Corporate code of a company.
+        :type corp_code: str
         :param period: Either 'annual' or 'quarter'.
         :type period: str
         :param year: Business year.
