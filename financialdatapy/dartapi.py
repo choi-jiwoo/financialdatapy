@@ -34,6 +34,9 @@ class DartApiKey:
         """
         if api_key is None:
             load_dotenv()
-            self._api_key = os.environ.get('DART_API_KEY')
+            env_api_key = os.environ.get('DART_API_KEY')
+            if env_api_key is None:
+                raise EmptyApiKeyException('Dart api key is not provided.')
+            self._api_key = env_api_key
         else:
             self._api_key = api_key
