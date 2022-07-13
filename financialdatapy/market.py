@@ -2,10 +2,9 @@
 from datetime import datetime
 import pandas as pd
 from typing import Optional
-from financialdatapy.stocklist import UsStockList
 from financialdatapy.exception import NotAvailable
-from financialdatapy.korfinancials import KorFinancials
-from financialdatapy.usfinancials import UsFinancials
+from financialdatapy.financials import KorFinancials
+from financialdatapy.financials import UsFinancials
 from financialdatapy.price import UsMarket
 from financialdatapy.price import KorMarket
 
@@ -16,17 +15,17 @@ class Market:
     :param country_code: Country where the stock is listed.
     :type country_code: str
     """
-    def __init__(self, country_code: str):
+    def __init__(self, country_code: str) -> None:
         """Initialize Market."""
-        self.country_code = country_code.upper()
+        self.country_code = country_code
 
     def financial_statement(
             self,
             symbol: str,
             financial: str,
             period: str,
-            web: bool = False,
-            type_of_financial: Optional[str] = None,
+            is_standard: bool,
+            web: bool,
     ) -> Optional[pd.DataFrame]:
         """Get financial statements.
 
@@ -36,9 +35,10 @@ class Market:
         :type financial: str
         :param period: Either 'annual' or 'quarter.
         :type period: str
-        :param web: Option for opening filings in a web browser, defaults to
-            False.
-        :type web: bool, optional
+        :param is_standard: Option for retrieving standard financial statements.
+        :type is_standard: bool
+        :param web: Option for opening filings in a web browser.
+        :type web: bool
         :param type_of_financial: Pass 'standard' for the method to return
             standard financials. If empty, finanicials as reported will be
             returned, defaults to None.
@@ -50,21 +50,18 @@ class Market:
         """
         match self.country_code:
             case 'USA':
-                cik_list = UsStockList()
-                comp_cik = cik_list.search_cik(symbol)
-                stock = UsFinancials(symbol, comp_cik, financial, period)
+                stock = UsFinancials(symbol, financial, period)
             case 'KOR':
                 stock = KorFinancials(symbol, financial, period)
             case _:
-                raise NotAvailable()
-
+                raise NotAvailable('Symbol is not found.')        
         if web:
             stock.open_report()
+            return
+        if is_standard:
+            return stock.get_standard_financials()
         else:
-            if type_of_financial == 'standard':
-                return stock.get_standard_financials()
-            else:
-                return stock.get_financials()
+            return stock.get_financials()
 
     def historical_price(self, symbol: str,
                          start: datetime, end: datetime) -> pd.DataFrame:
