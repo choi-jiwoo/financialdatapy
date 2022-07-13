@@ -26,3 +26,8 @@ class IntegerDateInputError(Exception):
 class DartError(Exception):
     """Raised when retrieving data from Dart failed."""
     pass
+
+
+class EmptyApiKeyException(Exception):
+    """Raised when Api key is not provided."""
+    pass
