@@ -81,6 +81,15 @@ class Request:
         return res
 
     def response_data(self, res_type: str) -> ResponseType:
+        """Return data depending on the data type.
+
+        :param res_type: Type of response data. 'content', 'text', 'json', or
+            'beautifulsoup'.
+        :type res_type: str
+        :raises NotAvailable: Response data is not available.
+        :return: Bytes, text, or json file containing requested data.
+        :rtype: ResponseType
+        """
         match res_type:
             case 'content':
                 return self.response.content
