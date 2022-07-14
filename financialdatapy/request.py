@@ -13,24 +13,18 @@ class Request:
     :type url: str
     :param method: Which http methods to request, defaults to 'get'.
     :type method: str, optional
-    :param headers: Http request headers, defaults to `Request.headers`.
+    :param headers: Http request headers, defaults to None.
     :type headers: dict, optional
     :param params: URL parameters to attach, defaults to None.
     :type params: dict, optional
     :param data: Data to pass when making POST request, defaults to None.
     :type data: Optional[dict], optional
     """
-
-    #: Default headers to send in request.
-    headers = {
-        'User-Agent': generate_user_agent(),
-        'X-Requested-With': 'XMLHttpRequest',
-    }
     #: Available types of response data.
     ResponseType = bytes | str | dict | BeautifulSoup
 
     def __init__(self, url: str, method: str = 'get',
-                 headers: dict = headers,
+                 headers: Optional[dict] = None,
                  params: Optional[dict] = None,
                  data: Optional[dict] = None) -> None:
         """Initialize Request."""
@@ -39,6 +33,29 @@ class Request:
         self.headers = headers
         self.params = params
         self.data = data
+
+    @property
+    def headers(self) -> dict:
+        """Getter method of property headers.
+
+        :return: Http request headers.
+        :rtype: dict
+        """
+        return self._headers
+
+    @headers.setter
+    def headers(self, headers: dict | None) -> None:
+        """Setter method of property headers.
+
+        :param headers: Http request headers.
+        :type headers: dict or None
+        """
+        if headers is None:
+            headers = {
+                'User-Agent': generate_user_agent(),
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        self._headers = headers
 
     @property
     def response(self) -> requests.Response:
