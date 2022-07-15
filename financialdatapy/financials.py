@@ -24,7 +24,7 @@ class Financials(ABC):
         'income_statement' or 'balance_sheet' or 'cash_flow', defaults to
         'income_statement'.
     :type financial: str, optional
-    :param period: Either 'annual' or 'quarter', defaults to 'annual'
+    :param period: Either 'annual' or 'quarter', defaults to 'annual'.
     :type period: str, optional
     """
 
