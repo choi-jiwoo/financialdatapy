@@ -37,26 +37,58 @@ class Financials(ABC):
 
     @property
     def symbol(self) -> str:
+        """Getter method of property symbol.
+
+        :return: Symbol of a company.
+        :rtype: str
+        """
         return self._symbol
 
     @symbol.setter
     def symbol(self, symbol: str) -> None:
+        """Setter method of property symbol.
+
+        :param symbol: Symbol of a company.
+        :type symbol: str
+        """
         self._symbol = symbol.upper()
     
     @property
     def financial(self) -> str:
+        """Getter method of property financial.
+
+        :return: Selected type of financial statement.
+        :rtype: str
+        """
         return self._financial
 
     @financial.setter
     def financial(self, financial: str) -> None:
+        """Setter method of property financial.
+
+        :param financial: One of the three financial statement.
+            'income_statement' or 'balance_sheet' or 'cash_flow', defaults to
+            'income_statement'.
+        :type financial: str
+        """
         self._financial = financial.lower()
     
     @property
     def period(self) -> str:
+        """Getter method of property period.
+
+        :return: Selected period of financial statement.
+        :rtype: str
+        """
         return self._period
 
     @period.setter
     def period(self, period: str) -> None:
+        """Setter method of property period.
+
+        :param period: Either 'annual' or 'quarter', defaults to 'annual'.
+        :type period: str
+        """
         self._period = period.lower()
 
     @abstractmethod
