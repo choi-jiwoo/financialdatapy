@@ -69,6 +69,13 @@ class OpenDart(DartApiKey):
             raise StatusMessageException(status_message)
 
     def get_corp_code_file(self) -> bytes:
+        """Get the list of corporate code of a company listed in Korea Exchange.
+
+        Endpoint returns the list in XML file.
+
+        :return: XML file that contains the list of corporate code of a company.
+        :rtype: bytes
+        """
         url = 'https://opendart.fss.or.kr/api/corpCode.xml'
         params = {
             'crtfc_key': self.api_key

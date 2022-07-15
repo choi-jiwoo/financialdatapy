@@ -90,6 +90,7 @@ class KorStockList(StockList):
     def get_stock_list(self) -> pd.DataFrame:
         """Retrieve company code list of stocks listed in Korea Exchange.
 
+        :raises DartError: Failed in getting data from opendart.fss.or.kr.
         :return: List of company codes.
         :rtype: pandas.DataFrame
         """

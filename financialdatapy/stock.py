@@ -65,6 +65,11 @@ class Stock:
 
     @property
     def market(self) -> Market:
+        """Property of :class:`market.Market` instance.
+
+        :return: :class:`market.Market` instance.
+        :rtype: :class:`market.Market`
+        """
         return Market(self.country_code)
 
     def _convert_symbol_to_code_in_krx(self, symbol: str) -> str:
@@ -157,4 +162,9 @@ class Stock:
         return price_data
 
     def __repr__(self) -> str:
+        """Returns representational string of :class:`Stock`.
+
+        :return: Representational string of :class:`Stock`.
+        :rtype: str
+        """
         return f"Stock(symbol='{self.symbol}', country_code='{self.country_code}')"
