@@ -61,7 +61,7 @@ class Request:
     def response(self) -> requests.Response:
         """Sends a HTTP request to a data source url.
 
-        :raises requests.ConnectionError: HTTP connection failure.
+        :raises: :py:class:`requests.exceptions.HTTPError` An HTTP error occurred.
         :return: A response object from the source.
         :rtype: requests.Response
         """
