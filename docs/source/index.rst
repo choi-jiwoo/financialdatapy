@@ -28,7 +28,7 @@ Quick Start
 **financialdatapy** supports three major financial statements of a company. Income statement, balance sheet, and cash flow.
 Also the user can select between annual and quarter financial statements.
 
-Checkout the usage in :doc:`source/usage` page, and `notebook <https://github.com/choi-jiwoo/financialdatapy/tree/master/notebook>`_
+Checkout the usage in :doc:`usage` page, and `notebook <https://github.com/choi-jiwoo/financialdatapy/tree/master/notebook>`_
 
 API Key
 ~~~~~~~
@@ -108,7 +108,7 @@ Summarized financial statements of a company.
 .. code-block:: python
 
     us_comp = Stock('aapl')
-    std_ic = us_comp.standard_financials('income_statement', 'annual')
+    std_ic = us_comp.financials('income_statement', 'annual', is_standard=True)
 
 Historical Stock Data
 ~~~~~~~~~~~~~~~~~~~~~
@@ -187,5 +187,5 @@ Find More About Financialdatapy
     :maxdepth: 1
     :caption: Financialdatapy
 
-    source/usage.rst
-    source/module.rst
+    usage.rst
+    module.rst

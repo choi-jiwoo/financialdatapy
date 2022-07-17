@@ -74,14 +74,14 @@ Standard Financial Statement
     default = msft.standard_financials()  # returns income statement of annual report
 
     # Annual
-    std_ic_a = msft.standard_financials('income_statement', period='annual')
-    std_bs_a = msft.standard_financials('balance_sheet', period='annual')
-    std_cf_a = msft.standard_financials('cash_flow', period='annual')
+    std_ic_a = msft.financials('income_statement', period='annual', is_standard=True)
+    std_bs_a = msft.financials('balance_sheet', period='annual', is_standard=True)
+    std_cf_a = msft.financials('cash_flow', period='annual', is_standard=True)
 
     # Quarterly
-    std_ic_q = msft.standard_financials('income_statement', period='quarter')
-    std_bs_q = msft.standard_financials('balance_sheet', period='quarter')
-    std_cf_q = msft.standard_financials('cash_flow', period='quarter')
+    std_ic_q = msft.financials('income_statement', period='quarter', is_standard=True)
+    std_bs_q = msft.financials('balance_sheet', period='quarter', is_standard=True)
+    std_cf_q = msft.financials('cash_flow', period='quarter', is_standard=True)
 
 **Standard financial statement of Naver (035420)**
 
@@ -94,14 +94,14 @@ Standard Financial Statement
     default = naver.standard_financials()  # returns income statement of annual report
 
     # Annual
-    std_ic_a = naver.standard_financials('income_statement', period='annual')
-    std_bs_a = naver.standard_financials('balance_sheet', period='annual')
-    std_cf_a = naver.standard_financials('cash_flow', period='annual')
+    std_ic_a = naver.financials('income_statement', period='annual', is_standard=True)
+    std_bs_a = naver.financials('balance_sheet', period='annual', is_standard=True)
+    std_cf_a = naver.financials('cash_flow', period='annual', is_standard=True)
 
     # Quarterly
-    std_ic_q = naver.standard_financials('income_statement', period='quarter')
-    std_bs_q = naver.standard_financials('balance_sheet', period='quarter')
-    std_cf_q = naver.standard_financials('cash_flow', period='quarter')
+    std_ic_q = naver.financials('income_statement', period='quarter', is_standard=True)
+    std_bs_q = naver.financials('balance_sheet', period='quarter', is_standard=True)
+    std_cf_q = naver.financials('cash_flow', period='quarter', is_standard=True)
 
 Historical Stock Data
 ---------------------

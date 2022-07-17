@@ -6,8 +6,6 @@ Modules
     module/stock
     module/market
     module/financials
-    module/korfinancials
-    module/usfinancials
     module/price
     module/stocklist
     module/filings
