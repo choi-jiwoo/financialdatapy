@@ -70,7 +70,7 @@ class UsMarket(Price):
         price_data = data['chart']['result'][0]['indicators']['quote'][0]
         columns = ['Date', 'close', 'open', 'high', 'low', 'volume']
 
-        date_range = [pd.to_datetime(x, unit='s').strftime('%Y-%m-%d')
+        date_range = [pd.to_datetime(x, unit='s').normalize()
                       for x
                       in timestamp]
         price_data['Date'] = date_range
