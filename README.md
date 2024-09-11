@@ -88,6 +88,9 @@ kor_comp.financials(web=True)
 
 ### Standard Financial Statement
 
+> [!WARNING]
+> Currently getting standard financial statements is not available.
+
 Summarized financial statements of a company.
 
 ```python
@@ -96,6 +99,9 @@ std_ic = us_comp.financials('income_statement', 'annual', is_standard=True)
 ```
 
 ### Historical Stock Data
+
+> [!WARNING]
+> Currently getting historical data of stocks listed in KOR exchange is not available.
 
 Historical stock price of the company.
 
