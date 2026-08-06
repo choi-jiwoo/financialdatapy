@@ -1,4 +1,5 @@
 """This module requests data from web."""
+
 from bs4 import BeautifulSoup
 import requests
 from typing import Optional
@@ -20,13 +21,18 @@ class Request:
     :param data: Data to pass when making POST request, defaults to None.
     :type data: Optional[dict], optional
     """
+
     #: Available types of response data.
     ResponseType = bytes | str | dict | BeautifulSoup
 
-    def __init__(self, url: str, method: str = 'get',
-                 headers: Optional[dict] = None,
-                 params: Optional[dict] = None,
-                 data: Optional[dict] = None) -> None:
+    def __init__(
+        self,
+        url: str,
+        method: str = "get",
+        headers: Optional[dict] = None,
+        params: Optional[dict] = None,
+        data: Optional[dict] = None,
+    ) -> None:
         """Initialize Request."""
         self.url = url
         self.method = method
@@ -52,8 +58,8 @@ class Request:
         """
         if headers is None:
             headers = {
-                'User-Agent': generate_user_agent(),
-                'X-Requested-With': 'XMLHttpRequest',
+                "User-Agent": generate_user_agent(),
+                "X-Requested-With": "XMLHttpRequest",
             }
         self._headers = headers
 
@@ -66,14 +72,10 @@ class Request:
         :rtype: requests.Response
         """
 
-        if self.method == 'post':
-            res = requests.post(
-                self.url, data=self.data, headers=self.headers
-            )
+        if self.method == "post":
+            res = requests.post(self.url, data=self.data, headers=self.headers)
         else:
-            res = requests.get(
-                self.url, params=self.params, headers=self.headers
-            )
+            res = requests.get(self.url, params=self.params, headers=self.headers)
 
         if res.status_code != 200:
             res.raise_for_status()
@@ -91,13 +93,13 @@ class Request:
         :rtype: ResponseType
         """
         match res_type:
-            case 'content':
+            case "content":
                 return self.response.content
-            case 'text':
+            case "text":
                 return self.response.text
-            case 'json':
+            case "json":
                 return self.response.json()
-            case 'beautifulsoup':
-                return BeautifulSoup(self.response.text, 'html.parser')
+            case "beautifulsoup":
+                return BeautifulSoup(self.response.text, "html.parser")
             case _:
-                raise NotAvailable('Response type is not valid.')
+                raise NotAvailable("Response type is not valid.")
