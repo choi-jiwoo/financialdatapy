@@ -1,6 +1,7 @@
 """This module states abstract class for financial statements."""
 from abc import ABC, abstractmethod
 from datetime import datetime
+import io
 import pandas as pd
 import string
 import webbrowser
@@ -293,41 +294,28 @@ class UsFinancials(Financials):
         """
 
         res = Request(link)
-        data = res.response_data('text')
-        financial_statement = pd.read_html(data)[0]
+        soup = res.response_data('beautifulsoup')
+        table = soup.find('table', class_='report')
+        financial_statement = pd.read_html(io.StringIO(str(table)))[0]
 
         first_column = financial_statement.columns[0]
-        multi_index = len(first_column)
 
-        if multi_index == 2:
-            first_column_header = financial_statement.columns[0][0]
+        if isinstance(first_column, tuple):
+            first_column_header = first_column[0]
         else:
-            first_column_header = financial_statement.columns[0]
+            first_column_header = first_column
 
-        title, unit = first_column_header.split(' - ')
+        title, _, unit = first_column_header.partition(' - ')
         elements = financial_statement.iloc[:, 0].rename((title, unit))
 
-        financial_statement = financial_statement.drop(
-            columns=financial_statement.columns[0]
-        )
-        financial_statement.insert(
-            loc=0,
-            column=elements.name,
-            value=list(elements.values),
-            allow_duplicates=True,
+        values = (
+            financial_statement.iloc[:, 1:]
+            .replace(r'[\$,]', '', regex=True)
+            .replace(r'^\((.*)\)$', r'-\1', regex=True)
+            .apply(pd.to_numeric, errors='coerce')
         )
 
-        financial_statement = financial_statement.fillna('')
-
-        financial_statement.iloc[:, 1:] = financial_statement.iloc[:, 1:].apply(
-            lambda x: [
-                ''.join(filter(str.isdigit, i))
-                for i
-                in x
-            ]
-        )
-
-        return financial_statement
+        return pd.concat([elements, values], axis=1)
 
 
 class KorFinancials(Financials):
