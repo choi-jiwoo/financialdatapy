@@ -145,7 +145,7 @@ class Financials(ABC):
         :rtype: pandas.DataFrame
         """
 
-        data_table = pd.read_html(data, index_col=0)[0]
+        data_table = pd.read_html(io.StringIO(data), index_col=0)[0]
 
         if report_type == 'CAS':
             data_table = self._convert_table_header(data_table, row_idx=2)

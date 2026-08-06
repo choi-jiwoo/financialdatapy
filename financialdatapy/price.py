@@ -1,5 +1,7 @@
 """This module retrieves the historical stock price of a company."""
+
 from abc import ABC, abstractmethod
+import io
 import pandas as pd
 from financialdatapy.date import date_to_timestamp
 from financialdatapy.date import convert_date_format
@@ -18,9 +20,7 @@ class Price(ABC):
     :type end: pandas.Timestamp
     """
 
-    def __init__(self, symbol: str,
-                 start: pd.Timestamp,
-                 end: pd.Timestamp) -> None:
+    def __init__(self, symbol: str, start: pd.Timestamp, end: pd.Timestamp) -> None:
         """Initialize Price"""
         self.symbol = symbol
         self.start = start
@@ -46,14 +46,15 @@ class UsMarket(Price):
         """
         one_day_in_timestamp = 86_400
         start_date_timestamp = date_to_timestamp(self.start)
-        end_date_timestamp = (date_to_timestamp(self.end) +
-                              one_day_in_timestamp)
-        url = ('https://query1.finance.yahoo.com/v8/finance/chart/'
-               f'{self.symbol}?symbol={self.symbol}'
-               f'&period1={start_date_timestamp}&period2={end_date_timestamp}'
-               '&interval=1d&corsDomain=finance.yahoo.com')
+        end_date_timestamp = date_to_timestamp(self.end) + one_day_in_timestamp
+        url = (
+            "https://query1.finance.yahoo.com/v8/finance/chart/"
+            f"{self.symbol}?symbol={self.symbol}"
+            f"&period1={start_date_timestamp}&period2={end_date_timestamp}"
+            "&interval=1d&corsDomain=finance.yahoo.com"
+        )
         res = Request(url)
-        data = res.response_data('json')
+        data = res.response_data("json")
 
         return data
 
@@ -66,14 +67,12 @@ class UsMarket(Price):
         :rtype: pandas.DataFrame
         """
         data = self._get_raw_price_data()
-        timestamp = data['chart']['result'][0]['timestamp']
-        price_data = data['chart']['result'][0]['indicators']['quote'][0]
-        columns = ['Date', 'close', 'open', 'high', 'low', 'volume']
+        timestamp = data["chart"]["result"][0]["timestamp"]
+        price_data = data["chart"]["result"][0]["indicators"]["quote"][0]
+        columns = ["Date", "close", "open", "high", "low", "volume"]
 
-        date_range = [pd.to_datetime(x, unit='s').normalize()
-                      for x
-                      in timestamp]
-        price_data['Date'] = date_range
+        date_range = [pd.to_datetime(x, unit="s").normalize() for x in timestamp]
+        price_data["Date"] = date_range
 
         price_table = pd.DataFrame(
             price_data,
@@ -96,23 +95,23 @@ class KorMarket(Price):
         :rtype: dict
         """
 
-        date_format = '%m/%d/%Y'
+        date_format = "%m/%d/%Y"
         st_date = convert_date_format(self.start, date_format)
         end_date = convert_date_format(self.end, date_format)
 
-        url = 'https://www.investing.com/instruments/HistoricalDataAjax'
+        url = "https://www.investing.com/instruments/HistoricalDataAjax"
         company_search_result = search.Company(self.symbol)
         curr_id = company_search_result.search_pair_id()
         data = {
-            'curr_id': curr_id,
-            'st_date': st_date,
-            'end_date': end_date,
-            'interval_sec': 'Daily',
-            'action': 'historical_data',
+            "curr_id": curr_id,
+            "st_date": st_date,
+            "end_date": end_date,
+            "interval_sec": "Daily",
+            "action": "historical_data",
         }
-        res = Request(url, method='post', data=data)
-        data = res.response_data('text')
-        tables = pd.read_html(data)
+        res = Request(url, method="post", data=data)
+        data = res.response_data("text")
+        tables = pd.read_html(io.StringIO(data))
         historical_price = tables[0]
 
         return historical_price
@@ -124,20 +123,18 @@ class KorMarket(Price):
         :rtype: pandas.DataFrame
         """
         data = self._get_raw_price_data()
-        data = data.replace(r'-$', float('NaN'), regex=True)
+        data = data.replace(r"-$", float("NaN"), regex=True)
 
         data.dropna(inplace=True)
         data.reset_index(drop=True, inplace=True)
-        data.drop('Change %', axis=1, inplace=True)
+        data.drop("Change %", axis=1, inplace=True)
 
-        data.rename(columns={'Price': 'Close', 'Vol.': 'Volume'}, inplace=True)
+        data.rename(columns={"Price": "Close", "Vol.": "Volume"}, inplace=True)
 
-        data['Volume'] = data['Volume'].apply(
-            lambda x: float(x[:-1]) * 1000000
-            if x[-1] == 'M'
-            else float(x[:-1]) * 1000
+        data["Volume"] = data["Volume"].apply(
+            lambda x: float(x[:-1]) * 1000000 if x[-1] == "M" else float(x[:-1]) * 1000
         )
-        data['Volume'] = data['Volume'].astype('int')
-        data['Date'] = pd.to_datetime(data['Date'])
+        data["Volume"] = data["Volume"].astype("int")
+        data["Date"] = pd.to_datetime(data["Date"])
 
         return data
