@@ -31,3 +31,8 @@ class DartError(Exception):
 class EmptyApiKeyException(Exception):
     """Raised when Api key is not provided."""
     pass
+
+
+class EmptySecUserAgentException(Exception):
+    """Raised when User-Agent declaring identity to SEC is not provided."""
+    pass

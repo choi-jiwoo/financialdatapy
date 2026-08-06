@@ -1,10 +1,57 @@
 """This module requests data from web."""
 
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
+import os
 import requests
 from typing import Optional
+from urllib.parse import urlsplit
 from user_agent import generate_user_agent
+from financialdatapy.exception import EmptySecUserAgentException
 from financialdatapy.exception import NotAvailable
+
+
+def get_sec_user_agent() -> str:
+    """Get the declaring User-Agent required by SEC EDGAR.
+
+    SEC rejects requests that do not identify the sender, so each user
+    must declare their own contact instead of sharing one baked into the
+    package.
+
+    :raises EmptySecUserAgentException: Identity is not provided.
+    :return: User-Agent in SEC's 'Name email' format.
+    :rtype: str
+    """
+    load_dotenv()
+    user_agent = os.environ.get("SEC_USER_AGENT")
+
+    if user_agent is None:
+        raise EmptySecUserAgentException(
+            "SEC requires a declaring User-Agent. "
+            'Set SEC_USER_AGENT to "pp Name your@email.com".'
+        )
+
+    return user_agent
+
+
+def get_user_agent() -> str:
+    """Get the User-Agent to send to sources other than SEC.
+
+    Some sources reject the outdated browser versions a randomized
+    User-Agent tends to produce, so the user can declare their own
+    browser's User-Agent instead.
+
+    :return: User-Agent of the user's browser, or a randomized one when
+        the user did not declare theirs.
+    :rtype: str
+    """
+    load_dotenv()
+    user_agent = os.environ.get("USER_AGENT")
+
+    if user_agent is None:
+        return generate_user_agent()
+
+    return user_agent
 
 
 class Request:
@@ -57,11 +104,26 @@ class Request:
         :type headers: dict or None
         """
         if headers is None:
-            headers = {
-                "User-Agent": generate_user_agent(),
-                "X-Requested-With": "XMLHttpRequest",
-            }
+            headers = self._default_headers()
         self._headers = headers
+
+    def _default_headers(self) -> dict:
+        """Build request headers appropriate for the data source.
+
+        :return: Http request headers.
+        :rtype: dict
+        """
+        host = urlsplit(self.url).hostname or ""
+
+        if host == "sec.gov" or host.endswith(".sec.gov"):
+            return {
+                "User-Agent": get_sec_user_agent(),
+            }
+
+        return {
+            "User-Agent": get_user_agent(),
+            "X-Requested-With": "XMLHttpRequest",
+        }
 
     @property
     def response(self) -> requests.Response:
