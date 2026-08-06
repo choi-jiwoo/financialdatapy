@@ -35,6 +35,34 @@ Inside `.env` file.
 DART_API_KEY=xxxxxxxxxxxxxxxx
 ```
 
+### SEC User-Agent
+
+❗When getting data of a company listed in US stock exchange, SEC requires every request to declare who is
+sending it. Requests without it are rejected with `403 Forbidden`.
+
+Store your own name and email on the same `.env` file, in the format SEC asks for.
+
+Inside `.env` file.
+
+```
+SEC_USER_AGENT=App Name your@email.com
+```
+
+### Browser User-Agent
+
+❗[investing.com](https://www.investing.com/), the data source for KOR stock price, rejects requests that do not
+come from a current browser. Declare your own browser's `User-Agent` to retrieve its data. If it is not set, a
+randomized `User-Agent` is sent instead, which investing.com refuses with `403 Forbidden`.
+
+You can find your browser's `User-Agent` by opening [whatismybrowser.com](https://www.whatismybrowser.com/detect/what-is-my-user-agent/)
+, or by running `navigator.userAgent` in your browser's developer console.
+
+Inside `.env` file.
+
+```
+USER_AGENT=xxxxxxxxxxxxxxxx
+```
+
 ### Initialization
 
 ```python
@@ -89,7 +117,9 @@ kor_comp.financials(web=True)
 ### Standard Financial Statement
 
 > [!WARNING]
-> Currently getting standard financial statements is not available.
+> Currently getting standard financial statements is not available. The investing.com endpoint it depends on
+> responds with `403 Forbidden` even to a current browser `User-Agent`, so setting `USER_AGENT` does not
+> restore it.
 
 Summarized financial statements of a company.
 
@@ -100,8 +130,10 @@ std_ic = us_comp.financials('income_statement', 'annual', is_standard=True)
 
 ### Historical Stock Data
 
-> [!WARNING]
-> Currently getting historical data of stocks listed in KOR exchange is not available.
+> [!IMPORTANT]
+> Getting historical data of stocks listed in KOR exchange requires `USER_AGENT` to be set. See the
+> **_Browser User-Agent_** section above. Without it the request is rejected with `403 Forbidden` and
+> `price()` raises `requests.exceptions.HTTPError`. US exchange is unaffected.
 
 Historical stock price of the company.
 
