@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "financialdatapy"
+dynamic = ["version"]
+description = "Extract financial data of a company."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+keywords = ["python", "stock", "finance"]
+authors = [
+    { name = "Choi Jiwoo", email = "cho2.jiwoo@gmail.com" },
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "beautifulsoup4>=4.15.0",
+    "lxml>=6.1.1",
+    "pandas>=3.0.5",
+    "python-dotenv>=1.2.2",
+    "requests>=2.34.2",
+    "user-agent>=0.1.14",
+    "xmltodict>=1.0.4",
+]
+
+[project.urls]
+Source = "https://github.com/choi-jiwoo/financialdatapy"
+
+[tool.hatch.version]
+path = "financialdatapy/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["financialdatapy"]
