@@ -44,6 +44,39 @@ Inside ``.env`` file, provide api key as shown below.
 
     DART_API_KEY=xxxxxxxxxxxxxxxx
 
+SEC User-Agent
+~~~~~~~~~~~~~~
+
+❗️When getting data of a company listed in US stock exchange, `SEC <https://www.sec.gov/os/accessing-edgar-data>`_
+requires every request to declare who is sending it. Requests without it are rejected with ``403 Forbidden``.
+
+Store your own name and email on the same ``.env`` file, in the format SEC asks for.
+
+Inside ``.env`` file.
+
+.. code-block:: none
+
+    SEC_USER_AGENT=App Name your@email.com
+
+If it is not set, :class:`financialdatapy.exception.EmptySecUserAgentException` is raised before the request is sent.
+
+Browser User-Agent
+~~~~~~~~~~~~~~~~~~
+
+❗️`investing.com <https://www.investing.com/>`_, the data source for KOR stock price, rejects requests that do not
+come from a current browser. Declare your own browser's ``User-Agent`` to retrieve its data. If it is not set, a
+randomized ``User-Agent`` is sent instead, which investing.com refuses with ``403 Forbidden``.
+
+You can find your browser's ``User-Agent`` by opening
+`whatismybrowser.com <https://www.whatismybrowser.com/detect/what-is-my-user-agent/>`_, or by running
+``navigator.userAgent`` in your browser's developer console.
+
+Inside ``.env`` file.
+
+.. code-block:: none
+
+    USER_AGENT=xxxxxxxxxxxxxxxx
+
 
 Initialization
 ~~~~~~~~~~~~~~
@@ -103,6 +136,12 @@ To see the full financial report from a browser, pass ``True`` in ``web``. Suppo
 Standard Financial Statement
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. warning::
+
+    Currently getting standard financial statements is not available. The investing.com endpoint it depends on
+    responds with ``403 Forbidden`` even to a current browser ``User-Agent``, so setting ``USER_AGENT`` does not
+    restore it.
+
 Summarized financial statements of a company.
 
 .. code-block:: python
@@ -112,6 +151,13 @@ Summarized financial statements of a company.
 
 Historical Stock Data
 ~~~~~~~~~~~~~~~~~~~~~
+
+.. important::
+
+    Getting historical data of stocks listed in KOR exchange requires ``USER_AGENT`` to be set. See the
+    **Browser User-Agent** section above. Without it the request is rejected with ``403 Forbidden`` and
+    :meth:`price() <financialdatapy.stock.Stock.price>` raises :py:class:`requests.exceptions.HTTPError`.
+    US exchange is unaffected.
 
 Historical stock price of the company.
 

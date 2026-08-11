@@ -11,6 +11,10 @@ Financial Statements as reported
 
 **Financial statements as reported of Apple (AAPL)**
 
+.. note::
+    ``SEC_USER_AGENT`` declaring your name and email is required to get the financial statements as reported of
+    companies listed in US stock exchange. See more about it in the **SEC User-Agent** section of :doc:`index`.
+
 .. code-block:: python
 
     from financialdatapy.stock import Stock
@@ -62,6 +66,11 @@ Financial Statements as reported
 
 Standard Financial Statement
 ----------------------------
+
+.. warning::
+    Currently getting standard financial statements is not available. The investing.com endpoint it depends on
+    responds with ``403 Forbidden`` even to a current browser ``User-Agent``, so setting ``USER_AGENT`` does not
+    restore it.
 
 **Standard financial statement of Microsoft (MSFT)**
 
@@ -119,6 +128,12 @@ Historical Stock Data
 
 **Historical stock price of SK Hynix (000660)**
 
+.. important::
+    ``USER_AGENT`` of your own browser is required to get the historical stock price of companies listed in Korea
+    Exchange. See more about it in the **Browser User-Agent** section of :doc:`index`. Without it the request is
+    rejected with ``403 Forbidden`` and :meth:`price() <financialdatapy.stock.Stock.price>` raises
+    :py:class:`requests.exceptions.HTTPError`.
+
 .. code-block:: python
 
     from financialdatapy.stock import Stock
@@ -132,6 +147,9 @@ List of Companies in Stock Exchange
 -----------------------------------
 
 **United States Stock Exchange**
+
+The stock list is retrieved from SEC, so ``SEC_USER_AGENT`` is required. See more about it in the **SEC User-Agent**
+section of :doc:`index`.
 
 .. code-block:: python
 
