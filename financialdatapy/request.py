@@ -28,7 +28,7 @@ def get_sec_user_agent() -> str:
     if user_agent is None:
         raise EmptySecUserAgentException(
             "SEC requires a declaring User-Agent. "
-            'Set SEC_USER_AGENT to "pp Name your@email.com".'
+            'Set SEC_USER_AGENT to "App Name your@email.com".'
         )
 
     return user_agent
