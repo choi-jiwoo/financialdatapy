@@ -7,6 +7,7 @@ from financialdatapy.date import date_to_timestamp
 from financialdatapy.date import convert_date_format
 from financialdatapy.request import Request
 from financialdatapy import search
+from financialdatapy.exception import DataNotAvailableError
 
 
 class Price(ABC):
@@ -66,9 +67,17 @@ class UsMarket(Price):
         :return: Historical stock price data.
         :rtype: pandas.DataFrame
         """
-        data = self._get_raw_price_data()
-        timestamp = data["chart"]["result"][0]["timestamp"]
-        price_data = data["chart"]["result"][0]["indicators"]["quote"][0]
+        raw_data = self._get_raw_price_data()
+        result_data = raw_data["chart"]["result"][0]
+
+        if "timestamp" not in result_data:
+            raise DataNotAvailableError(
+                f"No price data found for '{self.symbol}' "
+                f"between {self.start} and {self.end}."
+            )
+
+        timestamp = result_data["timestamp"]
+        price_data = result_data["indicators"]["quote"][0]
         columns = ["Date", "close", "open", "high", "low", "volume"]
 
         date_range = [pd.to_datetime(x, unit="s").normalize() for x in timestamp]
