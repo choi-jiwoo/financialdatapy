@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "financialdatapy"
-version = "1.2.3"
+version = "1.2.4"
 description = "Extract financial data of a company."
 readme = "README.md"
 requires-python = ">=3.12"
