@@ -1,1 +1,3 @@
-__version__ = "1.2.3"
+from importlib.metadata import version
+
+__version__ = version("financialdatapy")
